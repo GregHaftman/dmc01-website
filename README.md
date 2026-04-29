@@ -82,8 +82,9 @@ Weights: `--h0-weight: 700`, `--h1-weight: 600`, `--h2-weight: 600`, `--base-fon
 
 ### Surfaces (chrome / page)
 
-- **Site background:** `--bg-secondary` (`#161617`) — recommended
-- **Header / footer:** also `--bg-secondary` (or `--bg-primary` if you want subtle separation)
+- **Site background:** `--bg-primary` (`#070708`) — the deeper black, current choice across all sections
+- **Panel / card surfaces:** `--bg-secondary` (`#161617`) — used inside sections for board panels, chips, modules so they read as elevated above the page
+- **Header / footer:** `--bg-primary` to match the page
 - **Navbar height:** `~76px` (measured on live site, fixed-position)
 
 ---
@@ -94,7 +95,7 @@ Apply these in Webflow before publishing future embeds. Each is a 1-minute chang
 
 - [x] **Brand blue:** change `Accent Primary` from `#194bcd` to `#0047FF`
 - [ ] **Brand blue hover:** review whether `#3c6ce7` still works with the new blue, or pick a darker tone
-- [ ] **Site background:** standardise to `Neutral Secondary` (`#161617`) on all sections
+- [x] **Site background:** standardised on `Neutral Primary` (`#070708`) across all sections (intro, orbital, tailored). Panels inside sections still use `Neutral Secondary` for elevation contrast.
 - [ ] **Type scale:** consider bumping `base-font-size` from `1rem` to `1.125rem` (or `1.0625rem`) to address "fonts feel small" feedback. Will cascade to all embeds.
 - [x] **Add the alias block** to Project Settings → Custom Code → `<head>` (see `webflow/head-alias-block.css`)
 
@@ -106,7 +107,7 @@ Build order recommended by visual-system dependency:
 
 | # | Section | Status | Notes |
 |---|---|---|---|
-| 1 | **intro** (hero) | TODO | Big logo, main title, subtext, 3 KPIs. Sets the visual contract for the rest of the site. |
+| 1 | **intro** (hero) | DONE | Big logo, main title, subtext, 3 KPIs. Sets the visual contract for the rest of the site. |
 | 2 | **orbital** (six modules) | DONE (other chat) | TODO: port HTML to this repo |
 | 3 | **tailored** (use cases) | DONE (v10) | This file. |
 | 4 | **framework** (5-step explainer) | TODO | Includes deliverable examples |
@@ -155,6 +156,8 @@ git commit -m "Initial commit"
 
 Open in VS Code (`code .`). Install the **Live Server** extension. Right-click any HTML file → "Open with Live Server" to preview in a browser with hot reload.
 
+For a full-site scroll preview, open [`sections/dmc01-fullsite.html`](sections/dmc01-fullsite.html) — it loads the three section files as same-origin iframes, auto-sizes them to their content, and bridges the cross-section `dmc01:openModule` event so the tailored→orbital deep-link still works. Local-only; the live site uses Webflow Embeds, not iframes.
+
 ### Note on iCloud
 This repo lives in an iCloud-synced folder. Risks:
 - iCloud may evict files when storage is low. **Mitigation:** right-click the project folder → "Keep Downloaded".
@@ -182,6 +185,11 @@ Two surfaces:
 | Apr 2026 | Webflow AI-gen var separator is `--` between group and var-name, not `---` | Alias block patched; Pattern A vs B documented in `webflow/head-alias-block.css` header so it isn't relitigated |
 | Apr 2026 | Derived alphas (`--accent-primary-glow`, `--accent-primary-faint`) use `color-mix()` against `--accent-primary` | Auto-tracks Webflow brand-blue changes instead of drifting from a hard-coded hex |
 | Apr 2026 | Renamed `--accent-primary-grid` → `--brand-grid` | The grid colour is intentionally a different blue (`#4948C0`); old name implied derivation that didn't exist |
+| Apr 2026 | Site background flipped from `--bg-secondary` (#161617) to `--bg-primary` (#070708) on intro / orbital / tailored — section backgrounds use `var(--neutral-primary)` so the variable chain (and any future Webflow override) propagates. Panel surfaces inside sections still use `--bg-secondary` (#161617) so they read as elevated above the page. | User preferred the deeper black for the page background; the two-tier system (primary page, secondary panels) gives clearer visual hierarchy than the previous flat #161617. |
+| Apr 2026 | Intro hero v5: rails moved from y=32%/68% to y=22%/78% for more breathing room around the content. Feather-style icons reinstated on the KPIs but without the surrounding chip boxes — icons sit inline next to each label with hairline dividers between items. | v4's rail spacing was tight; pushing them out gives the text the visual headroom the user asked for. Icons on the KPIs add quick scannability without the visual weight of the boxed chips that were removed earlier. |
+| Apr 2026 | Intro hero v4: rails are *spindle polygons* (thick centre, thin tips) instead of constant-width lines. Logo dropped, tagline dropped, KPI chips replaced by inline labels with hairline dividers, new orchestration-layer description added. | The user wanted a 3D feel for the road and asked for elegant text-road integration. Spindle polygons give the rails mass at the centre (where the content sits) and recede to nothing at the far ends — that's the perspective cue without breaking parallelism. Boxed KPIs felt cluttered; inline labels with hairline separators are quieter and tie visually to the rails. |
+| Apr 2026 | Intro hero v3: two parallel angled rails framing the logo top/bottom, each rail's stroke is a linear gradient with a soft bell peak that sweeps end-to-end via SMIL `animateTransform` on `gradientTransform`. Counter-flow directions on the two rails. | v2 had crossed lines + 16 discrete flickering segments — wrong: the user wanted a road (parallel rails, not an X) with a smooth continuous brightness sweep, not a chopped-up flicker. Single moving gradient is geometrically what was asked for. Reset jump from translate(+80) → translate(-80) is invisible because the peak is past the rail's far edge at both endpoints. |
+| Apr 2026 | Intro hero: flux-capacitor pulse on the DMC01 mark (three tip-to-centre particles + breathing core halo) — REMOVED in v4 when the logo was taken out of the hero | Logo's three-prong topology was an obvious flux-capacitor analogue; tuned to "barely there" so the mark still read as a static identity |
 
 ---
 

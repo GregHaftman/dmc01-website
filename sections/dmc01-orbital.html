@@ -79,7 +79,10 @@
 
 body {
   font-family: var(--font);
-  background: var(--neutral-secondary);
+  /* Local-preview only; in Webflow the page background is set by the
+     parent. --neutral-primary resolves to var(--bg-primary, #070708)
+     so editing --bg-primary in Webflow propagates here. */
+  background: var(--neutral-primary);
   color: var(--white);
   min-height: 100vh;
   overflow-x: hidden;
@@ -104,8 +107,9 @@ body::before {
   width: 100vw;
   margin-left: calc(-50vw + 50%);
   padding: 56px 64px 72px;
-  /* Site-consistent dark surface (#161617) */
-  background: var(--neutral-secondary);
+  /* Darker surface (#070708) via the variable chain — overriding
+     --bg-primary in Webflow propagates here automatically. */
+  background: var(--neutral-primary);
 }
 
 /* Inner wrapper keeps title and lede readable on very wide screens */

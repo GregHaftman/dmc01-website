@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DMC01 — Data Monetisation Concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     DMC01 · Intro hero — "Data Monetisation Concept"
+
+     Atmosphere: a subtle BTTF homage. Faint horizontal road tracks
+     drift across the background, and a barely-perceptible flux pulse
+     runs through the three-prong DMC01 mark. Both effects are
+     intentionally low-contrast — content stays the focus.
+     ============================================================ */
+
+  :root {
+    /* All variables below reference Webflow's alias block (head-alias-block.css).
+       Fallbacks apply in dev preview when the alias block isn't loaded.
+       Keep fallbacks in sync with brand-tokens.css.
+       To change a value globally: edit Webflow → Variables, not this file. */
+
+    /* Brand */
+    --brand-blue:        var(--accent-primary, #0047FF);
+    --brand-blue-hover:  var(--accent-primary-hover, #3c6ce7);
+
+    /* Surfaces */
+    --neutral-primary:   var(--bg-primary, #070708);
+    --neutral-secondary: var(--bg-secondary, #161617);
+    --surface-3:         #1d1e22;
+
+    /* Typography — fonts */
+    --font:              var(--font-body, "Rajdhani", system-ui, sans-serif);
+
+    /* Typography — sizes (responsive via Webflow per-breakpoint values) */
+    --t-h1-size:      var(--h1-size, 5.65rem);
+    --t-h2-size:      var(--h2-size, 2.83rem);
+    --t-base-size:    var(--base-font-size, 1rem);
+    --t-lg-size:      var(--text-lg-size, 1.1rem);
+    --t-xl-size:      var(--text-xl-size, 1.2rem);
+    --t-eyebrow-size: var(--eyebrow-size, 0.8rem);
+
+    /* Typography — weights & line heights */
+    --w-h1:    var(--h1-weight, 600);
+    --w-base:  var(--base-font-weight, 400);
+    --w-bold:  var(--base-font-weight-bold, 600);
+    --lh-h1:   var(--h1-line-height, 1.04em);
+    --lh-base: var(--base-line-height, 1.6em);
+
+    /* Text */
+    --white:    var(--text-primary, #FFFFFF);
+    --white-72: rgba(255, 255, 255, 0.72);
+    --white-70: rgba(255, 255, 255, 0.70);
+    --white-50: rgba(255, 255, 255, 0.50);
+    --white-30: rgba(255, 255, 255, 0.30);
+    --white-15: var(--border-secondary, rgba(255, 255, 255, 0.15));
+
+    /* Brand-blue derived alphas */
+    --blue-glow:  var(--accent-primary-glow, rgba(0, 71, 255, 0.55));
+    --blue-faint: var(--accent-primary-faint, rgba(0, 71, 255, 0.10));
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--neutral-primary);
+    color: var(--white);
+    font-family: var(--font);
+    font-weight: var(--w-base);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ============================================================
+     SECTION FRAME
+     ============================================================ */
+  .intro-section {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    padding: clamp(72px, 10vh, 120px) 32px clamp(72px, 10vh, 120px);
+    background: var(--neutral-primary);
+    overflow: hidden;
+    isolation: isolate;
+    min-height: 88vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Soft vignette — pulls focus to the centred content */
+  .intro-section::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background: radial-gradient(ellipse 80% 60% at 50% 50%, transparent 30%, rgba(7, 7, 8, 0.55) 100%);
+  }
+
+  /* ----- ROAD RAILS BACKGROUND -----
+     Two parallel rails framing the content top/bottom. Each rail is
+     a *spindle polygon* — thick in the middle, tapering to a thin tip
+     at both edges. That's the 3D cue: the road has mass at the centre
+     (where the content sits) and recedes into the distance at both
+     ends. The polygon is filled by a linear gradient running along
+     the rail axis; the gradient has a soft bell peak that sweeps via
+     SMIL `animateTransform`. Counter-flow on the two rails. The peak
+     is past the polygon's far edge at both animation endpoints, so
+     the loop reset is invisible. */
+  .neon-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    /* Radial mask softens the rails' far horizontal edges. */
+    mask-image: radial-gradient(ellipse 85% 75% at 50% 50%, black 35%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 50%, black 35%, transparent 100%);
+  }
+
+  .neon-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    /* Halo follows fill alpha — bright peak blooms, dim baseline barely
+       glows. Drop-shadow lives in pixel space so the halo stays uniform
+       even though the SVG is non-uniformly stretched. */
+    filter: drop-shadow(0 0 6px rgba(0, 71, 255, 0.55));
+  }
+
+  /* All gradient stops share the brand colour; opacity varies per stop. */
+  .neon-svg stop { stop-color: var(--brand-blue); }
+
+  /* ============================================================
+     CONTENT
+     ============================================================ */
+  .section-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .intro-title {
+    font-size: clamp(3rem, 8vw, var(--t-h1-size));
+    font-weight: var(--w-h1);
+    line-height: var(--lh-h1);
+    letter-spacing: -0.02em;
+    color: var(--white);
+    max-width: 1100px;
+  }
+
+  .intro-description {
+    font-size: var(--t-xl-size);
+    font-weight: var(--w-base);
+    line-height: 1.55;
+    color: var(--white-72);
+    max-width: 640px;
+  }
+  .intro-description em {
+    font-style: normal;
+    color: var(--brand-blue);
+    font-weight: var(--w-bold);
+  }
+
+  /* ----- CREDIBILITY ROW (no boxes — icon + label, hairline dividers) ----- */
+  .cred-row {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    font-size: var(--t-base-size);
+    font-weight: 500;
+    color: var(--white-50);
+    line-height: 1.4;
+    margin-top: 8px;
+  }
+  .cred-row li {
+    position: relative;
+    padding: 0 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  /* Vertical hairline between items — feels architectural, ties to the rails. */
+  .cred-row li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: 0; top: 20%; bottom: 20%;
+    width: 1px;
+    background: var(--white-15);
+  }
+  .cred-icon {
+    width: 16px;
+    height: 16px;
+    stroke: var(--brand-blue);
+    fill: none;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+  }
+
+  /* Reduced motion — SMIL animations on the road SVG are paused via
+     JS in init(); nothing CSS-driven left to freeze here. */
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 720px) {
+    .intro-section { padding: 56px 20px; min-height: 80vh; }
+    .section-inner { gap: 18px; }
+    /* Stack KPI labels vertically on narrow viewports — dividers off. */
+    .cred-row { flex-direction: column; gap: 6px; }
+    .cred-row li { padding: 0; }
+    .cred-row li:not(:last-child)::after { display: none; }
+  }
+</style>
+</head>
+
+<body>
+
+<section class="intro-section" aria-label="DMC01 — Data Monetisation Concept">
+
+  <!-- Road rails: two parallel spindle polygons (thick mid, thin tips)
+       framing the content above and below. Each is filled by a
+       gradient whose bell peak sweeps along the rail axis via SMIL.
+       Counter-flow on rail A vs B. -->
+  <div class="neon-bg" aria-hidden="true">
+    <svg class="neon-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <defs>
+        <!-- Gradient axes match the rails' centre lines: A at y=32 (mid),
+             B at y=68 (mid). Translating ±80 in x slides the peak past
+             both polygon ends, so the loop reset is invisible. -->
+        <linearGradient id="introRailA" gradientUnits="userSpaceOnUse"
+                        x1="-5" y1="26" x2="105" y2="18">
+          <stop offset="0"    stop-opacity="0.05"/>
+          <stop offset="0.32" stop-opacity="0.05"/>
+          <stop offset="0.42" stop-opacity="0.30"/>
+          <stop offset="0.50" stop-opacity="0.85"/>
+          <stop offset="0.58" stop-opacity="0.30"/>
+          <stop offset="0.68" stop-opacity="0.05"/>
+          <stop offset="1"    stop-opacity="0.05"/>
+          <animateTransform attributeName="gradientTransform" type="translate"
+                            values="-80 0; 80 0" dur="9s" repeatCount="indefinite"/>
+        </linearGradient>
+        <linearGradient id="introRailB" gradientUnits="userSpaceOnUse"
+                        x1="-5" y1="82" x2="105" y2="74">
+          <stop offset="0"    stop-opacity="0.05"/>
+          <stop offset="0.32" stop-opacity="0.05"/>
+          <stop offset="0.42" stop-opacity="0.30"/>
+          <stop offset="0.50" stop-opacity="0.85"/>
+          <stop offset="0.58" stop-opacity="0.30"/>
+          <stop offset="0.68" stop-opacity="0.05"/>
+          <stop offset="1"    stop-opacity="0.05"/>
+          <animateTransform attributeName="gradientTransform" type="translate"
+                            values="80 0; -80 0" dur="11s" repeatCount="indefinite"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Spindle polygons. 14 vertices each: 7 along the top edge
+           (left → right) then 7 along the bottom edge (right → left).
+           Thickness profile is parabolic — peak 1.0 viewBox unit at
+           the centre, tapering to 0.2 at both ends. Centre lines now
+           run from (-5, 26)→(105, 18) and (-5, 82)→(105, 74) so the
+           rails sit at y≈22% and y≈78% — wider apart, more breathing
+           room around the content. Slope held at -0.073. -->
+      <polygon fill="url(#introRailA)"
+               points="-5,25.9 15,24.21 35,22.62 50,21.5 65,20.44 85,19.11 105,17.9 105,18.1 85,19.79 65,21.38 50,22.5 35,23.56 15,24.89 -5,26.1"/>
+      <polygon fill="url(#introRailB)"
+               points="-5,81.9 15,80.21 35,78.62 50,77.5 65,76.44 85,75.11 105,73.9 105,74.1 85,75.79 65,77.38 50,78.5 35,79.56 15,80.89 -5,82.1"/>
+    </svg>
+  </div>
+
+  <div class="section-inner">
+
+    <h1 class="intro-title">Data Monetisation Concept</h1>
+
+    <p class="intro-description">
+      DMC01 is the <em>orchestration layer</em> for monetising data assets — and charting the optimum route to market.
+    </p>
+
+    <ul class="cred-row">
+      <li>
+        <svg class="cred-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
+        </svg>
+        <span>15+ years sector expertise</span>
+      </li>
+      <li>
+        <svg class="cred-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 21V11M11 21V5M17 21v-9M3 21h18"/>
+        </svg>
+        <span>$7m ARR built from scratch</span>
+      </li>
+      <li>
+        <svg class="cred-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3L4 7v10l8 4 8-4V7l-8-4zM4 7l8 4 8-4M12 11v10"/>
+        </svg>
+        <span>Go-to-market strategy for data products</span>
+      </li>
+    </ul>
+
+  </div>
+</section>
+
+<script>
+(function() {
+  'use strict';
+
+  function init() {
+    const root = document.querySelector('.intro-section');
+    if (!root) {
+      console.error('[DMC01-intro] Could not find .intro-section.');
+      return;
+    }
+
+    /* prefers-reduced-motion: the gradient sweep runs on SMIL, which
+       needs an explicit pause (CSS animations are honoured by the UA). */
+    const prefersReduced = window.matchMedia
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) {
+      const svg = root.querySelector('.neon-svg');
+      if (svg && typeof svg.pauseAnimations === 'function') svg.pauseAnimations();
+    }
+
+    console.log('[DMC01-intro] Initialised.');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+</body>
+</html>

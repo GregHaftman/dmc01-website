@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DMC01 — Full site preview</title>
+
+<style>
+  /* ============================================================
+     LOCAL-PREVIEW ONLY
+
+     Stitches the three section embeds into one scrollable page via
+     same-origin iframes. Each iframe loads its standalone HTML file,
+     so every section keeps its own self-contained <style>+<script>
+     with zero cross-section CSS/JS conflicts. This mirrors how
+     Webflow loads each embed in its own context, and avoids the
+     duplicated `.section-inner` / `.eyebrow` / `.section-title`
+     rules colliding if we tried to inline all three.
+
+     Auto-sizing & a tiny event bridge below let the page behave like
+     a real continuous site. Open this file with Live Server.
+     ============================================================ */
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-primary, #070708);
+    color: #fff;
+    overflow-x: hidden;
+  }
+  iframe {
+    display: block;
+    width: 100%;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    /* Initial height; the script below resizes each iframe to fit
+       its actual content and tracks later layout changes. */
+    height: 100vh;
+  }
+</style>
+</head>
+<body>
+
+<iframe src="dmc01-intro.html"    title="DMC01 — Data Monetisation Concept" data-section="intro"></iframe>
+<iframe src="dmc01-orbital.html"  title="DMC01 — Specialised advisory"     data-section="orbital"></iframe>
+<iframe src="dmc01-tailored.html" title="DMC01 — Tailored to your context" data-section="tailored"></iframe>
+
+<script>
+(function() {
+  'use strict';
+
+  /* ============================================================
+     IFRAME AUTO-SIZE
+     Set each iframe's height to fit its content body, then a
+     ResizeObserver tracks later changes (e.g. tailored switching
+     case → chips animate; orbital "unfolds" a module → the rail
+     panel appears and the section grows). Same-origin only — fine
+     for Live Server's local serving.
+     ============================================================ */
+  function fit(iframe) {
+    const doc = iframe.contentDocument;
+    if (!doc || !doc.body) return;
+    const h = Math.max(
+      doc.body.scrollHeight,
+      doc.documentElement.scrollHeight
+    );
+    if (h && parseInt(iframe.style.height, 10) !== h) {
+      iframe.style.height = h + 'px';
+    }
+  }
+
+  const frames = Array.from(document.querySelectorAll('iframe'));
+  frames.forEach(function(iframe) {
+    iframe.addEventListener('load', function() {
+      fit(iframe);
+      /* Track later changes inside the section. */
+      try {
+        const ro = new ResizeObserver(function() { fit(iframe); });
+        ro.observe(iframe.contentDocument.body);
+      } catch (e) {
+        /* Fallback: poll every 500ms. */
+        setInterval(function() { fit(iframe); }, 500);
+      }
+      /* Also refit on viewport resize (clamp() padding etc. can shift heights). */
+      window.addEventListener('resize', function() { fit(iframe); });
+    });
+  });
+
+  /* ============================================================
+     CROSS-EMBED EVENT BRIDGE
+     Tailored fires `dmc01:openModule` on its OWN document when a
+     "Modules you'll lean on most" pill is clicked. In Webflow,
+     both embeds share one document, so orbital's listener catches
+     it directly. Here they're in separate iframe documents — so
+     the parent forwards the event from tailored's doc to orbital's
+     doc, then scrolls the orbital iframe into view.
+     ============================================================ */
+  function bridge() {
+    const tailored = document.querySelector('iframe[data-section="tailored"]');
+    const orbital  = document.querySelector('iframe[data-section="orbital"]');
+    if (!tailored || !orbital) return;
+    const td = tailored.contentDocument;
+    const od = orbital.contentDocument;
+    if (!td || !od) return;
+
+    td.addEventListener('dmc01:openModule', function(e) {
+      od.dispatchEvent(new CustomEvent('dmc01:openModule', { detail: e.detail }));
+      orbital.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  /* Both iframes need to be loaded before the bridge can attach. */
+  let loaded = 0;
+  ['tailored', 'orbital'].forEach(function(name) {
+    const f = document.querySelector('iframe[data-section="' + name + '"]');
+    if (!f) return;
+    f.addEventListener('load', function() {
+      loaded++;
+      if (loaded === 2) bridge();
+    });
+  });
+
+  console.log('[DMC01-fullsite] Preview shell loaded — 3 section iframes mounted.');
+})();
+</script>
+
+</body>
+</html>
