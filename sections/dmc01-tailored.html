@@ -72,7 +72,10 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: var(--neutral-secondary);
+    /* Local-preview only; in Webflow the page background is set by the
+       parent. --neutral-primary resolves to var(--bg-primary, #070708)
+       so editing --bg-primary in Webflow propagates here. */
+    background: var(--neutral-primary);
     color: var(--white);
     font-family: var(--font);
     font-weight: 400;
@@ -89,7 +92,9 @@
     width: 100vw;
     margin-left: calc(-50vw + 50%);
     padding: 56px 64px 72px;     /* tighter than v3 (was 80/120) */
-    background: var(--neutral-secondary);
+    /* Darker surface (#070708) via the variable chain — overriding
+       --bg-primary in Webflow propagates here automatically. */
+    background: var(--neutral-primary);
     overflow: hidden;
     isolation: isolate;
   }
