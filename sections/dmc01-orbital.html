@@ -554,7 +554,7 @@ body::before {
 </head>
 <body>
 
-<section class="section">
+<section class="section" id="dmc01-services">
   <div class="section-inner">
     <div class="header-grid">
       <div class="header-left">
@@ -1158,6 +1158,18 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && stage.classList.contains('unfolded')) {
     dismissUnfolded();
   }
+});
+
+/* External trigger: another embed (e.g. dmc01-tailored) can request a
+   specific module by dispatching `dmc01:openModule` with { detail: { id } }.
+   We always scroll the stage into view here — internal clicks already sit
+   on the stage, but external triggers usually originate from a section above. */
+document.addEventListener('dmc01:openModule', (e) => {
+  const id = e.detail && e.detail.id;
+  if (!id || !MODULES.find(m => m.id === id)) return;
+  setActiveModule(id);
+  const stageTop = stage.getBoundingClientRect().top + window.scrollY - 80;
+  window.scrollTo({ top: stageTop, behavior: 'smooth' });
 });
 
     console.log('[DMC01-orbital] Initialised.');
