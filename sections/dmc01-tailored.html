@@ -1017,8 +1017,14 @@
         const a = document.createElement('a');
         a.className = 'module-pill';
         a.style.animationDelay = (140 + i * 80) + 'ms';
-        a.href = '#services';
+        a.href = '#dmc01-services';
+        a.dataset.moduleId = id;
+        a.setAttribute('aria-label', 'Open module ' + MODULE_CODES[id] + ' — ' + MODULES[id]);
         a.innerHTML = '<span class="pill-num">' + MODULE_CODES[id] + '</span><span class="pill-name">' + MODULES[id] + '</span>';
+        a.addEventListener('click', function(e) {
+          e.preventDefault();
+          document.dispatchEvent(new CustomEvent('dmc01:openModule', { detail: { id: id } }));
+        });
         els.modulesList.appendChild(a);
       });
     }
