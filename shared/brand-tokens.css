@@ -1,0 +1,142 @@
+/* =====================================================================
+   DMC01 — Local brand tokens (dev fallback)
+   =====================================================================
+
+   PURPOSE
+   When you open a section HTML file outside Webflow (e.g. via Live Server
+   in VS Code), the Webflow-injected CSS variables don't exist. This file
+   defines local fallbacks with the same names so embeds render correctly
+   in dev preview.
+
+   IMPORTANT
+   - On the live Webflow site, this file is NOT loaded. Webflow's
+     <head> alias block (webflow/head-alias-block.css) provides the same
+     variable names from Webflow's actual values.
+   - Keep this file in sync with Webflow values. If you change a colour
+     in Webflow, also change it here so dev preview stays accurate.
+   - Hex values below match Webflow as of Apr 2026.
+
+   HOW TO USE IN AN EMBED
+   Add this line at the very top of the embed's <style> block:
+     @import url('../shared/brand-tokens.css');
+
+   …or inline-link via <link rel="stylesheet" href="..."> in the file's
+   <head>.
+
+   For section files that are embedded (not opened standalone), this file
+   is irrelevant — Webflow's alias block does the work.
+   ===================================================================== */
+
+:root {
+  /* ───── BACKGROUNDS ───── */
+  --bg-primary:        #070708;     /* deepest base */
+  --bg-secondary:      #161617;     /* recommended site bg */
+  --bg-accent-primary: #0047FF;     /* CTAs, accent surfaces */
+  --bg-inverse:        #FFFFFF;
+
+  /* ───── ACCENTS ───── */
+  --accent-primary:       #0047FF;  /* Brand Blue (CANONICAL) */
+  --accent-primary-hover: #3c6ce7;  /* TODO: review pairing with #0047FF */
+  --accent-secondary:     transparent;
+
+  /* ───── NEUTRALS ───── */
+  --neutral-primary:   #070708;
+  --neutral-secondary: #161617;
+  --neutral-inverse:   #FFFFFF;
+
+  /* ───── TINTS ───── */
+  --tint-neutral-primary-a10: rgba(7, 7, 8, 0.10);
+  --tint-neutral-primary-a20: rgba(7, 7, 8, 0.20);
+  --tint-neutral-inverse-a20: rgba(255, 255, 255, 0.20);
+
+  /* ───── TEXT ───── */
+  --text-primary:           #FFFFFF;
+  --text-secondary:         rgba(255, 255, 255, 0.72);
+  --text-inverse-primary:   #070708;
+  --text-inverse-secondary: rgba(7, 7, 8, 0.60);
+  --text-on-accent-primary: #FFFFFF;
+
+  /* ───── BORDERS ───── */
+  --border-secondary: rgba(255, 255, 255, 0.20);
+
+  /* ───── TYPOGRAPHY: FONTS ───── */
+  --font-body:    "Rajdhani", system-ui, sans-serif;
+  --font-heading: "Rajdhani", system-ui, sans-serif;
+  --font-button:  "Rajdhani", system-ui, sans-serif;
+
+  /* ───── TYPOGRAPHY: SIZES (desktop values; on Webflow these are responsive) ───── */
+  /* For dev preview these are static. Live site applies per-breakpoint values
+     via Webflow. If "fonts feel small" feedback applies, bump --base-font-size
+     here AND in Webflow's Typography panel. */
+  --base-font-size:        1rem;     /* 16px */
+  --base-font-weight:      400;
+  --base-font-weight-bold: 600;
+  --base-line-height:      1.6em;
+  --base-letter-spacing:   0em;
+
+  --h0-size:           7.99rem;     /* desktop ~128px; mobile ~65px */
+  --h0-weight:         700;
+  --h0-line-height:    1.04em;
+  --h0-letter-spacing: 0.01em;
+
+  --h1-size:           5.65rem;     /* desktop ~90px; mobile ~46px */
+  --h1-weight:         600;
+  --h1-line-height:    1.04em;
+  --h1-letter-spacing: 0.01em;
+
+  --h2-size:           2.83rem;     /* desktop ~45px; mobile ~23px */
+  --h2-weight:         600;
+  --h2-line-height:    1.04em;
+
+  --h3-size:           1.02rem;
+  --h3-weight:         500;
+
+  --h4-size:           1.03rem;
+  --h4-weight:         500;
+
+  --text-xxl-size: 1.4rem;
+  --text-xl-size:  1.2rem;
+  --text-lg-size:  1.1rem;
+  --text-sm-size:  1rem;
+
+  --eyebrow-size:           0.8rem;
+  --eyebrow-line-height:    1.3em;
+  --eyebrow-letter-spacing: 0.01em;
+
+  /* ───── DERIVED ALPHAS (component states) ───── */
+  --accent-primary-glow:  rgba(0, 71, 255, 0.55);   /* shadow / glow */
+  --accent-primary-faint: rgba(0, 71, 255, 0.10);   /* hover fills, gradients */
+  --accent-primary-grid:  rgba(73, 72, 192, 0.04);  /* faint background grid */
+
+  /* ───── SURFACES (derived elevation tier — used by chips, pills, etc.) ───── */
+  --surface-elevated: #1d1e22;   /* tier above bg-secondary */
+
+  /* ───── COMMON COMPONENT TOKENS (extracted from tailored / orbital) ───── */
+
+  /* Borders & radii */
+  --border-radius-sm:  2px;     /* chips, pills, panels */
+  --border-radius-md:  4px;     /* board panels */
+  --border-radius-lg:  8px;     /* (reserved) */
+
+  /* Spacing scale (informal — matches what's been used so far) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Easing curves used across animations */
+  --ease-out-soft:  cubic-bezier(0.2, 0.8, 0.2, 1);   /* chip-in, pill-in */
+  --ease-out-snap:  cubic-bezier(0.2, 0.7, 0.2, 1);   /* rail padding shift */
+  --ease-in-out:    cubic-bezier(0.4, 0.1, 0.3, 1);   /* star transitions */
+
+  /* Section padding (full-bleed sections) */
+  --section-padding-y: 56px;
+  --section-padding-x: 64px;
+
+  /* Navbar height (for above-the-fold calculations) */
+  --navbar-height: 76px;
+}

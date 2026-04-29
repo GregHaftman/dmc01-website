@@ -1,0 +1,34 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+
+# iCloud sync artefacts
+.icloud
+*.icloud
+.iCloud
+.tmp.driveupload
+.tmp.drivedownload
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS junk
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Node (if anything is added later)
+node_modules/
+npm-debug.log
+.npm
+
+# Backup / temp files
+*.bak
+*.backup
+*.orig

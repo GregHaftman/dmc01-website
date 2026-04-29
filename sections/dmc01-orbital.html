@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DMC01 — Six Modules</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* All variables below reference Webflow's alias block (head-alias-block.css).
+     The fallback after the comma applies in dev preview when the alias block
+     isn't loaded. To change a value globally: edit Webflow → Variables. */
+
+  /* Brand */
+  --brand-blue:        var(--accent-primary, #0047FF);
+  --brand-blue-hover:  var(--accent-primary-hover, #3c6ce7);
+
+  /* Surfaces */
+  --neutral-primary:   var(--bg-primary, #070708);
+  --neutral-secondary: var(--bg-secondary, #161617);
+  --surface-3:         #1d1e22; /* derived elevation tier — local-only */
+
+  /* Typography — fonts */
+  --font:              var(--font-body, "Rajdhani", system-ui, sans-serif);
+
+  /* Typography — sizes (responsive via Webflow per-breakpoint values) */
+  --t-h1-size:    var(--h1-size, 5.65rem);
+  --t-h2-size:    var(--h2-size, 2.83rem);
+  --t-h3-size:    var(--h3-size, 1.02rem);
+  --t-base-size:  var(--base-font-size, 1rem);
+  --t-lg-size:    var(--text-lg-size, 1.1rem);
+  --t-xl-size:    var(--text-xl-size, 1.2rem);
+  --t-xxl-size:   var(--text-xxl-size, 1.4rem);
+  --t-eyebrow-size: var(--eyebrow-size, 0.8rem);
+
+  /* Typography — weights */
+  --w-h1:        var(--h1-weight, 600);
+  --w-h2:        var(--h2-weight, 600);
+  --w-base:      var(--base-font-weight, 400);
+  --w-bold:      var(--base-font-weight-bold, 600);
+
+  /* Typography — line heights */
+  --lh-h1:       var(--h1-line-height, 1.04em);
+  --lh-h2:       var(--h2-line-height, 1.04em);
+  --lh-base:     var(--base-line-height, 1.6em);
+
+  /* Text */
+  --white:    var(--text-primary, #FFFFFF);
+  --white-72: rgba(255, 255, 255, 0.72);
+  --white-70: rgba(255, 255, 255, 0.70);
+  --white-50: rgba(255, 255, 255, 0.50);
+  --white-30: rgba(255, 255, 255, 0.30);
+  --white-15: var(--border-secondary, rgba(255, 255, 255, 0.15));
+
+  /* Brand-blue derived alphas (for component states) */
+  --blue-glow:    var(--accent-primary-glow, rgba(0, 71, 255, 0.55));
+  --blue-faint:   var(--accent-primary-faint, rgba(0, 71, 255, 0.10));
+  --blue-grid:    var(--accent-primary-grid, rgba(73, 72, 192, 0.04));
+  --blue-grid-hi: rgba(73, 72, 192, 0.07);
+
+  /* Local-only — not in Webflow scale. Used for component UI atoms
+     (orbital module labels, rail item titles, buttons). These are
+     intentionally outside the responsive H1/H2/body scale because they're
+     fixed-size UI furniture, not prose. */
+  --ui-label-sm:  12px;
+  --ui-label-md:  14px;
+  --ui-title-sm:  15px;
+
+  /* Local — Figma report tokens used inside report-themed visuals */
+  --icon-blue:    #194BCD;
+  --dark-grey:    #393939;
+  --medium-grey:  #999999;
+  --light-grey:   #F0F0F5;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--neutral-secondary);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(25, 75, 205, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(25, 75, 205, 0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.section {
+  position: relative;
+  z-index: 1;
+  /* Break out of any parent container — span the full viewport */
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  padding: 56px 64px 72px;
+  /* Site-consistent dark surface (#161617) */
+  background: var(--neutral-secondary);
+}
+
+/* Inner wrapper keeps title and lede readable on very wide screens */
+.section-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  font-size: var(--t-eyebrow-size);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--brand-blue);
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: var(--t-h1-size);
+  font-weight: var(--w-h1);
+  line-height: var(--lh-h1);
+  letter-spacing: -0.02em;
+  margin-bottom: 28px;
+  max-width: 1100px;
+}
+
+.section-title em { font-style: normal; color: var(--brand-blue); }
+
+.section-lede {
+  font-size: var(--t-lg-size);
+  font-weight: var(--w-base);
+  line-height: var(--lh-base);
+  color: var(--white-70);
+  max-width: 520px;
+}
+
+.section-lede em {
+  font-style: italic;
+  color: var(--white);
+}
+
+/* Side-by-side header — title on the left, lede on the right */
+.header-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: clamp(40px, 6vw, 96px);
+  align-items: end;
+  margin-bottom: 48px;
+}
+
+.header-left { min-width: 0; }
+.header-right { min-width: 0; }
+
+@media (max-width: 800px) {
+  .header-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+}
+
+/* Closing line beneath the orbital — reflective bookend */
+.closing-line {
+  margin: 64px auto 0;
+  padding-top: 40px;
+  border-top: 1px solid rgba(25, 75, 205, 0.2);
+  text-align: center;
+  max-width: 1400px;
+}
+
+.closing-line-eyebrow {
+  font-size: var(--t-eyebrow-size);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--brand-blue);
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.closing-line-text {
+  font-size: var(--t-xl-size);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--white-72);
+  margin: 0 auto;
+}
+
+@media (min-width: 900px) {
+  .closing-line-text {
+    white-space: nowrap;
+  }
+}
+
+.closing-line-text em {
+  font-style: normal;
+  color: var(--brand-blue);
+  font-weight: 600;
+}
+
+/* ==========================================================
+   STAGE — taller now to accommodate larger modules
+   ========================================================== */
+.stage {
+  position: relative;
+  min-height: 720px;
+  max-width: 1700px;
+  margin: 0 auto;
+}
+
+.reset-btn {
+  display: block;
+  width: 100%;
+  font-family: var(--font);
+  font-size: var(--ui-label-sm);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 12px 20px;
+  margin-bottom: 16px;
+  border: 1px solid var(--white-15);
+  background: var(--neutral-secondary);
+  color: var(--white);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.stage.unfolded .reset-btn { opacity: 1; pointer-events: auto; }
+.reset-btn:hover { border-color: var(--brand-blue); background: rgba(0, 71, 255, 0.1); }
+
+/* ==========================================================
+   ORBITAL CONTAINER
+   ========================================================== */
+.orbital {
+  position: relative;
+  width: 100%;
+  height: 720px;
+  transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.stage.unfolded .orbital {
+  opacity: 0;
+  transform: scale(0.92);
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+/* Atmospheric storm field — sits behind everything */
+.storm-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+/* The orbit lines + bonds + pulses */
+.orbital-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ==========================================================
+   CENTRE — logo + soft glow
+   ========================================================== */
+.orbital-centre {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+  z-index: 4;
+  width: 360px;
+}
+
+.centre-logo-wrap {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Soft glow halo behind the logo — the "eye of the storm" */
+.centre-logo-wrap::before {
+  content: '';
+  position: absolute;
+  inset: -40px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 71, 255, 0.25) 0%, rgba(0, 71, 255, 0.08) 40%, transparent 70%);
+  animation: centreHalo 4s ease-in-out infinite;
+}
+
+@keyframes centreHalo {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50%      { transform: scale(1.15); opacity: 1; }
+}
+
+.centre-logo-wrap::after {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 71, 255, 0.35);
+  animation: centreRing 4s ease-out infinite;
+}
+
+@keyframes centreRing {
+  0%   { transform: scale(0.85); opacity: 1; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+.centre-logo {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+  /* Subtle white-on-dark inversion via filter, plus a soft drop shadow */
+  filter: drop-shadow(0 0 12px rgba(0, 71, 255, 0.45));
+}
+
+.centre-logo svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* The logo's stroke: override black to white at appropriate weight */
+.centre-logo svg polyline {
+  stroke: var(--white);
+  stroke-width: 14px; /* slightly heavier so it reads at this size */
+}
+
+/* ==========================================================
+   MODULE NODES — significantly more prominent
+   ========================================================== */
+.node {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 340px;
+  margin-left: -170px;
+  margin-top: -80px;
+  cursor: pointer;
+  z-index: 3;
+  text-align: center;
+  transition: opacity 0.4s ease;
+  will-change: transform;
+}
+
+.node-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, var(--neutral-secondary) 0%, var(--neutral-primary) 100%);
+  border: 2px solid rgba(25, 75, 205, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+  position: relative;
+  transition: all 0.4s ease;
+  box-shadow: 0 0 24px rgba(0, 71, 255, 0.18);
+}
+
+.node:hover .node-circle {
+  border-color: var(--brand-blue);
+  background: radial-gradient(circle at 30% 30%, #1a1f3a 0%, var(--neutral-secondary) 100%);
+  transform: scale(1.1);
+  box-shadow: 0 0 40px rgba(0, 71, 255, 0.6);
+}
+
+.node-icon {
+  width: 34px;
+  height: 34px;
+  color: var(--brand-blue);
+}
+
+.node-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.node-num {
+  display: none;
+}
+
+.node-title {
+  font-size: var(--t-xl-size);
+  font-weight: var(--w-bold);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--white);
+  transition: color 0.3s ease;
+  white-space: nowrap;
+  /* Faint dark glow behind the text for legibility against the storm */
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6), 0 0 12px rgba(7, 7, 8, 0.8);
+}
+
+.node:hover .node-title { color: var(--brand-blue); }
+
+.orbital.has-hover .node:not(:hover) { opacity: 0.3; }
+
+/* ==========================================================
+   UNFOLDED VIEW (unchanged)
+   ========================================================== */
+.unfolded-view {
+  display: none;
+  position: relative;
+  opacity: 0;
+  transition: opacity 0.6s ease 0.3s;
+}
+
+.stage.unfolded .unfolded-view {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 32px;
+  align-items: start;
+  opacity: 1;
+}.hero-panel {
+  border: 1px solid var(--brand-blue);
+  background: linear-gradient(135deg, var(--neutral-secondary) 0%, #1a1f3a 100%);
+  padding: 32px 36px;
+  position: relative;
+  box-shadow: 0 0 60px rgba(0, 71, 255, 0.25);
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0, 71, 255, 0.0) 0%, rgba(0, 71, 255, 0.18) 100%);
+  pointer-events: none;
+}
+
+.hero-head { display: flex; justify-content: flex-end; align-items: flex-start; margin-bottom: 8px; position: relative; z-index: 1; }
+.hero-icon { width: 40px; height: 40px; color: var(--brand-blue); }
+.hero-icon svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.hero-eyebrow { font-size: var(--t-eyebrow-size); letter-spacing: 0.25em; text-transform: uppercase; color: var(--white-50); font-weight: 600; margin-bottom: 4px; position: relative; z-index: 1; }
+.hero-title { font-size: var(--t-xxl-size); font-weight: var(--w-h2); line-height: var(--lh-h2); letter-spacing: -0.01em; margin-bottom: 16px; position: relative; z-index: 1; }
+.hero-paragraph { font-size: var(--t-base-size); line-height: var(--lh-base); color: var(--white-72); font-weight: var(--w-base); max-width: 720px; margin-bottom: 22px; position: relative; z-index: 1; }
+
+/* Horizontal two-column layout: chart preview | deliverables list */
+.deliverables-block {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 28px;
+  margin-bottom: 0;
+  position: relative;
+  z-index: 1;
+  align-items: stretch;
+}
+
+@media (max-width: 900px) {
+  .deliverables-block {
+    grid-template-columns: 1fr;
+  }
+}
+
+.preview-block { background: var(--neutral-secondary); border: 1px solid rgba(25, 75, 205, 0.3); padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+.preview-label { font-size: var(--t-eyebrow-size); letter-spacing: 0.25em; text-transform: uppercase; color: var(--white-50); font-weight: 600; }
+.preview-content { flex: 1; display: flex; align-items: center; justify-content: center; }
+.preview-content svg { width: 100%; height: auto; max-height: 280px; }
+
+.deliverables-list-wrap { display: flex; flex-direction: column; }
+.deliverables-list-wrap .preview-label {
+  font-size: var(--t-eyebrow-size);
+  letter-spacing: 0.3em;
+  margin-bottom: 18px;
+}
+.deliverables-list { list-style: none; display: flex; flex-direction: column; gap: 16px; position: relative; z-index: 1; }
+.deliverables-list li { font-size: var(--t-base-size); font-weight: var(--w-base); color: var(--white-72); line-height: var(--lh-base); padding-left: 18px; position: relative; }
+.deliverables-list li::before { content: ''; position: absolute; left: 0; top: 11px; width: 10px; height: 1px; background: var(--brand-blue); }
+
+.rail-item { border: 1px solid rgba(25, 75, 205, 0.3); background: var(--neutral-secondary); padding: 16px 20px; display: flex; align-items: center; gap: 14px; cursor: pointer; opacity: 0.55; transition: all 0.3s ease; margin-bottom: 12px; }
+.rail-item:hover { opacity: 1; border-color: var(--brand-blue); }
+
+/* Active rail item — visually marked, click is a no-op */
+.rail-item.is-active {
+  opacity: 1;
+  border-color: var(--brand-blue);
+  background: linear-gradient(135deg, var(--neutral-secondary) 0%, rgba(0, 71, 255, 0.18) 100%);
+  cursor: default;
+  box-shadow: inset 3px 0 0 var(--brand-blue);
+}
+.rail-item.is-active:hover {
+  /* Don't change anything on hover — it's already active */
+  border-color: var(--brand-blue);
+}
+.rail-item.is-active .rail-item-title { color: var(--brand-blue); }
+.rail-item-head { flex-shrink: 0; display: flex; flex-direction: column; gap: 6px; }
+.rail-item-num { display: none; }
+.rail-item-icon { width: 22px; height: 22px; color: var(--brand-blue); }
+.rail-item-icon svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.rail-item-title { font-size: var(--t-base-size); font-weight: var(--w-bold); line-height: 1.15; letter-spacing: -0.005em; }
+
+@media (max-width: 1000px) {
+  .section { padding: 48px 20px 80px; }
+  .stage { min-height: auto; }
+  .orbital { height: auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 24px 0; }
+  .orbital-svg, .orbital-centre, .storm-svg { display: none; }
+  .node {
+    position: relative;
+    top: auto !important;
+    left: auto !important;
+    margin: 0;
+    width: 100%;
+    transform: none !important;
+  }
+  .reset-btn { display: none; }
+  .stage.unfolded .unfolded-view { grid-template-columns: 1fr; }
+  .hero-panel { padding: 24px; min-height: auto; }
+  .deliverables-block { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<section class="section">
+  <div class="section-inner">
+    <div class="header-grid">
+      <div class="header-left">
+        <div class="eyebrow">Specialised Advisory</div>
+        <h1 class="section-title">Specialised advisory <em>and execution.</em></h1>
+      </div>
+      <div class="header-right">
+        <p class="section-lede">Expert guidance for data vendors, fintechs, and institutions. Unlock new revenue streams, optimise go-to-market, and scale your data business with proven, hands-on strategy. The modules below are tailored to the maturity of your data products and the ambition you have to develop your offering.</p>
+      </div>
+    </div>
+  </div><!-- /.section-inner header -->
+
+  <div class="stage" id="stage">
+
+    <div class="orbital" id="orbital">
+
+      <!-- ============ STORM FIELD (atmospheric backdrop) ============ -->
+      <svg class="storm-svg" id="stormSvg" viewBox="0 0 1200 720" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <!-- Turbulent noise pattern with slow drift -->
+          <filter id="storm" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="3" result="turb">
+              <animate attributeName="baseFrequency" dur="22s" values="0.012;0.018;0.012" repeatCount="indefinite"/>
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="turb" scale="60" />
+            <feGaussianBlur stdDeviation="22"/>
+          </filter>
+
+          <radialGradient id="stormCore" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stop-color="#194BCD" stop-opacity="0.55"/>
+            <stop offset="35%" stop-color="#0047FF" stop-opacity="0.22"/>
+            <stop offset="70%" stop-color="#194BCD" stop-opacity="0.08"/>
+            <stop offset="100%" stop-color="#070708" stop-opacity="0"/>
+          </radialGradient>
+
+          <!-- Faint streaks suggesting motion in the storm -->
+          <linearGradient id="streakGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#194BCD" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#194BCD" stop-opacity="0.18"/>
+            <stop offset="100%" stop-color="#194BCD" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Layer 1: turbulent core that gets distorted -->
+        <g filter="url(#storm)">
+          <ellipse cx="600" cy="360" rx="500" ry="320" fill="url(#stormCore)"/>
+        </g>
+
+        <!-- Layer 2: faint drifting streaks (rotating slowly) -->
+        <g opacity="0.35">
+          <g style="transform-origin: 600px 360px; animation: stormSpin 90s linear infinite;">
+            <ellipse cx="600" cy="360" rx="380" ry="60" fill="url(#streakGrad)"/>
+          </g>
+          <g style="transform-origin: 600px 360px; animation: stormSpinReverse 120s linear infinite;">
+            <ellipse cx="600" cy="360" rx="320" ry="40" fill="url(#streakGrad)" transform="rotate(40 600 360)"/>
+          </g>
+          <g style="transform-origin: 600px 360px; animation: stormSpin 150s linear infinite;">
+            <ellipse cx="600" cy="360" rx="260" ry="30" fill="url(#streakGrad)" transform="rotate(75 600 360)"/>
+          </g>
+        </g>
+      </svg>
+
+      <style>
+        @keyframes stormSpin {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
+        @keyframes stormSpinReverse {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(-360deg); }
+        }
+      </style>
+
+      <!-- ============ ORBITAL SVG (orbits, bonds, pulses) ============ -->
+      <svg class="orbital-svg" id="orbitalSvg" viewBox="0 0 1200 720" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <filter id="pulseGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <filter id="strongGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <g id="orbits"></g>
+        <g id="pulses"></g>
+      </svg>
+
+      <!-- ============ CENTRE — DMC01 LOGO ONLY ============ -->
+      <div class="orbital-centre">
+        <div class="centre-logo-wrap">
+          <div class="centre-logo">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 595.28 595.28">
+              <polyline fill="none" stroke="#070708" stroke-miterlimit="10" stroke-width="10"
+                points="297.17 265.57 417.4 148.9 177.87 148.9 297.19 479.32 297.17 265.57 177.87 148.9"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ MODULE NODES ============ -->
+      <div class="node" data-module="01">
+        <div class="node-circle"><div class="node-icon">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div></div>
+        <div class="node-num">01</div>
+        <div class="node-title">Rights &amp; Licensing Framework</div>
+      </div>
+
+      <div class="node" data-module="02">
+        <div class="node-circle"><div class="node-icon">
+          <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div></div>
+        <div class="node-num">02</div>
+        <div class="node-title">Monetisation Model &amp; Pricing</div>
+      </div>
+
+      <div class="node" data-module="03">
+        <div class="node-circle"><div class="node-icon">
+          <svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+        </div></div>
+        <div class="node-num">03</div>
+        <div class="node-title">Product Direction &amp; Roadmap</div>
+      </div>
+
+      <div class="node" data-module="04">
+        <div class="node-circle"><div class="node-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </div></div>
+        <div class="node-num">04</div>
+        <div class="node-title">Value Strategy &amp; Enablement</div>
+      </div>
+
+      <div class="node" data-module="05">
+        <div class="node-circle"><div class="node-icon">
+          <svg viewBox="0 0 24 24"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        </div></div>
+        <div class="node-num">05</div>
+        <div class="node-title">Offer Design &amp; Packaging</div>
+      </div>
+
+      <div class="node" data-module="06">
+        <div class="node-circle"><div class="node-icon">
+          <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </div></div>
+        <div class="node-num">06</div>
+        <div class="node-title">Distribution &amp; Delivery Architecture</div>
+      </div>
+
+    </div>
+
+    <div class="unfolded-view" id="unfoldedView">
+      <div class="hero-panel" id="heroPanel"></div>
+      <div class="rail-column">
+        <button class="reset-btn" id="resetBtn">↻ Back to DMC01</button>
+        <div class="rail" id="rail"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Closing line — a reflective bookend after the system stops dancing -->
+  <div class="closing-line">
+    <div class="closing-line-eyebrow">Why this matters</div>
+    <p class="closing-line-text">Great things are built by people <em>fascinated</em> with how they work.</p>
+  </div>
+
+</section>
+
+<script>
+/* IIFE + DOMContentLoaded for Webflow embed compatibility.
+   All DOM lookups are scoped to `root` (the .section container) so multiple
+   embeds on the same page can't collide. */
+(function() {
+  'use strict';
+  function init() {
+    const root = document.querySelector('.section');
+    if (!root) return;
+
+/* ============ MODULE DATA ============
+   Note on colours inside `preview` SVGs: these are *illustrative
+   replicas* of static client deliverables (chart screenshots, matrices).
+   They keep their original calibrated hex values (#0047FF, #194BCD, etc.)
+   on purpose — they're content, not chrome. The orbital's chrome
+   (storm gradient, pulses, ellipses) reads from CSS variables and
+   responds to Webflow overrides; these embedded illustrations don't. */
+const MODULES = [
+  {
+    id: '01', code: 'MDL-LSG', title: 'Rights &amp; Licensing Framework', eyebrow: 'Module One',
+    icon: '<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+    paragraph: 'Advisory and review of MSAs, order forms, and commercial terms governing data licensing and delivery. Aligns contractual language with monetisation best practice — including modern use cases such as API distribution, downstream redistribution, and AI-driven applications with clearly defined permissioning tiers.',
+    reportTitle: 'Licensing Framework Review', previewLabel: 'Permissioning Tier Matrix',
+    preview: `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="320" height="28" fill="#393939"/><text x="12" y="18" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="10">USE CASE</text><text x="120" y="18" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="10">INTERNAL</text><text x="190" y="18" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="10">REDISTRIB.</text><text x="265" y="18" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="10">AI / LLM</text><rect x="0" y="28" width="320" height="32" fill="#F0F0F5"/><text x="12" y="48" fill="#393939" font-family="Rajdhani" font-size="10">Direct viewing</text><circle cx="138" cy="44" r="6" fill="#0047FF"/><circle cx="208" cy="44" r="6" fill="#999999" opacity="0.4"/><circle cx="278" cy="44" r="6" fill="#999999" opacity="0.4"/><rect x="0" y="60" width="320" height="32" fill="#FFFFFF"/><text x="12" y="80" fill="#393939" font-family="Rajdhani" font-size="10">Derived works</text><circle cx="138" cy="76" r="6" fill="#0047FF"/><circle cx="208" cy="76" r="6" fill="#0047FF"/><circle cx="278" cy="76" r="6" fill="#999999" opacity="0.4"/><rect x="0" y="92" width="320" height="32" fill="#F0F0F5"/><text x="12" y="112" fill="#393939" font-family="Rajdhani" font-size="10">API distribution</text><circle cx="138" cy="108" r="6" fill="#0047FF"/><circle cx="208" cy="108" r="6" fill="#194BCD"/><circle cx="278" cy="108" r="6" fill="#999999" opacity="0.4"/><rect x="0" y="124" width="320" height="32" fill="#FFFFFF"/><text x="12" y="144" fill="#393939" font-family="Rajdhani" font-size="10">Model training</text><circle cx="138" cy="140" r="6" fill="#194BCD"/><circle cx="208" cy="140" r="6" fill="#999999" opacity="0.4"/><circle cx="278" cy="140" r="6" fill="#0047FF"/><rect x="0" y="156" width="320" height="32" fill="#F0F0F5"/><text x="12" y="176" fill="#393939" font-family="Rajdhani" font-size="10">Inference / RAG</text><circle cx="138" cy="172" r="6" fill="#0047FF"/><circle cx="208" cy="172" r="6" fill="#194BCD"/><circle cx="278" cy="172" r="6" fill="#0047FF"/><circle cx="12" cy="212" r="5" fill="#0047FF"/><text x="22" y="216" fill="#FFFFFF" font-family="Rajdhani" font-size="9" opacity="0.7">Permitted</text><circle cx="92" cy="212" r="5" fill="#194BCD"/><text x="102" y="216" fill="#FFFFFF" font-family="Rajdhani" font-size="9" opacity="0.7">Conditional</text><circle cx="180" cy="212" r="5" fill="#999999" opacity="0.4"/><text x="190" y="216" fill="#FFFFFF" font-family="Rajdhani" font-size="9" opacity="0.7">Restricted</text></svg>`,
+    deliverables: ['MSA &amp; order form clause review with redline recommendations','AI-use permissioning matrix across data tiers','Redistribution &amp; downstream use framework','Audit-ready entitlement model']
+  },
+  {
+    id: '02', code: 'MDL-COM', title: 'Monetisation Model &amp; Pricing', eyebrow: 'Module Two',
+    icon: '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>',
+    paragraph: 'Design and assessment of pricing frameworks and commercial models — seat-based, usage-based, enterprise, embedded. Aligns pricing with packaging, segmentation, and real client workflows, ensuring models scale as customer utilisation and value creation evolve.',
+    reportTitle: 'Monetisation Model &amp; Pricing', previewLabel: 'ARR Projection by Pricing Model',
+    preview: `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg"><line x1="40" y1="20" x2="40" y2="200" stroke="#999999" stroke-width="1" opacity="0.4"/><line x1="40" y1="200" x2="310" y2="200" stroke="#999999" stroke-width="1" opacity="0.4"/><text x="32" y="24" text-anchor="end" fill="#999999" font-family="Rajdhani" font-size="9">$10M</text><text x="32" y="84" text-anchor="end" fill="#999999" font-family="Rajdhani" font-size="9">$6M</text><text x="32" y="144" text-anchor="end" fill="#999999" font-family="Rajdhani" font-size="9">$2M</text><text x="32" y="204" text-anchor="end" fill="#999999" font-family="Rajdhani" font-size="9">$0</text><rect x="60" y="170" width="22" height="30" fill="#999999" opacity="0.5"/><rect x="84" y="160" width="22" height="40" fill="#194BCD"/><rect x="108" y="150" width="22" height="50" fill="#0047FF"/><rect x="160" y="140" width="22" height="60" fill="#999999" opacity="0.5"/><rect x="184" y="115" width="22" height="85" fill="#194BCD"/><rect x="208" y="90" width="22" height="110" fill="#0047FF"/><rect x="260" y="100" width="22" height="100" fill="#999999" opacity="0.5"/><rect x="284" y="60" width="14" height="140" fill="#194BCD"/><rect x="300" y="30" width="14" height="170" fill="#0047FF"/><text x="95" y="218" text-anchor="middle" fill="#999999" font-family="Rajdhani" font-size="10">YEAR 1</text><text x="195" y="218" text-anchor="middle" fill="#999999" font-family="Rajdhani" font-size="10">YEAR 2</text><text x="295" y="218" text-anchor="middle" fill="#999999" font-family="Rajdhani" font-size="10">YEAR 3</text><rect x="40" y="232" width="10" height="6" fill="#999999" opacity="0.5"/><text x="54" y="237" fill="#FFFFFF" font-family="Rajdhani" font-size="9" opacity="0.7">Seat</text><rect x="100" y="232" width="10" height="6" fill="#194BCD"/><text x="114" y="237" fill="#FFFFFF" font-family="Rajdhani" font-size="9" opacity="0.7">Usage</text><rect x="170" y="232" width="10" height="6" fill="#0047FF"/><text x="184" y="237" fill="#FFFFFF" font-family="Rajdhani" font-size="9" opacity="0.7">Hybrid</text></svg>`,
+    deliverables: ['Pricing framework design across seat / usage / enterprise / embedded','Segmentation-driven pricing tiers with elasticity assumptions','Three-year revenue projection scenarios','Discounting guardrails &amp; commercial governance']
+  },
+  {
+    id: '03', code: 'MDL-RDM', title: 'Product Direction &amp; Roadmap', eyebrow: 'Module Three',
+    icon: '<svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>',
+    paragraph: 'Strategic input on long-term product development — including prioritisation of data assets, API improvements, and delivery channels to support future scalability and monetisation. Translates business ambition into a sequenced delivery plan with clear trade-offs and dependencies.',
+    reportTitle: 'Product Roadmap &amp; Sequencing', previewLabel: '12-Month Roadmap Sequencing',
+    preview: `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg"><line x1="80" y1="20" x2="80" y2="200" stroke="#999999" stroke-width="1" opacity="0.2" stroke-dasharray="2,3"/><line x1="160" y1="20" x2="160" y2="200" stroke="#999999" stroke-width="1" opacity="0.2" stroke-dasharray="2,3"/><line x1="240" y1="20" x2="240" y2="200" stroke="#999999" stroke-width="1" opacity="0.2" stroke-dasharray="2,3"/><text x="40" y="14" text-anchor="middle" fill="#999999" font-family="Rajdhani" font-weight="600" font-size="10">Q1</text><text x="120" y="14" text-anchor="middle" fill="#999999" font-family="Rajdhani" font-weight="600" font-size="10">Q2</text><text x="200" y="14" text-anchor="middle" fill="#999999" font-family="Rajdhani" font-weight="600" font-size="10">Q3</text><text x="280" y="14" text-anchor="middle" fill="#999999" font-family="Rajdhani" font-weight="600" font-size="10">Q4</text><rect x="0" y="30" width="120" height="18" fill="#0047FF" rx="2"/><text x="6" y="42" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="9">Fundamentals API v2</text><rect x="60" y="56" width="140" height="18" fill="#194BCD" rx="2"/><text x="66" y="68" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="9">Estimates dataset GA</text><rect x="120" y="82" width="100" height="18" fill="#0047FF" rx="2"/><text x="126" y="94" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="9">Snowflake listing</text><rect x="100" y="108" width="180" height="18" fill="#194BCD" rx="2"/><text x="106" y="120" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="9">Ownership coverage exp.</text><rect x="180" y="134" width="120" height="18" fill="#0047FF" rx="2"/><text x="186" y="146" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="9">Databricks marketplace</text><rect x="220" y="160" width="100" height="18" fill="#194BCD" rx="2"/><text x="226" y="172" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="9">Streaming endpoints</text><rect x="0" y="220" width="10" height="6" fill="#0047FF"/><text x="14" y="225" fill="#FFFFFF" font-family="Rajdhani" font-size="9" opacity="0.7">Tier 1</text><rect x="60" y="220" width="10" height="6" fill="#194BCD"/><text x="74" y="225" fill="#FFFFFF" font-family="Rajdhani" font-size="9" opacity="0.7">Tier 2</text></svg>`,
+    deliverables: ['Roadmap outline with quarterly sequencing','Asset prioritisation matrix (impact × effort × dependency)','Trade-off framework for build / buy / partner decisions','Delivery planning &amp; resource modelling']
+  },
+  {
+    id: '04', code: 'MDL-ENB', title: 'Value Strategy &amp; Enablement', eyebrow: 'Module Four',
+    icon: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+    paragraph: 'Product positioning and value proposition design. Includes review or creation of pitch decks and go-to-market narratives that equip Sales and Pre-Sales teams to articulate the commercial and strategic value of data products to specific buyer personas.',
+    reportTitle: 'Value Proposition &amp; Sales Enablement', previewLabel: 'Buyer Persona — Value Mapping',
+    preview: `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="320" height="24" fill="#393939"/><text x="60" y="16" text-anchor="middle" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="10">PORTFOLIO MGR</text><text x="160" y="16" text-anchor="middle" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="10">DATA OFFICER</text><text x="260" y="16" text-anchor="middle" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="10">QUANT LEAD</text><text x="6" y="42" fill="#999999" font-family="Rajdhani" font-weight="600" font-size="9">PAIN</text><rect x="10" y="48" width="100" height="40" fill="#F0F0F5" opacity="0.1" stroke="#194BCD" stroke-width="1"/><text x="16" y="62" fill="#FFFFFF" font-family="Rajdhani" font-size="8" opacity="0.85">Inconsistent</text><text x="16" y="74" fill="#FFFFFF" font-family="Rajdhani" font-size="8" opacity="0.85">coverage gaps</text><rect x="110" y="48" width="100" height="40" fill="#F0F0F5" opacity="0.1" stroke="#194BCD" stroke-width="1"/><text x="116" y="62" fill="#FFFFFF" font-family="Rajdhani" font-size="8" opacity="0.85">Vendor sprawl,</text><text x="116" y="74" fill="#FFFFFF" font-family="Rajdhani" font-size="8" opacity="0.85">licensing risk</text><rect x="210" y="48" width="100" height="40" fill="#F0F0F5" opacity="0.1" stroke="#194BCD" stroke-width="1"/><text x="216" y="62" fill="#FFFFFF" font-family="Rajdhani" font-size="8" opacity="0.85">Slow API,</text><text x="216" y="74" fill="#FFFFFF" font-family="Rajdhani" font-size="8" opacity="0.85">poor docs</text><text x="6" y="108" fill="#0047FF" font-family="Rajdhani" font-weight="600" font-size="9">VALUE</text><rect x="10" y="114" width="100" height="40" fill="#0047FF" opacity="0.18" stroke="#0047FF" stroke-width="1"/><text x="16" y="128" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="8">Survivorship-</text><text x="16" y="140" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="8">free history</text><rect x="110" y="114" width="100" height="40" fill="#0047FF" opacity="0.18" stroke="#0047FF" stroke-width="1"/><text x="116" y="128" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="8">One contract,</text><text x="116" y="140" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="8">audited tiers</text><rect x="210" y="114" width="100" height="40" fill="#0047FF" opacity="0.18" stroke="#0047FF" stroke-width="1"/><text x="216" y="128" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="8">Sub-100ms</text><text x="216" y="140" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="8">SLA, OpenAPI</text><text x="6" y="174" fill="#999999" font-family="Rajdhani" font-weight="600" font-size="9">PROOF</text><text x="16" y="190" fill="#FFFFFF" font-family="Rajdhani" font-size="8" opacity="0.7">25y point-in-time</text><text x="116" y="190" fill="#FFFFFF" font-family="Rajdhani" font-size="8" opacity="0.7">SOC2 / GDPR</text><text x="216" y="190" fill="#FFFFFF" font-family="Rajdhani" font-size="8" opacity="0.7">99.95% uptime</text><text x="16" y="220" fill="#0047FF" font-family="Rajdhani" font-size="9" font-weight="600">→ Outperformance</text><text x="116" y="220" fill="#0047FF" font-family="Rajdhani" font-size="9" font-weight="600">→ Risk reduction</text><text x="216" y="220" fill="#0047FF" font-family="Rajdhani" font-size="9" font-weight="600">→ Faster signal</text></svg>`,
+    deliverables: ['Pitch deck refinement (cover, problem, solution, proof, CTA)','Persona-mapped value propositions with proof points','Sales enablement playbook &amp; objection-handling guide','Discovery question library by buyer role']
+  },
+  {
+    id: '05', code: 'MDL-PKG', title: 'Offer Design &amp; Packaging', eyebrow: 'Module Five',
+    icon: '<svg viewBox="0 0 24 24"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
+    paragraph: 'Review or creation of data packaging strategy, ensuring alignment with customer workflows, investment strategies, and commercial models. Covers asset-type bundles, regional groupings, and thematic or cross-asset packages calibrated for clear price/value laddering.',
+    reportTitle: 'Offer Design &amp; Packaging Strategy', previewLabel: 'Package Architecture',
+    preview: `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="20" width="280" height="48" fill="#999999" opacity="0.2" stroke="#999999" stroke-width="1"/><text x="32" y="40" fill="#FFFFFF" font-family="Rajdhani" font-weight="700" font-size="12">ESSENTIAL</text><text x="32" y="56" fill="#FFFFFF" font-family="Rajdhani" font-size="9" opacity="0.7">Fundamentals · Reference data · Basic time series</text><text x="288" y="44" text-anchor="end" fill="#999999" font-family="Rajdhani" font-weight="600" font-size="11">$$</text><rect x="20" y="78" width="280" height="62" fill="#194BCD" opacity="0.25" stroke="#194BCD" stroke-width="1.5"/><text x="32" y="98" fill="#FFFFFF" font-family="Rajdhani" font-weight="700" font-size="12">PROFESSIONAL</text><text x="32" y="114" fill="#FFFFFF" font-family="Rajdhani" font-size="9" opacity="0.85">+ Estimates · Ownership · M&amp;A · Macro</text><text x="32" y="128" fill="#FFFFFF" font-family="Rajdhani" font-size="9" opacity="0.85">+ Snowflake / Databricks delivery</text><text x="288" y="106" text-anchor="end" fill="#194BCD" font-family="Rajdhani" font-weight="600" font-size="11">$$$$</text><rect x="20" y="150" width="280" height="76" fill="#0047FF" opacity="0.3" stroke="#0047FF" stroke-width="2"/><text x="32" y="170" fill="#FFFFFF" font-family="Rajdhani" font-weight="700" font-size="12">ENTERPRISE</text><text x="32" y="186" fill="#FFFFFF" font-family="Rajdhani" font-size="9">+ Full asset coverage &amp; depth</text><text x="32" y="200" fill="#FFFFFF" font-family="Rajdhani" font-size="9">+ AI/LLM rights · Streaming · Custom SLAs</text><text x="32" y="214" fill="#FFFFFF" font-family="Rajdhani" font-size="9">+ Dedicated solution architect</text><text x="288" y="184" text-anchor="end" fill="#0047FF" font-family="Rajdhani" font-weight="700" font-size="13">$$$$$$</text></svg>`,
+    deliverables: ['Three-tier package architecture (Essential / Professional / Enterprise)','Asset-type bundles aligned to buyer workflows','Regional &amp; thematic cross-asset packages','Bundle uplift modelling &amp; price laddering']
+  },
+  {
+    id: '06', code: 'MDL-DLV', title: 'Distribution &amp; Delivery Architecture', eyebrow: 'Module Six',
+    icon: '<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
+    paragraph: 'Technical and functional advisory on data delivery channels — APIs, file-based delivery, marketplace listings. Includes endpoint specifications, recommended delivery workflows, and architecture for listing on platforms such as Snowflake or Databricks.',
+    reportTitle: 'Distribution &amp; Delivery Architecture', previewLabel: 'Delivery Channel Architecture',
+    preview: `<svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="100" width="70" height="40" fill="#393939" stroke="#0047FF" stroke-width="1.5"/><text x="55" y="118" text-anchor="middle" fill="#FFFFFF" font-family="Rajdhani" font-weight="700" font-size="10">DATA</text><text x="55" y="132" text-anchor="middle" fill="#FFFFFF" font-family="Rajdhani" font-weight="700" font-size="10">PLATFORM</text><line x1="90" y1="115" x2="170" y2="40" stroke="#0047FF" stroke-width="1" opacity="0.6"/><line x1="90" y1="125" x2="170" y2="90" stroke="#0047FF" stroke-width="1" opacity="0.6"/><line x1="90" y1="125" x2="170" y2="140" stroke="#0047FF" stroke-width="1" opacity="0.6"/><line x1="90" y1="135" x2="170" y2="190" stroke="#0047FF" stroke-width="1" opacity="0.6"/><rect x="170" y="20" width="130" height="34" fill="#0047FF" opacity="0.2" stroke="#0047FF" stroke-width="1"/><text x="180" y="36" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="10">REST API</text><text x="180" y="48" fill="#FFFFFF" font-family="Rajdhani" font-size="8" opacity="0.7">OpenAPI 3.0 · OAuth2</text><rect x="170" y="70" width="130" height="34" fill="#0047FF" opacity="0.2" stroke="#0047FF" stroke-width="1"/><text x="180" y="86" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="10">SNOWFLAKE</text><text x="180" y="98" fill="#FFFFFF" font-family="Rajdhani" font-size="8" opacity="0.7">Marketplace listing · Share</text><rect x="170" y="120" width="130" height="34" fill="#0047FF" opacity="0.2" stroke="#0047FF" stroke-width="1"/><text x="180" y="136" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="10">DATABRICKS</text><text x="180" y="148" fill="#FFFFFF" font-family="Rajdhani" font-size="8" opacity="0.7">Delta Sharing · Unity Catalog</text><rect x="170" y="170" width="130" height="34" fill="#194BCD" opacity="0.2" stroke="#194BCD" stroke-width="1"/><text x="180" y="186" fill="#FFFFFF" font-family="Rajdhani" font-weight="600" font-size="10">FILE FEED</text><text x="180" y="198" fill="#FFFFFF" font-family="Rajdhani" font-size="8" opacity="0.7">SFTP · S3 · Daily / Intraday</text><text x="20" y="180" fill="#999999" font-family="Rajdhani" font-size="9">LATENCY</text><line x1="20" y1="186" x2="20" y2="220" stroke="#999999" stroke-width="1" opacity="0.4"/><text x="26" y="194" fill="#0047FF" font-family="Rajdhani" font-size="8">↑ Real-time</text><text x="26" y="218" fill="#194BCD" font-family="Rajdhani" font-size="8">↓ Batch</text></svg>`,
+    deliverables: ['OpenAPI endpoint specifications &amp; field-level documentation','Snowflake / Databricks marketplace listing strategy','Delivery workflow architecture (real-time / batch / hybrid)','Latency &amp; SLA framework with monitoring approach']
+  }
+];
+
+/* ==========================================================
+   ORBITAL CONFIGURATION — sized for the larger 880×1200 stage
+
+   Six modules, six well-separated orbits with deliberate
+   phase staggering so they never collide.
+
+   Speeds reduced ~3x from v4 — larger nodes look better
+   moving slowly. The pulses now do the visual work.
+   ========================================================== */
+/* ==========================================================
+   ORBITAL CONFIGURATION — three circular rings, six modules paired
+
+   Switched from ellipses to circles because elliptical rings
+   with different rx/ry can come closer together vertically than
+   horizontally — causing modules to collide in the upper-centre
+   region (e.g. ring 1's top point sitting just above ring 2's
+   middle when phases align). Circles guarantee the same radial
+   gap at every angle, so 140px ring spacing is enforced
+   uniformly.
+
+   Pairings unchanged:
+   - Ring 1 (r 180): 02 Pricing ↔ 05 Offer Design (commercial core)
+   - Ring 2 (r 290): 01 Licensing ↔ 04 Value & Enablement (cross-cutting)
+   - Ring 3 (r 400): 03 Roadmap ↔ 06 Distribution (technical track, counter-rotates)
+   ========================================================== */
+const ORBITS = {
+  // Ring 1 — inner (commercial core)
+  '02': { rx: 140, ry: 140, phase: 0,           speed: 0.018, dir: +1 },
+  '05': { rx: 140, ry: 140, phase: Math.PI,     speed: 0.018, dir: +1 },
+
+  // Ring 2 — middle (cross-cutting modules)
+  '01': { rx: 230, ry: 230, phase: Math.PI/2,   speed: 0.014, dir: +1 },
+  '04': { rx: 230, ry: 230, phase: 3*Math.PI/2, speed: 0.014, dir: +1 },
+
+  // Ring 3 — outer (technical track, counter-rotating)
+  '03': { rx: 320, ry: 320, phase: Math.PI/4,   speed: 0.011, dir: -1 },
+  '06': { rx: 320, ry: 320, phase: 5*Math.PI/4, speed: 0.011, dir: -1 }
+};
+
+const FLOWS = [
+  // PRIMARY
+  { from: '05', to: '02', weight: 1.0, directional: true,  speed: 1800, rate: 1.0 },
+  { from: '01', to: '02', weight: 1.0, directional: false, speed: 1600, rate: 1.0 },
+  { from: '03', to: '06', weight: 1.0, directional: false, speed: 2000, rate: 0.9 },
+  { from: '05', to: '04', weight: 1.0, directional: true,  speed: 2400, rate: 0.7 },
+  { from: '01', to: '04', weight: 1.0, directional: true,  speed: 2400, rate: 0.7 },
+  { from: '02', to: '04', weight: 1.0, directional: true,  speed: 2400, rate: 0.7 },
+  // SECONDARY
+  { from: '06', to: '02', weight: 0.6, directional: true,  speed: 2200, rate: 0.4 },
+  { from: '03', to: '05', weight: 0.6, directional: true,  speed: 2200, rate: 0.4 },
+  { from: '01', to: '06', weight: 0.6, directional: true,  speed: 2200, rate: 0.4 },
+  { from: '04', to: '03', weight: 0.6, directional: true,  speed: 2400, rate: 0.3 },
+];
+
+/* ==========================================================
+   ANIMATION
+   ========================================================== */
+const VIEWBOX_W = 1200;
+const VIEWBOX_H = 720;
+const CENTRE_X = VIEWBOX_W / 2;
+const CENTRE_Y = VIEWBOX_H / 2;
+
+const orbital = root.querySelector('#orbital');
+const orbitalSvg = root.querySelector('#orbitalSvg');
+const orbitsGroup = root.querySelector('#orbits');
+const pulsesGroup = root.querySelector('#pulses');
+const nodes = root.querySelectorAll('.node');
+
+/* Read brand colours from CSS variables so JS-set SVG attributes
+   inherit any Webflow override automatically. */
+const cs = getComputedStyle(root);
+const C_BRAND = cs.getPropertyValue('--brand-blue').trim() || '#0047FF';
+const C_ICON  = cs.getPropertyValue('--icon-blue').trim() || '#194BCD';
+
+/* Faint orbital ellipses — drawn once per unique track */
+const drawnOrbits = new Set();
+Object.entries(ORBITS).forEach(([id, o]) => {
+  const key = `${o.rx}-${o.ry}`;
+  if (drawnOrbits.has(key)) return;
+  drawnOrbits.add(key);
+
+  const ellipse = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+  ellipse.setAttribute('cx', CENTRE_X);
+  ellipse.setAttribute('cy', CENTRE_Y);
+  ellipse.setAttribute('rx', o.rx);
+  ellipse.setAttribute('ry', o.ry);
+  ellipse.setAttribute('fill', 'none');
+  ellipse.setAttribute('stroke', C_ICON);
+  ellipse.setAttribute('stroke-width', '0.5');
+  ellipse.setAttribute('stroke-opacity', '0.1');
+  ellipse.setAttribute('stroke-dasharray', '2,5');
+  orbitsGroup.appendChild(ellipse);
+});
+
+const nodePositions = {};
+
+function getNodeScreenPos(id) {
+  const o = ORBITS[id];
+  const angle = o.phase + (Date.now() / 1000) * o.speed * o.dir;
+  return {
+    vx: CENTRE_X + o.rx * Math.cos(angle),
+    vy: CENTRE_Y + o.ry * Math.sin(angle),
+    angle
+  };
+}
+
+function tick() {
+  const svgRect = orbitalSvg.getBoundingClientRect();
+  const scaleX = svgRect.width / VIEWBOX_W;
+  const scaleY = svgRect.height / VIEWBOX_H;
+
+  /* The icon circle's centre sits about 40px above the node container's
+     geometric centre (circle height 80px, margin-top: -80px on container).
+     Convert that screen-pixel offset to viewBox units so pulses land on
+     the icon, not the gap between icon and text. */
+  const ICON_OFFSET_PX = -40;
+  const iconOffsetVy = ICON_OFFSET_PX / scaleY;
+
+  nodes.forEach(node => {
+    const id = node.getAttribute('data-module');
+    const pos = getNodeScreenPos(id);
+    const offsetX = (pos.vx - CENTRE_X) * scaleX;
+    const offsetY = (pos.vy - CENTRE_Y) * scaleY;
+    node.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    /* Store the icon-circle centre (where pulses should land), not the container centre */
+    nodePositions[id] = { x: pos.vx, y: pos.vy + iconOffsetVy };
+  });
+
+  requestAnimationFrame(tick);
+}
+
+requestAnimationFrame(tick);
+
+/* ============ PULSES ============ */
+function spawnFlowPulse(flow) {
+  const fromPos = nodePositions[flow.from];
+  const toPos = nodePositions[flow.to];
+  if (!fromPos || !toPos) return;
+
+  let sx, sy, ex, ey, isReverse = false;
+  if (flow.directional) {
+    sx = fromPos.x; sy = fromPos.y; ex = toPos.x; ey = toPos.y;
+  } else {
+    if (Math.random() < 0.5) {
+      sx = fromPos.x; sy = fromPos.y; ex = toPos.x; ey = toPos.y;
+    } else {
+      sx = toPos.x; sy = toPos.y; ex = fromPos.x; ey = fromPos.y;
+      isReverse = true;
+    }
+  }
+
+  const pulse = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  pulse.setAttribute('cx', sx);
+  pulse.setAttribute('cy', sy);
+  pulse.setAttribute('r', flow.weight === 1.0 ? 3.5 : 2.5);
+  pulse.setAttribute('fill', C_BRAND);
+  pulse.setAttribute('filter', flow.weight === 1.0 ? 'url(#strongGlow)' : 'url(#pulseGlow)');
+  pulsesGroup.appendChild(pulse);
+
+  let tail = null;
+  if (flow.directional && flow.weight === 1.0) {
+    tail = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    tail.setAttribute('x1', sx); tail.setAttribute('y1', sy);
+    tail.setAttribute('x2', sx); tail.setAttribute('y2', sy);
+    tail.setAttribute('stroke', C_BRAND);
+    tail.setAttribute('stroke-width', '1.2');
+    tail.setAttribute('stroke-opacity', '0');
+    tail.setAttribute('stroke-linecap', 'round');
+    pulsesGroup.insertBefore(tail, pulse);
+  }
+
+  const startTime = Date.now();
+  const duration = flow.speed;
+
+  function animate() {
+    const elapsed = Date.now() - startTime;
+    const t = Math.min(elapsed / duration, 1);
+    const eased = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    const targetId = flow.directional ? flow.to : (isReverse ? flow.from : flow.to);
+    const currentTo = nodePositions[targetId];
+
+    if (currentTo) {
+      const cx = sx + (currentTo.x - sx) * eased;
+      const cy = sy + (currentTo.y - sy) * eased;
+      pulse.setAttribute('cx', cx);
+      pulse.setAttribute('cy', cy);
+      let opacity;
+      if (t < 0.15) opacity = t / 0.15;
+      else if (t > 0.85) opacity = (1 - t) / 0.15;
+      else opacity = 1;
+      pulse.setAttribute('opacity', opacity);
+
+      if (tail) {
+        const trailT = Math.max(0, eased - 0.15);
+        const tx = sx + (currentTo.x - sx) * trailT;
+        const ty = sy + (currentTo.y - sy) * trailT;
+        tail.setAttribute('x1', tx); tail.setAttribute('y1', ty);
+        tail.setAttribute('x2', cx); tail.setAttribute('y2', cy);
+        tail.setAttribute('stroke-opacity', opacity * 0.4);
+      }
+    }
+
+    if (t < 1) requestAnimationFrame(animate);
+    else { pulse.remove(); if (tail) tail.remove(); }
+  }
+  requestAnimationFrame(animate);
+}
+
+function pulseScheduler() {
+  if (root.querySelector('#stage').classList.contains('unfolded')) {
+    setTimeout(pulseScheduler, 500);
+    return;
+  }
+  FLOWS.forEach(flow => {
+    if (Math.random() < flow.rate * 0.18) spawnFlowPulse(flow);
+  });
+  setTimeout(pulseScheduler, 280);
+}
+setTimeout(pulseScheduler, 800);
+
+/* ============ ENGAGEMENT MOMENT ============
+   Originates at the centre (logo) — signal emerges from the centre,
+   travels through the canonical engagement path, exits at Value & Enablement.
+   No ignition flash on the logo itself — the existing ambient halo
+   (centreHalo + centreRing) carries the visual heartbeat. */
+function engagementMoment() {
+  const path = ['CENTRE', '05', '02', '01', '04'];
+  let i = 0;
+
+  function getPos(id) {
+    if (id === 'CENTRE') return { x: CENTRE_X, y: CENTRE_Y };
+    return nodePositions[id];
+  }
+
+  function nextHop() {
+    if (i >= path.length - 1) return;
+    const from = path[i], to = path[i + 1];
+    const fromPos = getPos(from), toPos = getPos(to);
+    if (!fromPos || !toPos) return;
+
+    const pulse = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    pulse.setAttribute('cx', fromPos.x);
+    pulse.setAttribute('cy', fromPos.y);
+    pulse.setAttribute('r', from === 'CENTRE' ? 8 : 6);
+    pulse.setAttribute('fill', C_BRAND);
+    pulse.setAttribute('filter', 'url(#strongGlow)');
+    pulsesGroup.appendChild(pulse);
+
+    const start = Date.now();
+    const dur = from === 'CENTRE' ? 1700 : 1400;
+    const sx = fromPos.x, sy = fromPos.y;
+
+    function step() {
+      const elapsed = Date.now() - start;
+      const t = Math.min(elapsed / dur, 1);
+      const eased = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+      const currentTo = getPos(to);
+      if (currentTo) {
+        pulse.setAttribute('cx', sx + (currentTo.x - sx) * eased);
+        pulse.setAttribute('cy', sy + (currentTo.y - sy) * eased);
+        let op = t < 0.1 ? t / 0.1 : (t > 0.9 ? (1 - t) / 0.1 : 1);
+        pulse.setAttribute('opacity', op);
+      }
+      if (t < 1) requestAnimationFrame(step);
+      else { pulse.remove(); i++; setTimeout(nextHop, 200); }
+    }
+    requestAnimationFrame(step);
+  }
+  nextHop();
+}
+
+setInterval(() => {
+  if (!root.querySelector('#stage').classList.contains('unfolded')) engagementMoment();
+}, 11000);
+
+setTimeout(() => {
+  if (!root.querySelector('#stage').classList.contains('unfolded')) engagementMoment();
+}, 4000);
+
+/* ============ HOVER & CLICK ============ */
+nodes.forEach(node => {
+  const moduleId = node.getAttribute('data-module');
+  node.addEventListener('mouseenter', () => orbital.classList.add('has-hover'));
+  node.addEventListener('mouseleave', () => orbital.classList.remove('has-hover'));
+  node.addEventListener('click', (e) => {
+    e.stopPropagation();
+    setActiveModule(moduleId);
+  });
+});
+
+/* ============ UNFOLDED VIEW ============ */
+const stage = root.querySelector('#stage');
+const heroPanel = root.querySelector('#heroPanel');
+const rail = root.querySelector('#rail');
+const resetBtn = root.querySelector('#resetBtn');
+
+function renderHero(mod) {
+  heroPanel.innerHTML = `
+    <div class="hero-head">
+      <div class="hero-icon">${mod.icon}</div>
+    </div>
+    <div class="hero-eyebrow">${mod.code}</div>
+    <h2 class="hero-title">${mod.title}</h2>
+    <p class="hero-paragraph">${mod.paragraph}</p>
+    <div class="deliverables-block">
+      <div class="preview-block">
+        <div class="preview-label">${mod.previewLabel}</div>
+        <div class="preview-content">${mod.preview}</div>
+      </div>
+      <div class="deliverables-list-wrap">
+        <div class="preview-label">What's included</div>
+        <ul class="deliverables-list">${mod.deliverables.map(d => `<li>${d}</li>`).join('')}</ul>
+      </div>
+    </div>
+  `;
+}
+
+function renderRail(activeId) {
+  /* Always render all 6 modules in canonical order — no filtering.
+     The active one is marked with .is-active so it can be styled
+     differently and clicks on it become no-ops. */
+  rail.innerHTML = MODULES.map(mod => `
+    <div class="rail-item ${mod.id === activeId ? 'is-active' : ''}" data-rail-module="${mod.id}">
+      <div class="rail-item-head">
+        <div class="rail-item-num">${mod.id}</div>
+        <div class="rail-item-icon">${mod.icon}</div>
+      </div>
+      <div class="rail-item-title">${mod.title}</div>
+    </div>
+  `).join('');
+
+  rail.querySelectorAll('.rail-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.stopPropagation(); /* prevent the click-outside handler from firing */
+      const clickedId = item.getAttribute('data-rail-module');
+      /* Don't reload if clicking the active one — it's already shown */
+      if (clickedId === activeId) return;
+      setActiveModule(clickedId);
+    });
+  });
+}
+
+function setActiveModule(id) {
+  const mod = MODULES.find(m => m.id === id);
+  if (!mod) return;
+  renderHero(mod);
+  renderRail(id);
+  if (!stage.classList.contains('unfolded')) stage.classList.add('unfolded');
+  const stageTop = stage.getBoundingClientRect().top + window.scrollY - 80;
+  if (window.scrollY > stageTop + 200) {
+    window.scrollTo({ top: stageTop, behavior: 'smooth' });
+  }
+}
+
+function dismissUnfolded() {
+  stage.classList.remove('unfolded');
+}
+
+resetBtn.addEventListener('click', dismissUnfolded);
+
+/* Click-outside-to-close: any click on the stage that isn't on the
+   hero panel, the rail, or the reset button dismisses the unfolded view. */
+stage.addEventListener('click', (e) => {
+  if (!stage.classList.contains('unfolded')) return;
+  /* If the click is inside the hero panel or rail, ignore */
+  if (e.target.closest('#heroPanel') || e.target.closest('.rail-column')) return;
+  dismissUnfolded();
+});
+
+/* Escape key also dismisses */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && stage.classList.contains('unfolded')) {
+    dismissUnfolded();
+  }
+});
+
+    console.log('[DMC01-orbital] Initialised.');
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+</body>
+</html>
