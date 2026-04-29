@@ -96,7 +96,7 @@ Apply these in Webflow before publishing future embeds. Each is a 1-minute chang
 - [ ] **Brand blue hover:** review whether `#3c6ce7` still works with the new blue, or pick a darker tone
 - [ ] **Site background:** standardise to `Neutral Secondary` (`#161617`) on all sections
 - [ ] **Type scale:** consider bumping `base-font-size` from `1rem` to `1.125rem` (or `1.0625rem`) to address "fonts feel small" feedback. Will cascade to all embeds.
-- [ ] **Add the alias block** to Project Settings → Custom Code → `<head>` (see `webflow/head-alias-block.css`)
+- [x] **Add the alias block** to Project Settings → Custom Code → `<head>` (see `webflow/head-alias-block.css`)
 
 ---
 
@@ -179,6 +179,9 @@ Two surfaces:
 | Apr 2026 | Tailored section: tactical-board metaphor, side rail + dynamic chip grid | Solved the "wall of 33 sub-blocks" problem in v3 of the section |
 | Apr 2026 | Constellation under chips frame as orbital-section echo | Atmospheric quote of orbital, no second-panel reading |
 | Apr 2026 | Module codes `MDL-XXX` instead of numeric IDs in Recommended panel | User preference; data layer keeps numeric IDs |
+| Apr 2026 | Webflow AI-gen var separator is `--` between group and var-name, not `---` | Alias block patched; Pattern A vs B documented in `webflow/head-alias-block.css` header so it isn't relitigated |
+| Apr 2026 | Derived alphas (`--accent-primary-glow`, `--accent-primary-faint`) use `color-mix()` against `--accent-primary` | Auto-tracks Webflow brand-blue changes instead of drifting from a hard-coded hex |
+| Apr 2026 | Renamed `--accent-primary-grid` → `--brand-grid` | The grid colour is intentionally a different blue (`#4948C0`); old name implied derivation that didn't exist |
 
 ---
 
