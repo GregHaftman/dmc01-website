@@ -104,9 +104,9 @@
   --eyebrow-letter-spacing: 0.01em;
 
   /* ───── DERIVED ALPHAS (component states) ───── */
-  --accent-primary-glow:  rgba(0, 71, 255, 0.55);   /* shadow / glow */
-  --accent-primary-faint: rgba(0, 71, 255, 0.10);   /* hover fills, gradients */
-  --accent-primary-grid:  rgba(73, 72, 192, 0.04);  /* faint background grid */
+  --accent-primary-glow:  color-mix(in srgb, var(--accent-primary) 55%, transparent);  /* shadow / glow */
+  --accent-primary-faint: color-mix(in srgb, var(--accent-primary) 10%, transparent);  /* hover fills, gradients */
+  --brand-grid:           rgba(73, 72, 192, 0.04);                                      /* faint background grid — intentionally a different blue */
 
   /* ───── SURFACES (derived elevation tier — used by chips, pills, etc.) ───── */
   --surface-elevated: #1d1e22;   /* tier above bg-secondary */

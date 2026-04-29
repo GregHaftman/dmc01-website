@@ -6,14 +6,31 @@
 
   WHAT IT DOES
   Webflow auto-generates CSS variable names like:
-    --ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h1-heading---h1-size
+    --ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---core-accent-color--accent-primary
 
   This block creates clean aliases at :root level, so embeds can use:
-    var(--h1-size)  →  resolves to the same Webflow variable
+    var(--accent-primary)  →  resolves to the same Webflow variable
+
+  THE NAMING PATTERN (verified Apr 2026, do not relitigate)
+  Two patterns exist depending on which Webflow variable group the var lives in:
+
+    Pattern A — colour / text / border / component groups:
+      --ai-gen-{PREFIX}---{group}--{var-name}
+      Example: --ai-gen-…---core-accent-color--accent-primary
+      Note: 3 dashes after PREFIX, 2 dashes between group and var-name.
+
+    Pattern B — typography / sizes / interactions:
+      --ai-gen-{PREFIX}_{megagroup}---{subgroup}--{var-name}
+      Example: --ai-gen-…_typography---h1-heading--h1-size
+      Note: underscore + megagroup, then 3 dashes, then 2 dashes.
 
   IMPORTANT
-  - The AI-gen prefix below must match yours. If Webflow regenerates IDs
-    (rare but happens after major project edits), update the prefix here.
+  - The PREFIX below must match yours. If Webflow regenerates IDs (rare,
+    but happens after major project edits), update PREFIX here. To verify
+    in DevTools console:
+      getComputedStyle(document.documentElement).getPropertyValue('--accent-primary')
+    If empty, the prefix or pattern is stale. To find current prefix:
+      [...getComputedStyle(document.documentElement)].filter(p => p.startsWith('--ai-gen')).slice(0,1)
   - Native Webflow components keep using their AI-gen names — they're
     untouched. Only NEW references through these aliases benefit.
   - Adding new aliases here is cheap; deleting them later is risky if
@@ -26,80 +43,83 @@
 <style>
 :root {
   /* ───── BACKGROUNDS ───── */
-  --bg-primary:        var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---background-color---bg-primary);
-  --bg-secondary:      var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---background-color---bg-secondary);
-  --bg-accent-primary: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---background-color---bg-accent-primary);
-  --bg-inverse:        var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---background-color---bg-inverse);
+  --bg-primary:        var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---background-color--bg-primary);
+  --bg-secondary:      var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---background-color--bg-secondary);
+  --bg-accent-primary: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---background-color--bg-accent-primary);
+  --bg-inverse:        var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---background-color--bg-inverse);
 
   /* ───── ACCENTS ───── */
-  --accent-primary:       var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---core-accent-color---accent-primary);
-  --accent-primary-hover: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---core-accent-color---accent-primary-hover);
-  --accent-secondary:     var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---core-accent-color---accent-secondary);
+  --accent-primary:       var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---core-accent-color--accent-primary);
+  --accent-primary-hover: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---core-accent-color--accent-primary-hover);
+  --accent-secondary:     var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---core-accent-color--accent-secondary);
 
   /* ───── NEUTRALS ───── */
-  --neutral-primary:   var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---core-neutral-color---neutral-primary);
-  --neutral-secondary: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---core-neutral-color---neutral-secondary);
-  --neutral-inverse:   var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---core-neutral-color---neutral-inverse);
+  --neutral-primary:   var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---core-neutral-color--neutral-primary);
+  --neutral-secondary: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---core-neutral-color--neutral-secondary);
+  --neutral-inverse:   var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---core-neutral-color--neutral-inverse);
 
   /* ───── TINTS (alpha overlays for borders, dim states, etc.) ───── */
-  --tint-neutral-primary-a10: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---core-color-tint---neutral-primary-a10);
-  --tint-neutral-primary-a20: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---core-color-tint---neutral-primary-a20);
-  --tint-neutral-inverse-a20: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---core-color-tint---neutral-inverse-a20);
+  --tint-neutral-primary-a10: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---core-color-tint--neutral-primary-a10);
+  --tint-neutral-primary-a20: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---core-color-tint--neutral-primary-a20);
+  --tint-neutral-inverse-a20: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---core-color-tint--neutral-inverse-a20);
 
   /* ───── TEXT ───── */
-  --text-primary:           var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---text-color---text-primary);
-  --text-secondary:         var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---text-color---text-secondary);
-  --text-inverse-primary:   var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---text-color---text-inverse-primary);
-  --text-inverse-secondary: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---text-color---text-inverse-secondary);
-  --text-on-accent-primary: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---text-color---text-on-accent-primary);
+  --text-primary:           var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---text-color--text-primary);
+  --text-secondary:         var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---text-color--text-secondary);
+  --text-inverse-primary:   var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---text-color--text-inverse-primary);
+  --text-inverse-secondary: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---text-color--text-inverse-secondary);
+  --text-on-accent-primary: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---text-color--text-on-accent-primary);
 
   /* ───── BORDERS ───── */
-  --border-secondary: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---border-color---border-secondary);
+  --border-secondary: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---border-color--border-secondary);
 
   /* ───── TYPOGRAPHY: FONTS ───── */
-  --font-body:    var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---font---body-font);
-  --font-heading: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---font---heading-font);
-  --font-button:  var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---font---button-font);
+  --font-body:    var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---font--body-font);
+  --font-heading: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---font--heading-font);
+  --font-button:  var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---font--button-font);
 
   /* ───── TYPOGRAPHY: SIZES (responsive — Webflow handles per-breakpoint) ───── */
-  --base-font-size:        var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---base-typography---base-font-size);
-  --base-font-weight:      var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---base-typography---base-font-weight);
-  --base-font-weight-bold: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---base-typography---base-font-weight-bold);
-  --base-line-height:      var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---base-typography---base-line-height);
-  --base-letter-spacing:   var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---base-typography---base-letter-spacing);
+  --base-font-size:        var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---base-typography--base-font-size);
+  --base-font-weight:      var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---base-typography--base-font-weight);
+  --base-font-weight-bold: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---base-typography--base-font-weight-bold);
+  --base-line-height:      var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---base-typography--base-line-height);
+  --base-letter-spacing:   var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---base-typography--base-letter-spacing);
 
-  --h0-size:           var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h0-heading---h0-size);
-  --h0-weight:         var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h0-heading---h0-weight);
-  --h0-line-height:    var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h0-heading---h0-line-height);
-  --h0-letter-spacing: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h0-heading---h0-letter-spacing);
+  --h0-size:           var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h0-heading--h0-size);
+  --h0-weight:         var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h0-heading--h0-weight);
+  --h0-line-height:    var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h0-heading--h0-line-height);
+  --h0-letter-spacing: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h0-heading--h0-letter-spacing);
 
-  --h1-size:           var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h1-heading---h1-size);
-  --h1-weight:         var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h1-heading---h1-weight);
-  --h1-line-height:    var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h1-heading---h1-line-height);
-  --h1-letter-spacing: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h1-heading---h1-letter-spacing);
+  --h1-size:           var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h1-heading--h1-size);
+  --h1-weight:         var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h1-heading--h1-weight);
+  --h1-line-height:    var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h1-heading--h1-line-height);
+  --h1-letter-spacing: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h1-heading--h1-letter-spacing);
 
-  --h2-size:           var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h2-heading---h2-size);
-  --h2-weight:         var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h2-heading---h2-weight);
-  --h2-line-height:    var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h2-heading---h2-line-height);
+  --h2-size:           var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h2-heading--h2-size);
+  --h2-weight:         var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h2-heading--h2-weight);
+  --h2-line-height:    var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h2-heading--h2-line-height);
 
-  --h3-size:           var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h3-heading---h3-size);
-  --h3-weight:         var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h3-heading---h3-weight);
+  --h3-size:           var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h3-heading--h3-size);
+  --h3-weight:         var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h3-heading--h3-weight);
 
-  --h4-size:           var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h4-heading---h4-size);
-  --h4-weight:         var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h4-heading---h4-weight);
+  --h4-size:           var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h4-heading--h4-size);
+  --h4-weight:         var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---h4-heading--h4-weight);
 
-  --text-xxl-size: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---text-xxl---xxl-text-size);
-  --text-xl-size:  var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---text-xl---xl-text-size);
-  --text-lg-size:  var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---text-lg---lg-text-size);
-  --text-sm-size:  var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---text-sm---sm-text-size);
+  --text-xxl-size: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---text-xxl--xxl-text-size);
+  --text-xl-size:  var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---text-xl--xl-text-size);
+  --text-lg-size:  var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---text-lg--lg-text-size);
+  --text-sm-size:  var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---text-sm--sm-text-size);
 
-  --eyebrow-size:           var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---eyebrow---eyebrow-size);
-  --eyebrow-line-height:    var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---eyebrow---eyebrow-line-height);
-  --eyebrow-letter-spacing: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---eyebrow---eyebrow-letter-spacing);
+  --eyebrow-size:           var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---eyebrow--eyebrow-size);
+  --eyebrow-line-height:    var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---eyebrow--eyebrow-line-height);
+  --eyebrow-letter-spacing: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---eyebrow--eyebrow-letter-spacing);
 
-  /* ───── DERIVED ALPHAS (for component states — embeds can use these directly) ───── */
-  --accent-primary-glow:  rgba(0, 71, 255, 0.55);
-  --accent-primary-faint: rgba(0, 71, 255, 0.10);
-  --accent-primary-grid:  rgba(73, 72, 192, 0.04);
+  /* ───── DERIVED ALPHAS (for component states — embeds can use these directly) ─────
+     Glow + faint use color-mix so they auto-track --accent-primary when Webflow
+     changes the brand colour. --brand-grid is intentionally a different blue
+     (#4948C0 at 4% alpha) — desaturated tone reads better as background grid. */
+  --accent-primary-glow:  color-mix(in srgb, var(--accent-primary) 55%, transparent);
+  --accent-primary-faint: color-mix(in srgb, var(--accent-primary) 10%, transparent);
+  --brand-grid:           rgba(73, 72, 192, 0.04);
 }
 </style>
