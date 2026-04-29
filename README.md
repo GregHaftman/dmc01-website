@@ -92,7 +92,7 @@ Weights: `--h0-weight: 700`, `--h1-weight: 600`, `--h2-weight: 600`, `--base-fon
 
 Apply these in Webflow before publishing future embeds. Each is a 1-minute change.
 
-- [ ] **Brand blue:** change `Accent Primary` from `#194bcd` to `#0047FF`
+- [x] **Brand blue:** change `Accent Primary` from `#194bcd` to `#0047FF`
 - [ ] **Brand blue hover:** review whether `#3c6ce7` still works with the new blue, or pick a darker tone
 - [ ] **Site background:** standardise to `Neutral Secondary` (`#161617`) on all sections
 - [ ] **Type scale:** consider bumping `base-font-size` from `1rem` to `1.125rem` (or `1.0625rem`) to address "fonts feel small" feedback. Will cascade to all embeds.
