@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DMC01 — Nav</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     DMC01 · Site nav — sticky page header
+     Hidden by default; slides in once the user has scrolled past
+     the intro section. Houses the brand mark + wordmark on the left
+     and a CTA + Menu dropdown on the right. The dropdown groups
+     in-page anchors and other pages (Pricing, FAQ).
+
+     Designed to be embedded once at the top of the Webflow page.
+     The fullsite preview shell inlines the same markup for local
+     scrolling — see 00-dmc01-fullsite.html.
+     ============================================================ */
+
+  :root {
+    --brand-blue:        var(--accent-primary, #0047FF);
+    --brand-blue-hover:  var(--accent-primary-hover, #3c6ce7);
+    --neutral-primary:   var(--bg-primary, #070708);
+    --neutral-secondary: var(--bg-secondary, #161617);
+    --font:              var(--font-body, "Rajdhani", system-ui, sans-serif);
+    --t-base-size:    var(--base-font-size, 1rem);
+    --t-eyebrow-size: var(--eyebrow-size, 0.8rem);
+    --w-base:  var(--base-font-weight, 400);
+    --w-bold:  var(--base-font-weight-bold, 600);
+    --white:    var(--text-primary, #FFFFFF);
+    --white-72: rgba(255, 255, 255, 0.72);
+    --white-50: rgba(255, 255, 255, 0.50);
+    --white-30: rgba(255, 255, 255, 0.30);
+    --white-15: var(--border-secondary, rgba(255, 255, 255, 0.15));
+    --blue-glow: var(--accent-primary-glow, rgba(0, 71, 255, 0.55));
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--neutral-primary);
+    color: var(--white);
+    font-family: var(--font);
+    font-weight: var(--w-base);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ============================================================
+     NAV BAR
+     ============================================================ */
+  .dmc01-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: linear-gradient(180deg, rgba(7, 7, 8, 0.96) 0%, rgba(7, 7, 8, 0.78) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--white-15);
+    /* Hidden until the user scrolls past intro. */
+    opacity: 0;
+    transform: translateY(-100%);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    pointer-events: none;
+  }
+  .dmc01-nav.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .nav-inner {
+    max-width: 1700px;
+    margin: 0 auto;
+    padding: 14px clamp(20px, 3vw, 40px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  /* ----- BRAND (logo + wordmark) ----- */
+  .nav-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    color: var(--white);
+    transition: opacity 0.2s ease;
+  }
+  .nav-brand:hover { opacity: 0.85; }
+
+  .nav-logo {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 6px rgba(0, 71, 255, 0.4));
+  }
+  .nav-logo svg { width: 100%; height: 100%; display: block; }
+  .nav-logo .mark-stroke {
+    stroke: var(--white);
+    stroke-width: 14;
+    stroke-miterlimit: 10;
+    fill: none;
+  }
+
+  .nav-wordmark {
+    font-size: var(--t-eyebrow-size);
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+  .nav-wordmark em {
+    font-style: normal;
+    color: var(--brand-blue);
+  }
+
+  /* ----- ACTIONS (CTA + Menu) ----- */
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background: var(--brand-blue);
+    color: var(--white);
+    font-family: inherit;
+    font-size: var(--t-base-size);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--brand-blue);
+    border-radius: 2px;
+    transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .nav-cta:hover {
+    background: var(--brand-blue-hover);
+    box-shadow: 0 0 28px rgba(0, 71, 255, 0.45);
+    transform: translateY(-1px);
+  }
+  .nav-cta-arrow {
+    width: 14px; height: 14px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.25s ease;
+  }
+  .nav-cta:hover .nav-cta-arrow { transform: translateX(3px); }
+
+  .nav-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: transparent;
+    border: 1px solid var(--white-15);
+    color: var(--white);
+    font-family: inherit;
+    font-size: var(--t-base-size);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: border-color 0.25s ease, background 0.25s ease;
+  }
+  .nav-menu-btn:hover {
+    border-color: var(--white-30);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .nav-menu-btn[aria-expanded="true"] {
+    border-color: var(--brand-blue);
+    background: rgba(0, 71, 255, 0.10);
+    color: var(--brand-blue);
+  }
+  .nav-menu-chevron {
+    width: 12px; height: 12px;
+    stroke: currentColor; fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.3s ease;
+  }
+  .nav-menu-btn[aria-expanded="true"] .nav-menu-chevron {
+    transform: rotate(180deg);
+  }
+
+  /* ============================================================
+     MENU PANEL (dropdown)
+     Anchored top-right, slides down from the nav bar.
+     ============================================================ */
+  .nav-panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: clamp(20px, 3vw, 40px);
+    width: 360px;
+    max-width: calc(100vw - 32px);
+    background: var(--neutral-primary);
+    border: 1px solid var(--white-15);
+    border-radius: 4px;
+    padding: 24px;
+    box-shadow: 0 14px 48px rgba(0, 0, 0, 0.55);
+    opacity: 0;
+    transform: translateY(-12px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .nav-panel.is-open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  /* Subtle corner brackets — same architectural detail used on the
+     orbital and framework panels. */
+  .nav-panel::after {
+    content: "";
+    position: absolute;
+    top: 8px; left: 8px; right: 8px; bottom: 8px;
+    pointer-events: none;
+    background:
+      linear-gradient(to right,  var(--brand-blue) 0, var(--brand-blue) 14px, transparent 14px, transparent calc(100% - 14px), var(--brand-blue) calc(100% - 14px), var(--brand-blue) 100%) top    / 100% 1px no-repeat,
+      linear-gradient(to right,  var(--brand-blue) 0, var(--brand-blue) 14px, transparent 14px, transparent calc(100% - 14px), var(--brand-blue) calc(100% - 14px), var(--brand-blue) 100%) bottom / 100% 1px no-repeat,
+      linear-gradient(to bottom, var(--brand-blue) 0, var(--brand-blue) 14px, transparent 14px, transparent calc(100% - 14px), var(--brand-blue) calc(100% - 14px), var(--brand-blue) 100%) left   / 1px 100% no-repeat,
+      linear-gradient(to bottom, var(--brand-blue) 0, var(--brand-blue) 14px, transparent 14px, transparent calc(100% - 14px), var(--brand-blue) calc(100% - 14px), var(--brand-blue) 100%) right  / 1px 100% no-repeat;
+    opacity: 0.4;
+  }
+
+  .nav-panel-section { margin-bottom: 20px; }
+  .nav-panel-section:last-child { margin-bottom: 0; }
+
+  .nav-panel-eyebrow {
+    font-size: var(--t-eyebrow-size);
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--white-15);
+  }
+
+  .nav-panel-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-panel-list a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    color: var(--white-72);
+    font-size: var(--t-base-size);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease, padding-left 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .nav-panel-list a:hover {
+    color: var(--brand-blue);
+    padding-left: 6px;
+  }
+  .nav-panel-list a .nav-panel-num {
+    font-size: var(--t-eyebrow-size);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--white-30);
+    min-width: 24px;
+    transition: color 0.2s ease;
+  }
+  .nav-panel-list a:hover .nav-panel-num { color: var(--brand-blue); }
+  .nav-panel-list a .nav-panel-arrow {
+    margin-left: auto;
+    width: 12px; height: 12px;
+    stroke: var(--white-30);
+    fill: none;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease, stroke 0.2s ease;
+  }
+  .nav-panel-list a:hover .nav-panel-arrow {
+    opacity: 1;
+    transform: translateX(0);
+    stroke: var(--brand-blue);
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 720px) {
+    .nav-inner { padding: 10px 16px; gap: 8px; }
+    .nav-wordmark { display: none; }
+    .nav-cta { padding: 8px 12px; font-size: 0.85rem; letter-spacing: 0.05em; }
+    .nav-menu-btn { padding: 8px 12px; font-size: 0.85rem; }
+    .nav-panel { right: 16px; left: 16px; width: auto; }
+  }
+</style>
+</head>
+
+<body>
+
+<header class="dmc01-nav" id="dmc01Nav" role="banner">
+  <div class="nav-inner">
+
+    <a class="nav-brand" href="#dmc01-intro" aria-label="DMC01 — back to top">
+      <span class="nav-logo" aria-hidden="true">
+        <svg viewBox="0 0 595.28 595.28" xmlns="http://www.w3.org/2000/svg">
+          <polyline class="mark-stroke"
+                    points="297.17 265.57 417.4 148.9 177.87 148.9 297.19 479.32 297.17 265.57 177.87 148.9"/>
+        </svg>
+      </span>
+      <span class="nav-wordmark">DMC<em>01</em></span>
+    </a>
+
+    <div class="nav-actions">
+      <a class="nav-cta" href="#contact">
+        <span>Start a project</span>
+        <svg class="nav-cta-arrow" viewBox="0 0 24 24" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+      <button class="nav-menu-btn" type="button"
+              aria-haspopup="true" aria-expanded="false"
+              aria-controls="dmc01NavPanel">
+        <span>Menu</span>
+        <svg class="nav-menu-chevron" viewBox="0 0 24 24" aria-hidden="true">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Dropdown panel — anchored to the right of the nav bar. -->
+  <div class="nav-panel" id="dmc01NavPanel" role="menu" aria-label="Site menu">
+    <div class="nav-panel-section">
+      <div class="nav-panel-eyebrow">On this page</div>
+      <ul class="nav-panel-list">
+        <li><a href="#dmc01-intro" role="menuitem">
+          <span class="nav-panel-num">01</span>
+          <span>Hero</span>
+          <svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg>
+        </a></li>
+        <li><a href="#dmc01-services" role="menuitem">
+          <span class="nav-panel-num">02</span>
+          <span>Services</span>
+          <svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg>
+        </a></li>
+        <li><a href="#dmc01-tailored" role="menuitem">
+          <span class="nav-panel-num">03</span>
+          <span>Use cases</span>
+          <svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg>
+        </a></li>
+        <li><a href="#dmc01-framework" role="menuitem">
+          <span class="nav-panel-num">04</span>
+          <span>Framework</span>
+          <svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg>
+        </a></li>
+      </ul>
+    </div>
+
+    <div class="nav-panel-section">
+      <div class="nav-panel-eyebrow">Other pages</div>
+      <ul class="nav-panel-list">
+        <li><a href="/pricing" role="menuitem">
+          <span class="nav-panel-num">→</span>
+          <span>Pricing</span>
+          <svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg>
+        </a></li>
+        <li><a href="/faq" role="menuitem">
+          <span class="nav-panel-num">→</span>
+          <span>FAQ</span>
+          <svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg>
+        </a></li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<script>
+(function() {
+  'use strict';
+
+  function init() {
+    const nav = document.querySelector('.dmc01-nav');
+    if (!nav) {
+      console.error('[DMC01-nav] Could not find .dmc01-nav.');
+      return;
+    }
+
+    const menuBtn   = nav.querySelector('.nav-menu-btn');
+    const menuPanel = nav.querySelector('.nav-panel');
+
+    /* ---------- VISIBILITY ----------
+       The nav appears once the intro section has been mostly scrolled
+       past. We watch the .intro-section's bottom edge — when it sits
+       above 40% of the viewport, the nav fades in. If there's no intro
+       section on the page (e.g. Pricing or FAQ pages), the nav shows
+       immediately. */
+    function syncVisibility() {
+      const intro = document.querySelector('.intro-section');
+      let shouldShow;
+      if (intro) {
+        const rect = intro.getBoundingClientRect();
+        shouldShow = rect.bottom < window.innerHeight * 0.4;
+      } else {
+        shouldShow = true;
+      }
+      nav.classList.toggle('is-visible', shouldShow);
+    }
+    syncVisibility();
+    window.addEventListener('scroll', syncVisibility, { passive: true });
+    window.addEventListener('resize', syncVisibility, { passive: true });
+
+    /* ---------- MENU TOGGLE ---------- */
+    function setOpen(open) {
+      menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      menuPanel.classList.toggle('is-open', open);
+    }
+
+    menuBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const isOpen = menuBtn.getAttribute('aria-expanded') === 'true';
+      setOpen(!isOpen);
+    });
+
+    /* Click outside → close. */
+    document.addEventListener('click', function(e) {
+      if (!nav.contains(e.target)) setOpen(false);
+    });
+    /* Esc → close. */
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') setOpen(false);
+    });
+    /* Click any link → close (so the menu doesn't linger after nav). */
+    menuPanel.querySelectorAll('a').forEach(function(a) {
+      a.addEventListener('click', function() { setOpen(false); });
+    });
+
+    console.log('[DMC01-nav] Initialised.');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+</body>
+</html>
