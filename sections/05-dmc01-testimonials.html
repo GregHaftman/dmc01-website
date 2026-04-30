@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+<script>(function(){try{var t=localStorage.getItem('dmc01-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+
 <style>
   /* ============================================================
      DMC01 · "Work with me, what to expect?"
@@ -47,6 +49,19 @@
     /* Border radius — see head-alias-block.css. */
     --radius-sm: var(--radius-base, 2px);
     --radius-md: calc(var(--radius-sm) * 2);
+  }
+
+  /* Light theme — see 01-dmc01-intro.html for the rationale. */
+  [data-theme="light"] {
+    --neutral-primary:   #f5f5f7;
+    --neutral-secondary: #ffffff;
+    --surface-3:         #ebebee;
+    --white:    #070708;
+    --white-72: rgba(7, 7, 8, 0.72);
+    --white-70: rgba(7, 7, 8, 0.70);
+    --white-50: rgba(7, 7, 8, 0.55);
+    --white-30: rgba(7, 7, 8, 0.42);
+    --white-15: rgba(7, 7, 8, 0.10);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }

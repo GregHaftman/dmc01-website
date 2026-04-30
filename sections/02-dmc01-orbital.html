@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>(function(){try{var t=localStorage.getItem('dmc01-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <style>
 :root {
   /* All variables below reference Webflow's alias block (head-alias-block.css).
@@ -74,6 +75,34 @@
   --medium-grey:  #999999;
   --light-grey:   #F0F0F5;
 }
+
+/* ============================================================
+   LIGHT THEME OVERRIDES
+   See 01-dmc01-intro.html for the full rationale. Storm SVG
+   illustrations keep their dark blues — they read as atmospheric
+   atmospheric clouds on either background. The hero-panel gradient
+   uses a hardcoded `#1a1f3a` navy that needs theming.
+   ============================================================ */
+[data-theme="light"] {
+  --neutral-primary:   #f5f5f7;
+  --neutral-secondary: #ffffff;
+  --surface-3:         #ebebee;
+  --white:    #070708;
+  --white-72: rgba(7, 7, 8, 0.72);
+  --white-70: rgba(7, 7, 8, 0.70);
+  --white-50: rgba(7, 7, 8, 0.55);
+  --white-30: rgba(7, 7, 8, 0.42);
+  --white-15: rgba(7, 7, 8, 0.10);
+}
+/* Hero-panel (unfolded module view) — gradient flips so it reads on a light page. */
+[data-theme="light"] .hero-panel {
+  background: linear-gradient(135deg, var(--neutral-secondary) 0%, #eef0fa 100%);
+}
+[data-theme="light"] .rail-item.is-active {
+  background: linear-gradient(135deg, var(--neutral-secondary) 0%, rgba(0, 71, 255, 0.10) 100%);
+}
+/* The DMC01 mark in the centre — clickable on either theme. */
+[data-theme="light"] .centre-logo svg polyline { stroke: var(--white); }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -300,6 +329,10 @@ body::before {
 
 /* ==========================================================
    CENTRE — logo + soft glow
+   The wrap container itself is non-interactive (so it doesn't
+   block clicks on nodes that pass under it), but the logo
+   element gets pointer-events back on, so clicking it fires a
+   user-triggered engagement wave (see #centreLogoTrigger in JS).
    ========================================================== */
 .orbital-centre {
   position: absolute;
@@ -310,6 +343,22 @@ body::before {
   pointer-events: none;
   z-index: 4;
   width: 360px;
+}
+.centre-logo-wrap {
+  pointer-events: auto;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.34, 0, 0.25, 1);
+}
+.centre-logo-wrap:hover { transform: scale(1.04); }
+.centre-logo-wrap:active { transform: scale(0.98); }
+/* Per-click flash — JS adds .is-firing for ~600ms when clicked. */
+.centre-logo-wrap.is-firing {
+  animation: centreFire 0.6s ease-out;
+}
+@keyframes centreFire {
+  0%   { transform: scale(0.92); }
+  40%  { transform: scale(1.10); }
+  100% { transform: scale(1.00); }
 }
 
 .centre-logo-wrap {
@@ -1082,6 +1131,27 @@ setInterval(() => {
 setTimeout(() => {
   if (!root.querySelector('#stage').classList.contains('unfolded')) engagementMoment();
 }, 4000);
+
+/* ============ USER-TRIGGERED WAVES ============
+   Clicking the centre DMC01 mark fires an engagement wave on
+   demand — same path as the auto-fire above, but the user gets
+   to *play* with it. The .is-firing class on the wrap gives a
+   short tactile pulse, so the click feels mechanical.
+   The click is ignored while a module is unfolded (the centre
+   isn't visible then anyway). */
+const centreLogoWrap = root.querySelector('.centre-logo-wrap');
+if (centreLogoWrap) {
+  centreLogoWrap.addEventListener('click', () => {
+    if (root.querySelector('#stage').classList.contains('unfolded')) return;
+    centreLogoWrap.classList.remove('is-firing');
+    void centreLogoWrap.offsetWidth; /* restart the keyframe */
+    centreLogoWrap.classList.add('is-firing');
+    engagementMoment();
+  });
+  centreLogoWrap.addEventListener('animationend', () => {
+    centreLogoWrap.classList.remove('is-firing');
+  });
+}
 
 /* ============ HOVER & CLICK ============ */
 nodes.forEach(node => {

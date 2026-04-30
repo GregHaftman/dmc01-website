@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+<script>(function(){try{var t=localStorage.getItem('dmc01-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+
 <style>
   /* ============================================================
      DMC01 · Site nav — sticky page header
@@ -43,6 +45,24 @@
        rectangle corners across the site proportionally. */
     --radius-sm: var(--radius-base, 2px);
     --radius-md: calc(var(--radius-sm) * 2);
+
+    /* Nav-bar background — themed via tokens below so light theme
+       gets a translucent white bar instead of translucent black. */
+    --nav-bg-top:    rgba(7, 7, 8, 0.96);
+    --nav-bg-bottom: rgba(7, 7, 8, 0.78);
+  }
+
+  /* Light theme — see 01-dmc01-intro.html for the rationale. */
+  [data-theme="light"] {
+    --neutral-primary:   #f5f5f7;
+    --neutral-secondary: #ffffff;
+    --white:    #070708;
+    --white-72: rgba(7, 7, 8, 0.72);
+    --white-50: rgba(7, 7, 8, 0.55);
+    --white-30: rgba(7, 7, 8, 0.42);
+    --white-15: rgba(7, 7, 8, 0.10);
+    --nav-bg-top:    rgba(245, 245, 247, 0.96);
+    --nav-bg-bottom: rgba(245, 245, 247, 0.82);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -65,7 +85,7 @@
     left: 0;
     right: 0;
     z-index: 1000;
-    background: linear-gradient(180deg, rgba(7, 7, 8, 0.96) 0%, rgba(7, 7, 8, 0.78) 100%);
+    background: linear-gradient(180deg, var(--nav-bg-top) 0%, var(--nav-bg-bottom) 100%);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--white-15);
@@ -326,6 +346,47 @@
   }
 
   /* ============================================================
+     THEME TOGGLE — segmented Dark / Light, sits in the menu panel
+     ============================================================ */
+  .nav-theme-toggle {
+    display: flex;
+    margin-top: 8px;
+    border: 1px solid var(--white-15);
+    border-radius: var(--radius-sm);
+    padding: 2px;
+    gap: 0;
+  }
+  .nav-theme-option {
+    flex: 1;
+    background: transparent;
+    border: 0;
+    color: var(--white-50);
+    font-family: inherit;
+    font-size: 0.82rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 8px 10px;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .nav-theme-option:hover { color: var(--white-72); }
+  .nav-theme-option.is-active {
+    background: var(--brand-blue);
+    color: #ffffff; /* always white on blue, both themes */
+  }
+  .nav-theme-icon {
+    width: 14px; height: 14px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  /* ============================================================
      RESPONSIVE
      ============================================================ */
   @media (max-width: 720px) {
@@ -429,6 +490,27 @@
         </a></li>
       </ul>
     </div>
+
+    <div class="nav-panel-section">
+      <div class="nav-panel-eyebrow">Display</div>
+      <div class="nav-theme-toggle" role="radiogroup" aria-label="Theme">
+        <button type="button" class="nav-theme-option" data-theme="dark"
+                role="radio" aria-checked="true">
+          <svg class="nav-theme-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <span>Dark</span>
+        </button>
+        <button type="button" class="nav-theme-option" data-theme="light"
+                role="radio" aria-checked="false">
+          <svg class="nav-theme-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+          </svg>
+          <span>Light</span>
+        </button>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -490,6 +572,27 @@
     /* Click any link → close (so the menu doesn't linger after nav). */
     menuPanel.querySelectorAll('a').forEach(function(a) {
       a.addEventListener('click', function() { setOpen(false); });
+    });
+
+    /* ---------- THEME TOGGLE ----------
+       The FOUC script in <head> already set the initial theme on
+       <html data-theme="…">. Here we sync the segmented control to
+       it, and wire clicks. localStorage persists the choice across
+       sessions; system preference seeds the first visit. */
+    const themeButtons = nav.querySelectorAll('.nav-theme-option');
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      themeButtons.forEach(function(b) {
+        const active = b.dataset.theme === theme;
+        b.classList.toggle('is-active', active);
+        b.setAttribute('aria-checked', active ? 'true' : 'false');
+      });
+      try { localStorage.setItem('dmc01-theme', theme); } catch (e) {}
+    }
+    /* Sync to whatever the FOUC script picked. */
+    applyTheme(document.documentElement.getAttribute('data-theme') || 'dark');
+    themeButtons.forEach(function(b) {
+      b.addEventListener('click', function() { applyTheme(b.dataset.theme); });
     });
 
     console.log('[DMC01-nav] Initialised.');
