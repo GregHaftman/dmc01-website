@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DMC01 — Six Modules</title>
+<title>DMC01 — Specialised advisory and execution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -602,6 +602,191 @@ body::before {
 .rail-item-icon svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .rail-item-title { font-size: var(--t-base-size); font-weight: var(--w-bold); line-height: 1.15; letter-spacing: -0.005em; }
 
+/* ==========================================================
+   ZONE MARKERS — sub-section headers that split the section into
+   "01 · The toolkit" (the orbital) and "02 · How they combine"
+   (the use case grid). The numbered eyebrows make the
+   modules-vs-use-cases distinction explicit; the lede sentence
+   sets up the next zone.
+   ========================================================== */
+.zone-marker {
+  padding: 24px 0 28px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(20px, 4vw, 64px);
+  align-items: end;
+}
+.zone-marker .zone-num {
+  grid-column: 1;
+  font-size: var(--t-eyebrow-size);
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--brand-blue);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+  align-self: end;
+}
+.zone-marker .zone-num::before {
+  content: "";
+  width: 32px; height: 1px;
+  background: var(--brand-blue);
+}
+.zone-marker .zone-title {
+  grid-column: 1;
+  grid-row: 2;
+  font-size: var(--t-h2-size);
+  font-weight: var(--w-h2);
+  line-height: var(--lh-h2);
+  letter-spacing: -0.012em;
+  color: var(--white);
+  margin: 0;
+}
+.zone-marker .zone-title em { font-style: normal; color: var(--brand-blue); }
+.zone-marker .zone-lede {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  font-size: var(--t-lg-size);
+  line-height: var(--lh-base);
+  color: var(--white-72);
+  max-width: 520px;
+  align-self: end;
+  padding-bottom: 4px;
+}
+@media (max-width: 800px) {
+  .zone-marker {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .zone-marker .zone-num,
+  .zone-marker .zone-title,
+  .zone-marker .zone-lede { grid-column: 1; grid-row: auto; }
+}
+
+/* ==========================================================
+   USE CASE GRID
+   3×2 cards on desktop, 2×3 on tablet, 1 col on mobile.
+   Each card: number + name + 1-line situation + the 2–3 module
+   chips it pulls in. Module chips are clickable — they scroll
+   to the orbital above and open that module (cross-zone bridge).
+   ========================================================== */
+.use-cases {
+  max-width: 1700px;
+  margin: 0 auto 48px;
+}
+.use-case-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.use-case-card {
+  background: var(--neutral-secondary);
+  border: 1px solid var(--white-15);
+  border-radius: var(--radius-md);
+  padding: 22px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+.use-case-card:hover {
+  border-color: rgba(0, 71, 255, 0.45);
+  transform: translateY(-2px);
+  box-shadow: 0 0 28px rgba(0, 71, 255, 0.18);
+}
+.use-case-card-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+.use-case-num {
+  font-size: var(--t-xl-size);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--brand-blue);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.use-case-name {
+  font-size: var(--t-xl-size);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--white);
+  line-height: 1.15;
+  margin: 0;
+}
+.use-case-rule {
+  width: 36px;
+  height: 1px;
+  background: var(--brand-blue);
+  border: 0;
+  margin: 0;
+}
+.use-case-text {
+  font-size: var(--t-base-size);
+  line-height: 1.5;
+  color: var(--white-72);
+  flex: 1;
+  margin: 0;
+}
+.use-case-text strong {
+  color: var(--white);
+  font-weight: 600;
+}
+.use-case-modules {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px dashed var(--white-15);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.use-case-modules-label {
+  font-size: var(--t-eyebrow-size);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--white-50);
+}
+.use-case-modules-list {
+  display: flex;
+  gap: 6px;
+}
+.use-case-module-chip {
+  background: transparent;
+  border: 1px solid var(--white-15);
+  color: var(--white-72);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+.use-case-module-chip:hover {
+  border-color: var(--brand-blue);
+  background: rgba(0, 71, 255, 0.12);
+  color: var(--brand-blue);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 1000px) {
+  .use-case-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .use-case-grid { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 1000px) {
   .section { padding: 48px 20px 80px; }
   .stage { min-height: auto; }
@@ -632,10 +817,17 @@ body::before {
         <h1 class="section-title">Specialised advisory <em>and execution.</em></h1>
       </div>
       <div class="header-right">
-        <p class="section-lede">Expert guidance for data vendors, fintechs, and institutions. Unlock new revenue streams, optimise go-to-market, and scale your data business with proven, hands-on strategy. The modules below are tailored to the maturity of your data products and the ambition you have to develop your offering.</p>
+        <p class="section-lede">A fixed toolkit of <em>six modules</em>, combined into the right shape for your situation. Below, see the modules — then how they combine into real client use cases.</p>
       </div>
     </div>
   </div><!-- /.section-inner header -->
+
+  <!-- ZONE 1 marker — frames the orbital below as "the toolkit". -->
+  <div class="zone-marker section-inner">
+    <span class="zone-num">01 · The toolkit</span>
+    <h2 class="zone-title">Six <em>modules.</em></h2>
+    <p class="zone-lede">Click any module to see the deliverable. Then scroll on to see how they combine in real client situations.</p>
+  </div>
 
   <div class="stage" id="stage">
 
@@ -793,6 +985,125 @@ body::before {
       </div>
     </div>
 
+  </div>
+
+  <!-- ZONE 2 marker — frames the use case grid below as the
+       combinations that the toolkit produces. -->
+  <div class="zone-marker section-inner">
+    <span class="zone-num">02 · How they combine</span>
+    <h2 class="zone-title">Six <em>use cases.</em></h2>
+    <p class="zone-lede">Each one combines two or three of the modules above. Click a module chip on a card to scroll back up and open that module.</p>
+  </div>
+
+  <!-- USE CASE GRID — six clean cards. The chips at the bottom of
+       each card link back up to the modules; the cross-zone bridge
+       lives in the script below. -->
+  <div class="use-cases section-inner">
+    <div class="use-case-grid">
+
+      <article class="use-case-card">
+        <header class="use-case-card-head">
+          <span class="use-case-num">01</span>
+          <h3 class="use-case-name">Enterprise selling</h3>
+        </header>
+        <hr class="use-case-rule">
+        <p class="use-case-text"><strong>If you are</strong> selling complex data into large institutions — procurement, security review, multi-stakeholder cycles before any signature.</p>
+        <div class="use-case-modules">
+          <span class="use-case-modules-label">Modules</span>
+          <div class="use-case-modules-list">
+            <button class="use-case-module-chip" data-module="04" type="button" aria-label="Module 04 — Value Strategy &amp; Enablement">04</button>
+            <button class="use-case-module-chip" data-module="02" type="button" aria-label="Module 02 — Monetisation Model &amp; Pricing">02</button>
+            <button class="use-case-module-chip" data-module="01" type="button" aria-label="Module 01 — Rights &amp; Licensing Framework">01</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="use-case-card">
+        <header class="use-case-card-head">
+          <span class="use-case-num">02</span>
+          <h3 class="use-case-name">Pipeline growth</h3>
+        </header>
+        <hr class="use-case-rule">
+        <p class="use-case-text"><strong>If you are</strong> generating interest but losing it before commercials — deals stalling at evaluation, adoption flat after sign-off.</p>
+        <div class="use-case-modules">
+          <span class="use-case-modules-label">Modules</span>
+          <div class="use-case-modules-list">
+            <button class="use-case-module-chip" data-module="04" type="button" aria-label="Module 04 — Value Strategy &amp; Enablement">04</button>
+            <button class="use-case-module-chip" data-module="02" type="button" aria-label="Module 02 — Monetisation Model &amp; Pricing">02</button>
+            <button class="use-case-module-chip" data-module="05" type="button" aria-label="Module 05 — Offer Design &amp; Packaging">05</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="use-case-card">
+        <header class="use-case-card-head">
+          <span class="use-case-num">03</span>
+          <h3 class="use-case-name">Investor readiness</h3>
+        </header>
+        <hr class="use-case-rule">
+        <p class="use-case-text"><strong>If you are</strong> pre-deal — preparing for a raise, sale, or strategic review. Or a PE / strategic acquirer eyeing a target.</p>
+        <div class="use-case-modules">
+          <span class="use-case-modules-label">Modules</span>
+          <div class="use-case-modules-list">
+            <button class="use-case-module-chip" data-module="02" type="button" aria-label="Module 02 — Monetisation Model &amp; Pricing">02</button>
+            <button class="use-case-module-chip" data-module="05" type="button" aria-label="Module 05 — Offer Design &amp; Packaging">05</button>
+            <button class="use-case-module-chip" data-module="01" type="button" aria-label="Module 01 — Rights &amp; Licensing Framework">01</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="use-case-card">
+        <header class="use-case-card-head">
+          <span class="use-case-num">04</span>
+          <h3 class="use-case-name">Data product launch &amp; land</h3>
+        </header>
+        <hr class="use-case-rule">
+        <p class="use-case-text"><strong>If you are</strong> bringing a new dataset to market — or productising data for the first time — and need every dependency lined up before launch day.</p>
+        <div class="use-case-modules">
+          <span class="use-case-modules-label">Modules</span>
+          <div class="use-case-modules-list">
+            <button class="use-case-module-chip" data-module="03" type="button" aria-label="Module 03 — Product Direction &amp; Roadmap">03</button>
+            <button class="use-case-module-chip" data-module="05" type="button" aria-label="Module 05 — Offer Design &amp; Packaging">05</button>
+            <button class="use-case-module-chip" data-module="01" type="button" aria-label="Module 01 — Rights &amp; Licensing Framework">01</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="use-case-card">
+        <header class="use-case-card-head">
+          <span class="use-case-num">05</span>
+          <h3 class="use-case-name">Marketplace enablement</h3>
+        </header>
+        <hr class="use-case-rule">
+        <p class="use-case-text"><strong>If you are</strong> listing on Snowflake, Databricks, or a sector marketplace — or considering it. Different commercial surface, its own logic.</p>
+        <div class="use-case-modules">
+          <span class="use-case-modules-label">Modules</span>
+          <div class="use-case-modules-list">
+            <button class="use-case-module-chip" data-module="05" type="button" aria-label="Module 05 — Offer Design &amp; Packaging">05</button>
+            <button class="use-case-module-chip" data-module="06" type="button" aria-label="Module 06 — Distribution &amp; Delivery Architecture">06</button>
+            <button class="use-case-module-chip" data-module="02" type="button" aria-label="Module 02 — Monetisation Model &amp; Pricing">02</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="use-case-card">
+        <header class="use-case-card-head">
+          <span class="use-case-num">06</span>
+          <h3 class="use-case-name">Delivery modernisation</h3>
+        </header>
+        <hr class="use-case-rule">
+        <p class="use-case-text"><strong>If you are</strong> still shipping data the way you did five years ago — file feeds, batch FTP — and customers are starting to ask for something modern.</p>
+        <div class="use-case-modules">
+          <span class="use-case-modules-label">Modules</span>
+          <div class="use-case-modules-list">
+            <button class="use-case-module-chip" data-module="06" type="button" aria-label="Module 06 — Distribution &amp; Delivery Architecture">06</button>
+            <button class="use-case-module-chip" data-module="03" type="button" aria-label="Module 03 — Product Direction &amp; Roadmap">03</button>
+            <button class="use-case-module-chip" data-module="04" type="button" aria-label="Module 04 — Value Strategy &amp; Enablement">04</button>
+          </div>
+        </div>
+      </article>
+
+    </div>
   </div>
 
   <!-- Closing line — a reflective bookend after the system stops dancing -->
@@ -1251,10 +1562,9 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-/* External trigger: another embed (e.g. dmc01-tailored) can request a
-   specific module by dispatching `dmc01:openModule` with { detail: { id } }.
-   We always scroll the stage into view here — internal clicks already sit
-   on the stage, but external triggers usually originate from a section above. */
+/* External trigger: legacy event from when use cases lived in a separate
+   embed. Kept for compatibility — any other section dispatching
+   `dmc01:openModule` with { detail: { id } } still works. */
 document.addEventListener('dmc01:openModule', (e) => {
   const id = e.detail && e.detail.id;
   if (!id || !MODULES.find(m => m.id === id)) return;
@@ -1263,7 +1573,22 @@ document.addEventListener('dmc01:openModule', (e) => {
   window.scrollTo({ top: stageTop, behavior: 'smooth' });
 });
 
-    console.log('[DMC01-orbital] Initialised.');
+/* ============ USE CASE CHIPS ============
+   Clicking a module chip in the use-case grid below scrolls back up
+   to the orbital and opens that module — the in-section bridge that
+   makes the modules-vs-use-cases relationship explicit. Same path
+   as the external dmc01:openModule event, just inline. */
+root.querySelectorAll('.use-case-module-chip').forEach((chip) => {
+  chip.addEventListener('click', () => {
+    const id = chip.getAttribute('data-module');
+    if (!id || !MODULES.find(m => m.id === id)) return;
+    setActiveModule(id);
+    const stageTop = stage.getBoundingClientRect().top + window.scrollY - 80;
+    window.scrollTo({ top: stageTop, behavior: 'smooth' });
+  });
+});
+
+    console.log('[DMC01-services] Initialised.');
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);

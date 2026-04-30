@@ -243,11 +243,10 @@
       <div class="nav-panel-eyebrow">On this page</div>
       <ul class="nav-panel-list">
         <li><a href="#dmc01-intro" data-target="intro" role="menuitem"><span class="nav-panel-num">01</span><span>Hero</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
-        <li><a href="#dmc01-services" data-target="orbital" role="menuitem"><span class="nav-panel-num">02</span><span>Services</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
-        <li><a href="#dmc01-tailored" data-target="tailored" role="menuitem"><span class="nav-panel-num">03</span><span>Use cases</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
-        <li><a href="#dmc01-framework" data-target="framework" role="menuitem"><span class="nav-panel-num">04</span><span>Framework</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
-        <li><a href="#dmc01-testimonials" data-target="testimonials" role="menuitem"><span class="nav-panel-num">05</span><span>Work with me</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
-        <li><a href="#dmc01-contact" data-target="contact" role="menuitem"><span class="nav-panel-num">06</span><span>Open a brief</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
+        <li><a href="#dmc01-services"     data-target="services"     role="menuitem"><span class="nav-panel-num">02</span><span>Services &amp; use cases</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
+        <li><a href="#dmc01-framework"    data-target="framework"    role="menuitem"><span class="nav-panel-num">03</span><span>Framework</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
+        <li><a href="#dmc01-testimonials" data-target="testimonials" role="menuitem"><span class="nav-panel-num">04</span><span>Work with me</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
+        <li><a href="#dmc01-contact"      data-target="contact"      role="menuitem"><span class="nav-panel-num">05</span><span>Open a brief</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
       </ul>
     </div>
     <div class="nav-panel-section">
@@ -274,13 +273,12 @@
 </header>
 
 <!-- ================ SECTION IFRAMES ================ -->
-<iframe src="01-dmc01-intro.html"     title="DMC01 — Data Monetisation Concept" data-section="intro"></iframe>
-<iframe src="02-dmc01-orbital.html"   title="DMC01 — Specialised advisory"     data-section="orbital"></iframe>
-<iframe src="03-dmc01-tailored.html"  title="DMC01 — Tailored to your context" data-section="tailored"></iframe>
-<iframe src="04-dmc01-framework.html"    title="DMC01 — Powered by a rigorous framework" data-section="framework"></iframe>
-<iframe src="05-dmc01-testimonials.html" title="DMC01 — Work with me, what to expect?"     data-section="testimonials"></iframe>
-<iframe src="06-dmc01-contact.html"      title="DMC01 — Open a brief"                      data-section="contact"></iframe>
-<iframe src="dmc01-footer.html"          title="DMC01 — Footer"                            data-section="footer"></iframe>
+<iframe src="01-dmc01-intro.html"        title="DMC01 — Data Monetisation Concept"        data-section="intro"></iframe>
+<iframe src="02-dmc01-services.html"     title="DMC01 — Specialised advisory and execution" data-section="services"></iframe>
+<iframe src="04-dmc01-framework.html"    title="DMC01 — Powered by a rigorous framework"  data-section="framework"></iframe>
+<iframe src="05-dmc01-testimonials.html" title="DMC01 — Work with me, what to expect?"    data-section="testimonials"></iframe>
+<iframe src="06-dmc01-contact.html"      title="DMC01 — Open a brief"                     data-section="contact"></iframe>
+<iframe src="dmc01-footer.html"          title="DMC01 — Footer"                           data-section="footer"></iframe>
 
 <script>
 (function() {
@@ -307,29 +305,9 @@
     });
   });
 
-  /* ============================================================
-     CROSS-EMBED BRIDGE — tailored "Modules" pill → orbital open.
-     Same as before; survives even now that nav scrolls the page. */
-  function bridge() {
-    const tailored = document.querySelector('iframe[data-section="tailored"]');
-    const orbital  = document.querySelector('iframe[data-section="orbital"]');
-    if (!tailored || !orbital) return;
-    const td = tailored.contentDocument, od = orbital.contentDocument;
-    if (!td || !od) return;
-    td.addEventListener('dmc01:openModule', function(e) {
-      od.dispatchEvent(new CustomEvent('dmc01:openModule', { detail: e.detail }));
-      orbital.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-  }
-  let loaded = 0;
-  ['tailored', 'orbital'].forEach(function(name) {
-    const f = document.querySelector('iframe[data-section="' + name + '"]');
-    if (!f) return;
-    f.addEventListener('load', function() {
-      loaded++;
-      if (loaded === 2) bridge();
-    });
-  });
+  /* (The old tailored→orbital cross-iframe bridge was removed when
+      the two were merged into the single 02-dmc01-services embed. The
+      use-case chips now scroll within their own document.) */
 
   /* ============================================================
      NAV BEHAVIOUR (in this preview the nav lives in the parent
