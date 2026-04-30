@@ -214,19 +214,21 @@
   }
 
   /* ----- LOGO MARK (bottom-right corner) -----
-     Static signature mark that sits below the right-hand rail,
-     out of the way of the centred content. Subtle blue drop-shadow
-     ties it to the rest of the section's atmosphere. */
+     Static signature mark hugging the bottom-right corner. As the
+     user starts scrolling away from this section, it fades and
+     drops out — visually "migrating" into the sticky nav header
+     that takes over from the next section onwards. */
   .intro-mark {
     position: absolute;
-    bottom: clamp(20px, 4vw, 44px);
-    right: clamp(20px, 4vw, 44px);
-    width: clamp(64px, 8vw, 100px);
+    bottom: clamp(6px, 1.2vw, 16px);
+    right: clamp(6px, 1.2vw, 16px);
+    width: clamp(64px, 8vw, 104px);
     aspect-ratio: 1;
     z-index: 3;
     pointer-events: none;
     opacity: 0.78;
     filter: drop-shadow(0 0 14px rgba(0, 71, 255, 0.35));
+    transition: opacity 0.45s ease, transform 0.45s ease;
   }
   .intro-mark svg { width: 100%; height: 100%; display: block; }
   .intro-mark .mark-stroke {
@@ -234,6 +236,13 @@
     stroke-width: 14;
     stroke-miterlimit: 10;
     fill: none;
+  }
+  /* `.is-leaving` is added by JS (or by the fullsite shell) when the
+     intro is mostly scrolled past. The mark dissolves down-right,
+     synchronised with the nav fading in. */
+  .intro-section.is-leaving .intro-mark {
+    opacity: 0;
+    transform: translate(12px, 12px);
   }
 
   /* Reduced motion — SMIL animations on the road SVG are paused via
@@ -257,7 +266,7 @@
 
 <body>
 
-<section class="intro-section" aria-label="DMC01 — Data Monetisation Concept">
+<section class="intro-section" id="dmc01-intro" aria-label="DMC01 — Data Monetisation Concept">
 
   <!-- Road rails: two parallel spindle polygons (thick mid, thin tips)
        framing the content above and below. Each is filled by a
@@ -369,6 +378,20 @@
       const svg = root.querySelector('.neon-svg');
       if (svg && typeof svg.pauseAnimations === 'function') svg.pauseAnimations();
     }
+
+    /* Fade the corner mark out as the section is scrolled past, so
+       the migration into the sticky nav header reads as a movement.
+       Triggers when the section's bottom edge is past 60% of the
+       viewport height. (The fullsite shell triggers the same class
+       via cross-iframe DOM access — both paths converge here.) */
+    function syncLeaving() {
+      const rect = root.getBoundingClientRect();
+      const isLeaving = rect.bottom < window.innerHeight * 0.6;
+      root.classList.toggle('is-leaving', isLeaving);
+    }
+    syncLeaving();
+    window.addEventListener('scroll', syncLeaving, { passive: true });
+    window.addEventListener('resize', syncLeaving, { passive: true });
 
     console.log('[DMC01-intro] Initialised.');
   }
