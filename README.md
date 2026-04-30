@@ -110,7 +110,7 @@ Build order recommended by visual-system dependency:
 | 1 | **intro** (hero) | DONE | Big logo, main title, subtext, 3 KPIs. Sets the visual contract for the rest of the site. |
 | 2 | **orbital** (six modules) | DONE (other chat) | TODO: port HTML to this repo |
 | 3 | **tailored** (use cases) | DONE (v10) | This file. |
-| 4 | **framework** (5-step explainer) | TODO | Includes deliverable examples |
+| 4 | **framework** (5-step explainer) | DONE | Five tiles (Learn → Think → Build → Execute → Deliver) with hover-peek + click-to-lock to expose a stage panel showing the activity for each step. |
 | 5 | **me** (background, experience) | TODO | Content-light, easy |
 | 6 | **testimonials** | TODO | Main text + testimonials hero |
 | 7 | **reach** (contact form) | TODO | Replace Webflow's default form |
@@ -138,7 +138,9 @@ For each section file in `sections/`:
 1. Embed component on the page: `<style>` block + the markup (`<section>...</section>`)
 2. Project Settings → Custom Code → Before `</body>`: the `<script>` content (without `<script>` tags themselves)
 
-Currently no section needs this. Tailored is at ~40k chars with ~10k headroom.
+**Framework currently needs this** — it's at ~54k chars (over the 50k limit) because of the five SVG illustrations on the stage panel. Move the contents of the trailing `<script>...</script>` block into Project Settings → Custom Code → Before `</body>` (just the JS body, no `<script>` tags), and paste only the `<style>` + `<section>` markup into the page Embed component.
+
+Tailored is at ~40k chars with ~10k headroom. Intro and orbital are well under.
 
 ---
 
@@ -185,6 +187,7 @@ Two surfaces:
 | Apr 2026 | Webflow AI-gen var separator is `--` between group and var-name, not `---` | Alias block patched; Pattern A vs B documented in `webflow/head-alias-block.css` header so it isn't relitigated |
 | Apr 2026 | Derived alphas (`--accent-primary-glow`, `--accent-primary-faint`) use `color-mix()` against `--accent-primary` | Auto-tracks Webflow brand-blue changes instead of drifting from a hard-coded hex |
 | Apr 2026 | Renamed `--accent-primary-grid` → `--brand-grid` | The grid colour is intentionally a different blue (`#4948C0`); old name implied derivation that didn't exist |
+| Apr 2026 | Framework section: 5 cards in a flex row with hover-peek + click-to-lock; each tile reveals a stage-panel illustration (signed SOW, stakeholder interviews, Notion analysis page, Figma + VS Code split, executive brief + handover bundle). Default stage shows a Gantt-proportional 12-month timeline (Learn 0.5mo / Think 1mo / Build 4.5mo / Execute 5mo / Deliver 1mo). A static-line + animated SMIL pulse runs under the cards, with the 3 / 12 / 18-month range called out as the project envelope. | The live site's "Powered by a rigorous framework" tiles were text-only; user wanted to expose the *activity* per step. The hover-peek mirrors the tailored section's interaction so the page has one consistent click-to-explore vocabulary. SVG illustrations for Build/Execute/Deliver intentionally show the actual tools (Notion, Figma, VS Code) so the section reads as concrete rather than aspirational. |
 | Apr 2026 | Site background flipped from `--bg-secondary` (#161617) to `--bg-primary` (#070708) on intro / orbital / tailored — section backgrounds use `var(--neutral-primary)` so the variable chain (and any future Webflow override) propagates. Panel surfaces inside sections still use `--bg-secondary` (#161617) so they read as elevated above the page. | User preferred the deeper black for the page background; the two-tier system (primary page, secondary panels) gives clearer visual hierarchy than the previous flat #161617. |
 | Apr 2026 | Intro hero v5: rails moved from y=32%/68% to y=22%/78% for more breathing room around the content. Feather-style icons reinstated on the KPIs but without the surrounding chip boxes — icons sit inline next to each label with hairline dividers between items. | v4's rail spacing was tight; pushing them out gives the text the visual headroom the user asked for. Icons on the KPIs add quick scannability without the visual weight of the boxed chips that were removed earlier. |
 | Apr 2026 | Intro hero v4: rails are *spindle polygons* (thick centre, thin tips) instead of constant-width lines. Logo dropped, tagline dropped, KPI chips replaced by inline labels with hairline dividers, new orchestration-layer description added. | The user wanted a 3D feel for the road and asked for elegant text-road integration. Spindle polygons give the rails mass at the centre (where the content sits) and recede to nothing at the far ends — that's the perspective cue without breaking parallelism. Boxed KPIs felt cluttered; inline labels with hairline separators are quieter and tie visually to the rails. |
