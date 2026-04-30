@@ -73,6 +73,26 @@
   /* ───── BORDERS ───── */
   --border-secondary: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863---border-color--border-secondary);
 
+  /* ───── BORDER RADIUS ─────
+     Single source of truth for the corner radius across every rectangle
+     frame site-wide. Sections derive `--radius-sm` (= base) and
+     `--radius-md` (= 2× base) from this — tweak the base value below
+     (or the Webflow variable it points to) and everything from chips
+     to panels rounds or sharpens proportionally.
+
+     TO WIRE UP TO A WEBFLOW VARIABLE:
+     1. Webflow → Variables → create a variable named "Radius Base"
+        (any group works — Sizing, Component, etc.). Set value 2px.
+     2. After publishing once, copy the auto-generated AI-gen name for
+        that variable (DevTools → :root, look for the ai-gen ending in
+        `…---{group}--radius-base`).
+     3. Replace the static fallback below with that var() reference,
+        e.g.:
+          --radius-base: var(--ai-gen-{PREFIX}---core-sizing--radius-base, 2px);
+
+     Until then, this static 2px keeps the current look intact. */
+  --radius-base: 2px;
+
   /* ───── TYPOGRAPHY: FONTS ───── */
   --font-body:    var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---font--body-font);
   --font-heading: var(--ai-gen-82921b10-4b39-48f0-b346-808cf4903d29-1759757771863_typography---font--heading-font);

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DMC01 — Work with me, what to expect?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     DMC01 · "Work with me, what to expect?"
+     Combines the bio (was the "me" section) with the testimonial
+     wall (was the testimonials section). Two zones:
+       1. Bio block — placeholder portrait illustration + intro copy.
+          The illustration is a stand-in until a real photo is dropped in.
+       2. Testimonial marquee — all ten quotes from the live site
+          scroll horizontally on a slow loop, paused on hover.
+     ============================================================ */
+
+  :root {
+    --brand-blue:        var(--accent-primary, #0047FF);
+    --brand-blue-hover:  var(--accent-primary-hover, #3c6ce7);
+    --neutral-primary:   var(--bg-primary, #070708);
+    --neutral-secondary: var(--bg-secondary, #161617);
+    --surface-3:         #1d1e22;
+    --font:              var(--font-body, "Rajdhani", system-ui, sans-serif);
+    --t-h1-size:    var(--h1-size, 5.65rem);
+    --t-h2-size:    var(--h2-size, 2.83rem);
+    --t-base-size:  var(--base-font-size, 1rem);
+    --t-lg-size:    var(--text-lg-size, 1.1rem);
+    --t-xl-size:    var(--text-xl-size, 1.2rem);
+    --t-eyebrow-size: var(--eyebrow-size, 0.8rem);
+    --w-h1:    var(--h1-weight, 600);
+    --w-base:  var(--base-font-weight, 400);
+    --w-bold:  var(--base-font-weight-bold, 600);
+    --lh-h1:   var(--h1-line-height, 1.04em);
+    --lh-base: var(--base-line-height, 1.6em);
+    --white:    var(--text-primary, #FFFFFF);
+    --white-72: rgba(255, 255, 255, 0.72);
+    --white-50: rgba(255, 255, 255, 0.50);
+    --white-30: rgba(255, 255, 255, 0.30);
+    --white-15: var(--border-secondary, rgba(255, 255, 255, 0.15));
+    --blue-faint: var(--accent-primary-faint, rgba(0, 71, 255, 0.10));
+
+    /* Border radius — see head-alias-block.css. */
+    --radius-sm: var(--radius-base, 2px);
+    --radius-md: calc(var(--radius-sm) * 2);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--neutral-primary);
+    color: var(--white);
+    font-family: var(--font);
+    font-weight: var(--w-base);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ============================================================
+     SECTION FRAME
+     ============================================================ */
+  .testimonials-section {
+    position: relative;
+    z-index: 1;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    padding: 56px 0 72px;
+    background: var(--neutral-primary);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .testimonials-section .section-inner {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 0 64px;
+  }
+
+  /* ============================================================
+     HEADER
+     ============================================================ */
+  .testimonials-header {
+    margin-bottom: 56px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--white-15);
+  }
+  .testimonials-section .eyebrow {
+    font-size: var(--t-eyebrow-size);
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .testimonials-section .eyebrow::before {
+    content: "";
+    width: 32px; height: 1px;
+    background: var(--brand-blue);
+  }
+  .testimonials-section .section-title {
+    font-size: var(--t-h1-size);
+    font-weight: var(--w-h1);
+    line-height: var(--lh-h1);
+    letter-spacing: -0.02em;
+    max-width: 1200px;
+  }
+  .testimonials-section .section-title em {
+    font-style: normal;
+    color: var(--brand-blue);
+  }
+
+  /* ============================================================
+     BIO BLOCK — illustration + intro copy
+     ============================================================ */
+  .bio-block {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 72px);
+    align-items: start;
+    margin-bottom: 72px;
+  }
+  .bio-figure {
+    position: relative;
+    width: 280px;
+    aspect-ratio: 1;
+  }
+  .bio-figure svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    filter: drop-shadow(0 0 20px rgba(0, 71, 255, 0.18));
+  }
+  .bio-figure-caption {
+    margin-top: 18px;
+    text-align: center;
+  }
+  .bio-figure-name {
+    font-size: var(--t-base-size);
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .bio-figure-title {
+    margin-top: 4px;
+    font-size: var(--t-eyebrow-size);
+    font-weight: 600;
+    color: var(--brand-blue);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+
+  .bio-text {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-top: 8px;
+  }
+  .bio-intro {
+    font-size: var(--t-lg-size);
+    line-height: 1.65;
+    color: var(--white-72);
+    max-width: 720px;
+  }
+  .bio-intro strong {
+    color: var(--white);
+    font-weight: var(--w-bold);
+  }
+
+  /* ============================================================
+     TESTIMONIAL MARQUEE
+     ============================================================ */
+  .testimonials-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    font-size: var(--t-eyebrow-size);
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--white-50);
+  }
+  .testimonials-eyebrow::before {
+    content: "";
+    width: 28px; height: 1px;
+    background: var(--brand-blue);
+  }
+  .testimonials-eyebrow::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--white-15);
+  }
+
+  .testimonials-marquee {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    overflow: hidden;
+    /* Edge fade so cards dissolve in/out at left/right rather than
+       cutting off hard against the viewport. */
+    mask-image: linear-gradient(
+      90deg, transparent 0%, black 6%, black 94%, transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      90deg, transparent 0%, black 6%, black 94%, transparent 100%
+    );
+  }
+
+  .testimonials-track {
+    display: flex;
+    gap: 20px;
+    width: max-content;
+    /* The track contains the 10 testimonials twice. We translate
+       from 0 to -50% (one full set width) over the duration —
+       the second copy slides in seamlessly behind the first. */
+    animation: marqueeScroll 90s linear infinite;
+    will-change: transform;
+  }
+  .testimonials-marquee:hover .testimonials-track,
+  .testimonials-marquee:focus-within .testimonials-track {
+    animation-play-state: paused;
+  }
+  @keyframes marqueeScroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  .testimonial-card {
+    flex: 0 0 380px;
+    min-height: 220px;
+    padding: 24px 26px;
+    background: var(--neutral-secondary);
+    border: 1px solid var(--white-15);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .testimonial-card:hover {
+    border-color: rgba(0, 71, 255, 0.45);
+    transform: translateY(-2px);
+    box-shadow: 0 0 28px rgba(0, 71, 255, 0.18);
+  }
+  /* Stylised opening quote mark in the top-left corner. */
+  .testimonial-card::before {
+    content: "“";
+    position: absolute;
+    top: 12px;
+    left: 18px;
+    font-size: 3.4rem;
+    line-height: 1;
+    color: var(--brand-blue);
+    opacity: 0.35;
+    font-family: Georgia, serif;
+    pointer-events: none;
+  }
+
+  .quote-text {
+    font-size: 0.98rem;
+    line-height: 1.55;
+    color: var(--white-72);
+    flex: 1;
+    margin-top: 18px;
+    padding-left: 8px;
+    /* Ellipsize very long quotes to keep cards uniform. */
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .quote-author {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--white-15);
+  }
+  .author-title {
+    font-size: var(--t-base-size);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.25;
+  }
+  .author-company {
+    margin-top: 4px;
+    font-size: var(--t-eyebrow-size);
+    font-weight: 600;
+    color: var(--brand-blue);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 900px) {
+    .testimonials-section .section-inner { padding: 0 32px; }
+    .bio-block {
+      grid-template-columns: 1fr;
+      gap: 32px;
+      margin-bottom: 56px;
+    }
+    .bio-figure {
+      width: 220px;
+      margin: 0 auto;
+    }
+    .testimonial-card { flex-basis: 320px; min-height: 200px; }
+  }
+
+  @media (max-width: 540px) {
+    .testimonials-section { padding: 48px 0 64px; }
+    .testimonials-section .section-inner { padding: 0 20px; }
+    .testimonial-card { flex-basis: 280px; padding: 20px 22px; }
+  }
+</style>
+</head>
+
+<body>
+
+<section class="testimonials-section" id="dmc01-testimonials" aria-label="Work with me — what to expect">
+  <div class="section-inner">
+
+    <!-- HEADER -->
+    <header class="testimonials-header">
+      <div class="eyebrow">Work with me</div>
+      <h2 class="section-title">Work with me, <em>what to expect?</em></h2>
+    </header>
+
+    <!-- BIO BLOCK -->
+    <div class="bio-block">
+      <div class="bio-figure">
+        <!-- Placeholder portrait illustration. Stylised geometric
+             silhouette in brand-blue, framed by corner brackets and
+             dotted with orbital-echo accents. Will be swapped for a
+             real photo when one's chosen. -->
+        <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+          <!-- Corner brackets — architectural framing detail -->
+          <g stroke="#0047FF" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M 4 24 V 4 H 24"/>
+            <path d="M 216 4 H 236 V 24"/>
+            <path d="M 4 216 V 236 H 24"/>
+            <path d="M 216 236 H 236 V 216"/>
+          </g>
+          <!-- Outer halo ring (subtle) -->
+          <circle cx="120" cy="120" r="92" fill="none" stroke="#0047FF" stroke-opacity="0.18" stroke-width="1"/>
+          <!-- Inner halo ring (bolder) -->
+          <circle cx="120" cy="120" r="78" fill="none" stroke="#0047FF" stroke-width="1.5" stroke-opacity="0.55"/>
+          <!-- Head -->
+          <circle cx="120" cy="100" r="34" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
+          <!-- Hair / silhouette top — slight curve so it doesn't read as a bald sphere -->
+          <path d="M 90 92 Q 100 70 120 68 Q 140 70 150 92"
+                fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Shoulders / suit -->
+          <path d="M 56 196 Q 84 150 120 144 Q 156 150 184 196"
+                fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Shirt collar -->
+          <path d="M 108 152 L 120 164 L 132 152"
+                fill="none" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Lapel hint -->
+          <line x1="92" y1="170" x2="100" y2="195" stroke="#FFFFFF" stroke-opacity="0.55" stroke-width="1"/>
+          <line x1="148" y1="170" x2="140" y2="195" stroke="#FFFFFF" stroke-opacity="0.55" stroke-width="1"/>
+          <!-- Orbital-echo accent dots in the four diagonals -->
+          <g fill="#0047FF">
+            <circle cx="36"  cy="80"  r="2.2"/>
+            <circle cx="204" cy="80"  r="2.2"/>
+            <circle cx="36"  cy="160" r="2.2"/>
+            <circle cx="204" cy="160" r="2.2"/>
+          </g>
+        </svg>
+        <div class="bio-figure-caption">
+          <div class="bio-figure-name">Grégoire Haftman</div>
+          <div class="bio-figure-title">Founder · Director</div>
+        </div>
+      </div>
+
+      <div class="bio-text">
+        <p class="bio-intro">
+          In my experience, flashy claims don't build trust — <strong>results and relationships do.</strong> Over the years, I have had the privilege of working with exceptional teams, clients, and partners across the financial data world. This is what spurs me on to do what I do: to help organisations build stronger, more sustainable data businesses.
+        </p>
+        <p class="bio-intro">
+          What you can expect from me is a way of working grounded in clarity, rigour, and collaboration. I'll challenge assumptions when it helps, bring practical solutions you can act upon, and stay close to the details that make strategies work in real life.
+        </p>
+      </div>
+    </div>
+
+    <!-- TESTIMONIAL MARQUEE -->
+    <div class="testimonials-eyebrow">What people say</div>
+  </div>
+
+  <!-- The marquee escapes .section-inner so cards run edge-to-edge. -->
+  <div class="testimonials-marquee" id="testimonialsMarquee" tabindex="0" aria-label="Testimonials carousel">
+    <div class="testimonials-track" id="testimonialsTrack">
+      <!-- Cards are rendered here by JS — the source list lives in
+           the script, and we duplicate it for seamless looping. -->
+    </div>
+  </div>
+
+</section>
+
+<script>
+(function() {
+  'use strict';
+
+  /* Source list — verbatim from dmc01.com. Order preserved. */
+  const TESTIMONIALS = [
+    {
+      title: 'Head of Pre-Sales',
+      company: 'Macrobond Financial',
+      quote: "Very exciting for all the companies that will now get direct access to Greg's invaluable expertise. Working with you over the past few years has really been inspirational! I can't think of many people who bring a unique combination of technical skills, commercial acumen, and business savvy while staying uniquely professional, fair, and genuine. Being both detail oriented and innately able to see the bigger picture while being both necessarily sceptical yet contagiously optimistic makes Greg a truly unique talent."
+    },
+    {
+      title: 'Head of Sales · Former CCO',
+      company: 'Regnology',
+      quote: "G was my second hire when I joined and he was a massive success. He built our datafeeds business from scratch, running everything from product design through to marketing and GTM. I have no hesitation in recommending him to anyone looking to scale a data business."
+    },
+    {
+      title: 'Product Manager',
+      company: 'Macrobond Financial',
+      quote: "Data without a business model is just a lake. Only senior architects like Greg can turn it into a flowing system that nourishes the industry. Exciting stuff and looking forward to your great contribution to the industry!"
+    },
+    {
+      title: 'Solution Architect',
+      company: 'SAP Fioneer',
+      quote: "Greg's expertise is a real asset and any client will be lucky to have them on their side. Best of luck on this exciting journey!"
+    },
+    {
+      title: 'Product Specialist',
+      company: 'Abaris Investment Management',
+      quote: "Any firm getting Greg's advice will get the best value they can hope for. I really appreciated your immense contribution at Macrobond."
+    },
+    {
+      title: 'Senior Account Executive',
+      company: '9fin',
+      quote: "As someone that has witnessed (and benefited from) the value of Greg's insights firsthand, I have no doubt you will be successful!"
+    },
+    {
+      title: 'Head of Customer Solutions',
+      company: 'FactSet',
+      quote: "I can only recommend Greg to anyone!"
+    },
+    {
+      title: 'VP Sales',
+      company: 'FactSet',
+      quote: "Your professionalism and market knowledge will make you successful in this new adventure!"
+    },
+    {
+      title: 'Product Strategist',
+      company: 'Charles River Development',
+      quote: "I am sure your new customers will benefit from your insight and hope we get to work together again one day."
+    },
+    {
+      title: 'VP of Business Development',
+      company: 'Engine AI',
+      quote: "Amazing move! I highly recommend anyone to try your services!"
+    }
+  ];
+
+  function init() {
+    const root = document.querySelector('.testimonials-section');
+    if (!root) {
+      console.error('[DMC01-testimonials] Could not find .testimonials-section.');
+      return;
+    }
+    const track = root.querySelector('#testimonialsTrack');
+    if (!track) return;
+
+    /* Render the cards twice into the track so the loop seam is
+       invisible — when the first set has scrolled off-left, the
+       duplicate slides in from the right, then the animation resets
+       to translate(0) which now shows the original first card again. */
+    function buildCard(t) {
+      const card = document.createElement('article');
+      card.className = 'testimonial-card';
+      card.innerHTML =
+        '<blockquote class="quote-text">' + escapeHtml(t.quote) + '</blockquote>' +
+        '<footer class="quote-author">' +
+          '<div class="author-title">' + escapeHtml(t.title) + '</div>' +
+          '<div class="author-company">' + escapeHtml(t.company) + '</div>' +
+        '</footer>';
+      return card;
+    }
+    function escapeHtml(s) {
+      return s.replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;')
+              .replace(/"/g, '&quot;');
+    }
+
+    const frag = document.createDocumentFragment();
+    TESTIMONIALS.forEach(function(t) { frag.appendChild(buildCard(t)); });
+    /* Duplicate set for seamless loop. */
+    TESTIMONIALS.forEach(function(t) { frag.appendChild(buildCard(t)); });
+    track.appendChild(frag);
+
+    /* Honour prefers-reduced-motion — pause the marquee. */
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      track.style.animation = 'none';
+    }
+
+    console.log('[DMC01-testimonials] Initialised. ' + TESTIMONIALS.length + ' quotes loaded.');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+</body>
+</html>

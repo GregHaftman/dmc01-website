@@ -37,6 +37,12 @@
     --white-30: rgba(255, 255, 255, 0.30);
     --white-15: var(--border-secondary, rgba(255, 255, 255, 0.15));
     --blue-glow: var(--accent-primary-glow, rgba(0, 71, 255, 0.55));
+
+    /* Border radius — derived from --radius-base (Webflow alias).
+       sm = base, md = 2× base. Tweak --radius-base to scale all
+       rectangle corners across the site proportionally. */
+    --radius-sm: var(--radius-base, 2px);
+    --radius-md: calc(var(--radius-sm) * 2);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -97,29 +103,44 @@
   .nav-brand:hover { opacity: 0.85; }
 
   .nav-logo {
-    width: 32px;
-    height: 32px;
+    width: 38px;
+    height: 38px;
     flex-shrink: 0;
-    filter: drop-shadow(0 0 6px rgba(0, 71, 255, 0.4));
+    filter: drop-shadow(0 0 8px rgba(0, 71, 255, 0.45));
   }
   .nav-logo svg { width: 100%; height: 100%; display: block; }
+  /* Chunkier stroke + rounded joins/caps so the mark doesn't read as
+     wiry at small size. Stroke-width is in viewBox units (595x595);
+     28 here is roughly equivalent to the 14 used at 140px on the
+     orbital centre logo, scaled for the smaller render size. */
   .nav-logo .mark-stroke {
     stroke: var(--white);
-    stroke-width: 14;
+    stroke-width: 28;
     stroke-miterlimit: 10;
+    stroke-linecap: round;
+    stroke-linejoin: round;
     fill: none;
   }
 
+  /* Wordmark stacked: "DMC" on top, "01" below in brand-blue.
+     Tighter than the previous wide-spaced single line. */
   .nav-wordmark {
-    font-size: var(--t-eyebrow-size);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    line-height: 1;
+  }
+  .wordmark-line {
+    font-size: 0.78rem;
     font-weight: 700;
-    letter-spacing: 0.32em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--white);
   }
-  .nav-wordmark em {
-    font-style: normal;
+  .wordmark-line-2 {
     color: var(--brand-blue);
+    font-weight: 700;
   }
 
   /* ----- ACTIONS (CTA + Menu) ----- */
@@ -143,7 +164,7 @@
     text-transform: uppercase;
     text-decoration: none;
     border: 1px solid var(--brand-blue);
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
     transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
   }
   .nav-cta:hover {
@@ -175,7 +196,7 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     cursor: pointer;
-    border-radius: 2px;
+    border-radius: var(--radius-sm);
     transition: border-color 0.25s ease, background 0.25s ease;
   }
   .nav-menu-btn:hover {
@@ -211,7 +232,7 @@
     max-width: calc(100vw - 32px);
     background: var(--neutral-primary);
     border: 1px solid var(--white-15);
-    border-radius: 4px;
+    border-radius: var(--radius-md);
     padding: 24px;
     box-shadow: 0 14px 48px rgba(0, 0, 0, 0.55);
     opacity: 0;
@@ -329,11 +350,14 @@
                     points="297.17 265.57 417.4 148.9 177.87 148.9 297.19 479.32 297.17 265.57 177.87 148.9"/>
         </svg>
       </span>
-      <span class="nav-wordmark">DMC<em>01</em></span>
+      <span class="nav-wordmark">
+        <span class="wordmark-line">DMC</span>
+        <span class="wordmark-line wordmark-line-2">01</span>
+      </span>
     </a>
 
     <div class="nav-actions">
-      <a class="nav-cta" href="#contact">
+      <a class="nav-cta" href="#dmc01-contact">
         <span>Start a project</span>
         <svg class="nav-cta-arrow" viewBox="0 0 24 24" aria-hidden="true">
           <line x1="5" y1="12" x2="19" y2="12"/>
@@ -375,6 +399,16 @@
         <li><a href="#dmc01-framework" role="menuitem">
           <span class="nav-panel-num">04</span>
           <span>Framework</span>
+          <svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg>
+        </a></li>
+        <li><a href="#dmc01-testimonials" role="menuitem">
+          <span class="nav-panel-num">05</span>
+          <span>Work with me</span>
+          <svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg>
+        </a></li>
+        <li><a href="#dmc01-contact" role="menuitem">
+          <span class="nav-panel-num">06</span>
+          <span>Open a brief</span>
           <svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg>
         </a></li>
       </ul>

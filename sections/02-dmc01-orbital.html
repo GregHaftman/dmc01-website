@@ -260,7 +260,10 @@ body::before {
   inset: 0;
 }
 
-/* Atmospheric storm field — sits behind everything */
+/* Atmospheric storm field — sits behind everything.
+   Mask fades the top/bottom edges into transparency so the storm
+   dissolves smoothly into the section background instead of cutting
+   off at the .stage container's hard edges. */
 .storm-svg {
   position: absolute;
   inset: 0;
@@ -269,6 +272,20 @@ body::before {
   z-index: 0;
   opacity: 0.75;
   pointer-events: none;
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    black 14%,
+    black 86%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    black 14%,
+    black 86%,
+    transparent 100%
+  );
 }
 
 /* The orbit lines + bonds + pulses */

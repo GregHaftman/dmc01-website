@@ -87,6 +87,22 @@ Weights: `--h0-weight: 700`, `--h1-weight: 600`, `--h2-weight: 600`, `--base-fon
 - **Header / footer:** `--bg-primary` to match the page
 - **Navbar height:** `~76px` (measured on live site, fixed-position)
 
+### Border radius
+
+Every rectangle frame on the site (chips, buttons, inputs, panels, modules, cards) reads from a single source: `--radius-base`. The default is `2px`. Each section computes two tiers from it:
+
+| Token | Resolves to | Used for |
+|---|---|---|
+| `--radius-sm` | `var(--radius-base, 2px)` | small surfaces — chips, buttons, inputs, pills, the nav CTA, etc. (was `2px` hard-coded — 11 places) |
+| `--radius-md` | `calc(var(--radius-sm) * 2)` | larger panels — board panel, framework figures, testimonial cards, the success block, etc. (was `4px` hard-coded — 6 places) |
+
+Tweak `--radius-base` in [`webflow/head-alias-block.css`](webflow/head-alias-block.css) (or in Webflow Variables once you've wired the alias to a Webflow var) and **every rectangle on the site rounds or sharpens proportionally**. Set it to `0` for square corners everywhere; set it to `8px` for a softer feel; etc. Circles (`border-radius: 50%`) stay perfect circles regardless — they're not tied to the variable.
+
+To wire the base value to a Webflow variable instead of a static `2px`:
+1. Webflow → Variables → create a variable named **Radius Base** in any group (Sizing, Component, etc.). Set it to `2px` to start.
+2. Publish once so Webflow generates the AI-gen name. In DevTools → `:root`, find the var ending in `…--radius-base`.
+3. In [`head-alias-block.css`](webflow/head-alias-block.css), replace `--radius-base: 2px;` with `--radius-base: var(--ai-gen-{PREFIX}---{group}--radius-base, 2px);` — same pattern as the other variables in that file.
+
 ---
 
 ## Pending Webflow updates
@@ -113,7 +129,14 @@ Build order recommended by visual-system dependency:
 | 4 | **framework** (5-step explainer) | DONE | Five tiles (Learn → Think → Build → Execute → Deliver) with hover-peek + click-to-lock to expose a stage panel showing the activity for each step. |
 | 5 | **me** (background, experience) | TODO | Content-light, easy |
 | 6 | **testimonials** | TODO | Main text + testimonials hero |
-| 7 | **reach** (contact form) | TODO | Replace Webflow's default form |
+| 7 | **reach** (contact form) | DONE | See `06-dmc01-contact.html`. |
+
+**Page chrome (no scroll-order number):**
+
+| File | Status | Notes |
+|---|---|---|
+| **`dmc01-nav.html`** | DONE | Sticky header — brand + Start-a-project CTA + Menu dropdown. Hidden until intro scrolls past. |
+| **`dmc01-footer.html`** | DONE | Brand mark + legal links (Terms / Privacy / Cookies) + company registration + copyright. Mirrors live-site content. |
 
 ---
 
@@ -188,6 +211,7 @@ Two surfaces:
 | Apr 2026 | Derived alphas (`--accent-primary-glow`, `--accent-primary-faint`) use `color-mix()` against `--accent-primary` | Auto-tracks Webflow brand-blue changes instead of drifting from a hard-coded hex |
 | Apr 2026 | Renamed `--accent-primary-grid` → `--brand-grid` | The grid colour is intentionally a different blue (`#4948C0`); old name implied derivation that didn't exist |
 | Apr 2026 | Framework section: 5 cards in a flex row with hover-peek + click-to-lock; each tile reveals a stage-panel illustration (signed SOW, stakeholder interviews, Notion analysis page, Figma + VS Code split, executive brief + handover bundle). Default stage shows a Gantt-proportional 12-month timeline (Learn 0.5mo / Think 1mo / Build 4.5mo / Execute 5mo / Deliver 1mo). A static-line + animated SMIL pulse runs under the cards, with the 3 / 12 / 18-month range called out as the project envelope. | The live site's "Powered by a rigorous framework" tiles were text-only; user wanted to expose the *activity* per step. The hover-peek mirrors the tailored section's interaction so the page has one consistent click-to-explore vocabulary. SVG illustrations for Build/Execute/Deliver intentionally show the actual tools (Notion, Figma, VS Code) so the section reads as concrete rather than aspirational. |
+| Apr 2026 | Border radius globalised: every rectangle frame (chips, buttons, inputs, panels, cards) now reads from `--radius-base` (default `2px`) defined in `head-alias-block.css`. Each section's `:root` derives `--radius-sm` (= base) and `--radius-md` (= 2× base). Single tweak in Webflow scales the whole site proportionally; circles untouched. | User asked for one-knob global radius control. Two-tier proportional approach preserves the current 1:2 visual hierarchy (small surfaces vs panels) while keeping a single source-of-truth — `--radius-base = 0` flat-corners the whole site, `8px` softens it, etc. |
 | Apr 2026 | Site background flipped from `--bg-secondary` (#161617) to `--bg-primary` (#070708) on intro / orbital / tailored — section backgrounds use `var(--neutral-primary)` so the variable chain (and any future Webflow override) propagates. Panel surfaces inside sections still use `--bg-secondary` (#161617) so they read as elevated above the page. | User preferred the deeper black for the page background; the two-tier system (primary page, secondary panels) gives clearer visual hierarchy than the previous flat #161617. |
 | Apr 2026 | Intro hero v5: rails moved from y=32%/68% to y=22%/78% for more breathing room around the content. Feather-style icons reinstated on the KPIs but without the surrounding chip boxes — icons sit inline next to each label with hairline dividers between items. | v4's rail spacing was tight; pushing them out gives the text the visual headroom the user asked for. Icons on the KPIs add quick scannability without the visual weight of the boxed chips that were removed earlier. |
 | Apr 2026 | Intro hero v4: rails are *spindle polygons* (thick centre, thin tips) instead of constant-width lines. Logo dropped, tagline dropped, KPI chips replaced by inline labels with hairline dividers, new orchestration-layer description added. | The user wanted a 3D feel for the road and asked for elegant text-road integration. Spindle polygons give the rails mass at the centre (where the content sits) and recede to nothing at the far ends — that's the perspective cue without breaking parallelism. Boxed KPIs felt cluttered; inline labels with hairline separators are quieter and tie visually to the rails. |

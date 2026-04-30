@@ -40,6 +40,8 @@
     --white-30: rgba(255, 255, 255, 0.30);
     --white-15: var(--border-secondary, rgba(255, 255, 255, 0.15));
     --blue-glow: var(--accent-primary-glow, rgba(0, 71, 255, 0.55));
+    --radius-sm: var(--radius-base, 2px);
+    --radius-md: calc(var(--radius-sm) * 2);
   }
 
   html, body {
@@ -86,11 +88,12 @@
   }
   .nav-brand { display: inline-flex; align-items: center; gap: 14px; text-decoration: none; color: var(--white); transition: opacity 0.2s ease; }
   .nav-brand:hover { opacity: 0.85; }
-  .nav-logo { width: 32px; height: 32px; flex-shrink: 0; filter: drop-shadow(0 0 6px rgba(0,71,255,0.4)); }
+  .nav-logo { width: 38px; height: 38px; flex-shrink: 0; filter: drop-shadow(0 0 8px rgba(0,71,255,0.45)); }
   .nav-logo svg { width: 100%; height: 100%; display: block; }
-  .nav-logo .mark-stroke { stroke: var(--white); stroke-width: 14; stroke-miterlimit: 10; fill: none; }
-  .nav-wordmark { font-size: var(--t-eyebrow-size); font-weight: 700; letter-spacing: 0.32em; text-transform: uppercase; color: var(--white); }
-  .nav-wordmark em { font-style: normal; color: var(--brand-blue); }
+  .nav-logo .mark-stroke { stroke: var(--white); stroke-width: 28; stroke-miterlimit: 10; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+  .nav-wordmark { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; line-height: 1; }
+  .wordmark-line { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--white); }
+  .wordmark-line-2 { color: var(--brand-blue); font-weight: 700; }
   .nav-actions { display: flex; align-items: center; gap: 10px; }
   .nav-cta {
     display: inline-flex; align-items: center; gap: 10px;
@@ -98,7 +101,7 @@
     background: var(--brand-blue); color: var(--white);
     font-family: inherit; font-size: var(--t-base-size); font-weight: 600;
     letter-spacing: 0.08em; text-transform: uppercase;
-    text-decoration: none; border: 1px solid var(--brand-blue); border-radius: 2px;
+    text-decoration: none; border: 1px solid var(--brand-blue); border-radius: var(--radius-sm);
     transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
   }
   .nav-cta:hover { background: var(--brand-blue-hover); box-shadow: 0 0 28px rgba(0,71,255,0.45); transform: translateY(-1px); }
@@ -110,7 +113,7 @@
     border: 1px solid var(--white-15); color: var(--white);
     font-family: inherit; font-size: var(--t-base-size); font-weight: 600;
     letter-spacing: 0.08em; text-transform: uppercase;
-    cursor: pointer; border-radius: 2px;
+    cursor: pointer; border-radius: var(--radius-sm);
     transition: border-color 0.25s ease, background 0.25s ease, color 0.25s ease;
   }
   .nav-menu-btn:hover { border-color: var(--white-30); background: rgba(255,255,255,0.04); }
@@ -121,7 +124,7 @@
   .nav-panel {
     position: absolute; top: calc(100% + 8px); right: clamp(20px, 3vw, 40px);
     width: 360px; max-width: calc(100vw - 32px);
-    background: var(--neutral-primary); border: 1px solid var(--white-15); border-radius: 4px;
+    background: var(--neutral-primary); border: 1px solid var(--white-15); border-radius: var(--radius-md);
     padding: 24px; box-shadow: 0 14px 48px rgba(0,0,0,0.55);
     opacity: 0; transform: translateY(-12px); pointer-events: none;
     transition: opacity 0.3s ease, transform 0.3s ease;
@@ -187,10 +190,13 @@
           <polyline class="mark-stroke" points="297.17 265.57 417.4 148.9 177.87 148.9 297.19 479.32 297.17 265.57 177.87 148.9"/>
         </svg>
       </span>
-      <span class="nav-wordmark">DMC<em>01</em></span>
+      <span class="nav-wordmark">
+        <span class="wordmark-line">DMC</span>
+        <span class="wordmark-line wordmark-line-2">01</span>
+      </span>
     </a>
     <div class="nav-actions">
-      <a class="nav-cta" href="#contact">
+      <a class="nav-cta" href="#dmc01-contact" data-target="contact">
         <span>Start a project</span>
         <svg class="nav-cta-arrow" viewBox="0 0 24 24" aria-hidden="true">
           <line x1="5" y1="12" x2="19" y2="12"/>
@@ -213,6 +219,8 @@
         <li><a href="#dmc01-services" data-target="orbital" role="menuitem"><span class="nav-panel-num">02</span><span>Services</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
         <li><a href="#dmc01-tailored" data-target="tailored" role="menuitem"><span class="nav-panel-num">03</span><span>Use cases</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
         <li><a href="#dmc01-framework" data-target="framework" role="menuitem"><span class="nav-panel-num">04</span><span>Framework</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
+        <li><a href="#dmc01-testimonials" data-target="testimonials" role="menuitem"><span class="nav-panel-num">05</span><span>Work with me</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
+        <li><a href="#dmc01-contact" data-target="contact" role="menuitem"><span class="nav-panel-num">06</span><span>Open a brief</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
       </ul>
     </div>
     <div class="nav-panel-section">
@@ -229,7 +237,10 @@
 <iframe src="01-dmc01-intro.html"     title="DMC01 — Data Monetisation Concept" data-section="intro"></iframe>
 <iframe src="02-dmc01-orbital.html"   title="DMC01 — Specialised advisory"     data-section="orbital"></iframe>
 <iframe src="03-dmc01-tailored.html"  title="DMC01 — Tailored to your context" data-section="tailored"></iframe>
-<iframe src="04-dmc01-framework.html" title="DMC01 — Powered by a rigorous framework" data-section="framework"></iframe>
+<iframe src="04-dmc01-framework.html"    title="DMC01 — Powered by a rigorous framework" data-section="framework"></iframe>
+<iframe src="05-dmc01-testimonials.html" title="DMC01 — Work with me, what to expect?"     data-section="testimonials"></iframe>
+<iframe src="06-dmc01-contact.html"      title="DMC01 — Open a brief"                      data-section="contact"></iframe>
+<iframe src="dmc01-footer.html"          title="DMC01 — Footer"                            data-section="footer"></iframe>
 
 <script>
 (function() {
@@ -352,6 +363,19 @@
   menuPanel.querySelectorAll('a:not([data-target])').forEach(function(a) {
     a.addEventListener('click', function() { setOpen(false); });
   });
+
+  /* The "Start a project" CTA also scrolls to the contact iframe. */
+  const ctaLink = nav.querySelector('.nav-cta[data-target]');
+  if (ctaLink) {
+    ctaLink.addEventListener('click', function(e) {
+      const target = ctaLink.getAttribute('data-target');
+      const f = document.querySelector('iframe[data-section="' + target + '"]');
+      if (f) {
+        e.preventDefault();
+        f.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  }
 
   /* Brand mark scrolls back to top of page (intro iframe). */
   document.querySelector('.nav-brand').addEventListener('click', function(e) {

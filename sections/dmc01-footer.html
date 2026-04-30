@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DMC01 — Footer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     DMC01 · Site footer
+     Page-chrome embed (no scroll-order number, like the nav).
+     Two zones separated by a hairline:
+       Top    — brand on the left, legal links on the right.
+       Bottom — company registration info on the left, copyright
+                on the right.
+     Stacks centred on mobile.
+     ============================================================ */
+
+  :root {
+    --brand-blue:        var(--accent-primary, #0047FF);
+    --neutral-primary:   var(--bg-primary, #070708);
+    --neutral-secondary: var(--bg-secondary, #161617);
+    --font:              var(--font-body, "Rajdhani", system-ui, sans-serif);
+    --t-base-size:    var(--base-font-size, 1rem);
+    --t-eyebrow-size: var(--eyebrow-size, 0.8rem);
+    --w-base:  var(--base-font-weight, 400);
+    --white:    var(--text-primary, #FFFFFF);
+    --white-72: rgba(255, 255, 255, 0.72);
+    --white-50: rgba(255, 255, 255, 0.50);
+    --white-30: rgba(255, 255, 255, 0.30);
+    --white-15: var(--border-secondary, rgba(255, 255, 255, 0.15));
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--neutral-primary);
+    color: var(--white);
+    font-family: var(--font);
+    font-weight: var(--w-base);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ============================================================
+     SECTION FRAME
+     ============================================================ */
+  .dmc01-footer {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    background: var(--neutral-primary);
+    padding: 48px clamp(20px, 4vw, 64px);
+    border-top: 1px solid var(--white-15);
+  }
+  .footer-inner {
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+
+  /* ============================================================
+     TOP ROW — brand + legal links
+     ============================================================ */
+  .footer-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  /* Brand: logo + stacked DMC / 01 wordmark, mirrors the nav. */
+  .footer-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    color: var(--white);
+    transition: opacity 0.2s ease;
+  }
+  .footer-brand:hover { opacity: 0.85; }
+
+  .footer-logo {
+    width: 36px; height: 36px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 6px rgba(0, 71, 255, 0.35));
+  }
+  .footer-logo svg { width: 100%; height: 100%; display: block; }
+  .footer-logo .mark-stroke {
+    stroke: var(--white);
+    stroke-width: 28;
+    stroke-miterlimit: 10;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
+
+  .footer-wordmark {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    line-height: 1;
+  }
+  .footer-wordmark-line {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+  .footer-wordmark-line-2 {
+    color: var(--brand-blue);
+    font-weight: 700;
+  }
+
+  /* Legal links — small caps, middot dividers. */
+  .footer-legal {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .footer-legal li {
+    position: relative;
+    padding: 0 14px;
+  }
+  .footer-legal li:first-child { padding-left: 0; }
+  .footer-legal li:last-child  { padding-right: 0; }
+  .footer-legal li:not(:last-child)::after {
+    content: "·";
+    position: absolute;
+    right: -3px;
+    color: var(--white-30);
+    font-weight: 700;
+  }
+  .footer-legal a {
+    font-size: var(--t-eyebrow-size);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--white-50);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .footer-legal a:hover { color: var(--brand-blue); }
+
+  /* ============================================================
+     DIVIDER
+     ============================================================ */
+  .footer-divider {
+    height: 1px;
+    background: var(--white-15);
+    margin: 28px 0;
+  }
+
+  /* ============================================================
+     BOTTOM ROW — company info + copyright
+     ============================================================ */
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--white-50);
+  }
+  .footer-bottom strong {
+    color: var(--white-72);
+    font-weight: 600;
+  }
+  .footer-copyright {
+    font-size: var(--t-eyebrow-size);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--white-30);
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 720px) {
+    .dmc01-footer { padding: 36px 24px; }
+    .footer-top {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 18px;
+    }
+    .footer-bottom {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<footer class="dmc01-footer" id="dmc01Footer" role="contentinfo" aria-label="Site footer">
+  <div class="footer-inner">
+
+    <!-- TOP — brand + legal links -->
+    <div class="footer-top">
+      <a class="footer-brand" href="#dmc01-intro" aria-label="DMC01 — back to top">
+        <span class="footer-logo" aria-hidden="true">
+          <svg viewBox="0 0 595.28 595.28" xmlns="http://www.w3.org/2000/svg">
+            <polyline class="mark-stroke"
+                      points="297.17 265.57 417.4 148.9 177.87 148.9 297.19 479.32 297.17 265.57 177.87 148.9"/>
+          </svg>
+        </span>
+        <span class="footer-wordmark">
+          <span class="footer-wordmark-line">DMC</span>
+          <span class="footer-wordmark-line footer-wordmark-line-2">01</span>
+        </span>
+      </a>
+
+      <ul class="footer-legal">
+        <li><a href="/terms-of-use">Terms</a></li>
+        <li><a href="/privacy-policy">Privacy</a></li>
+        <li><a href="/cookie-policy">Cookies</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-divider" role="presentation"></div>
+
+    <!-- BOTTOM — company registration + copyright -->
+    <div class="footer-bottom">
+      <p>
+        <strong>DMC01 Ltd</strong> · Registered in England &amp; Wales · Company №&nbsp;16674758
+      </p>
+      <p class="footer-copyright">© 2026 DMC01 Ltd · All rights reserved</p>
+    </div>
+
+  </div>
+</footer>
+
+</body>
+</html>
