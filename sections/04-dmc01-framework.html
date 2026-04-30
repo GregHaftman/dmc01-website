@@ -53,6 +53,10 @@
     --blue-glow:  var(--accent-primary-glow, rgba(0, 71, 255, 0.55));
     --blue-faint: var(--accent-primary-faint, rgba(0, 71, 255, 0.10));
     --blue-grid:  var(--brand-grid, rgba(73, 72, 192, 0.04));
+
+    /* Border radius — see head-alias-block.css. */
+    --radius-sm: var(--radius-base, 2px);
+    --radius-md: calc(var(--radius-sm) * 2);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -316,7 +320,7 @@
     position: relative;
     background: linear-gradient(180deg, var(--neutral-secondary) 0%, rgba(22,22,23,0.6) 100%);
     border: 1px solid var(--white-15);
-    border-radius: 4px;
+    border-radius: var(--radius-md);
     padding: 22px;
     overflow: hidden;
   }
@@ -461,8 +465,8 @@
             <rect x="208" y="178" width="200" height="2" fill="#FFF" opacity="0.25"/>
             <rect x="208" y="186" width="240" height="2" fill="#FFF" opacity="0.25"/>
             <line x1="208" y1="222" x2="338" y2="222" stroke="#FFF" stroke-opacity="0.5"/>
-            <text x="208" y="240" fill="#FFF" opacity="0.55" font-size="9">DMC01 · Greg</text>
-            <text x="220" y="218" fill="#0047FF" font-size="13" font-style="italic" font-weight="600">G. Haftman</text>
+            <text x="208" y="240" fill="#FFF" opacity="0.55" font-size="9">DMC01</text>
+            <text x="220" y="218" fill="#0047FF" font-size="13" font-style="italic" font-weight="600">Director</text>
             <line x1="412" y1="222" x2="552" y2="222" stroke="#FFF" stroke-opacity="0.5"/>
             <text x="412" y="240" fill="#FFF" opacity="0.55" font-size="9">CLIENT</text>
             <text x="426" y="218" fill="#0047FF" font-size="13" font-style="italic" font-weight="600" opacity="0.85">Authorised</text>

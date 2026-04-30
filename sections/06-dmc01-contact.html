@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DMC01 — Open a brief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     DMC01 · Contact form — "Open a brief"
+
+     Wiring: Webflow native form. No third-party endpoint —
+     submissions land in:
+       • Webflow Project Forms tab (Project Settings → Forms)
+       • The notification email configured in Project Settings →
+         Forms → Default email address (set this once to greg@dmc01.com
+         or wherever you want briefs to land).
+
+     For Webflow to pick up the form, the markup must follow its
+     conventions: `.w-form` wrapper, `data-name` on the form and on
+     each field, `name="wf-form-…"` on the form, `.w-button` on the
+     submit, and sibling `.w-form-done` / `.w-form-fail` panels that
+     Webflow's runtime toggles. Webflow's runtime (`webflow.js`,
+     loaded automatically on Webflow-hosted pages) intercepts the
+     submit, posts AJAX to its own endpoint, and flips the right
+     panel into view.
+
+     Local preview (Live Server / fullsite shell) WON'T submit —
+     `webflow.js` isn't on the page, so the form will try a default
+     POST to the local URL and fail. Test from a Webflow staging
+     deploy to verify wiring.
+     ============================================================ */
+
+  :root {
+    --brand-blue:        var(--accent-primary, #0047FF);
+    --brand-blue-hover:  var(--accent-primary-hover, #3c6ce7);
+    --neutral-primary:   var(--bg-primary, #070708);
+    --neutral-secondary: var(--bg-secondary, #161617);
+    --surface-3:         #1d1e22;
+    --font:              var(--font-body, "Rajdhani", system-ui, sans-serif);
+    --t-h1-size:    var(--h1-size, 5.65rem);
+    --t-h2-size:    var(--h2-size, 2.83rem);
+    --t-base-size:  var(--base-font-size, 1rem);
+    --t-lg-size:    var(--text-lg-size, 1.1rem);
+    --t-xl-size:    var(--text-xl-size, 1.2rem);
+    --t-eyebrow-size: var(--eyebrow-size, 0.8rem);
+    --w-h1:    var(--h1-weight, 600);
+    --w-base:  var(--base-font-weight, 400);
+    --w-bold:  var(--base-font-weight-bold, 600);
+    --lh-h1:   var(--h1-line-height, 1.04em);
+    --lh-base: var(--base-line-height, 1.6em);
+    --white:    var(--text-primary, #FFFFFF);
+    --white-72: rgba(255, 255, 255, 0.72);
+    --white-50: rgba(255, 255, 255, 0.50);
+    --white-30: rgba(255, 255, 255, 0.30);
+    --white-15: var(--border-secondary, rgba(255, 255, 255, 0.15));
+    --blue-glow:  var(--accent-primary-glow, rgba(0, 71, 255, 0.55));
+    --blue-faint: var(--accent-primary-faint, rgba(0, 71, 255, 0.10));
+    --blue-grid:  var(--brand-grid, rgba(73, 72, 192, 0.04));
+    --error: #E13838;
+
+    /* Border radius — see head-alias-block.css. */
+    --radius-sm: var(--radius-base, 2px);
+    --radius-md: calc(var(--radius-sm) * 2);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--neutral-primary);
+    color: var(--white);
+    font-family: var(--font);
+    font-weight: var(--w-base);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ============================================================
+     SECTION FRAME
+     ============================================================ */
+  .contact-section {
+    position: relative;
+    z-index: 1;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    padding: 56px 64px 80px;
+    background: var(--neutral-primary);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .contact-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      linear-gradient(var(--blue-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--blue-grid) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black 40%, transparent 100%);
+  }
+  .contact-section .section-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 880px;
+    margin: 0 auto;
+  }
+
+  /* ============================================================
+     HEADER
+     ============================================================ */
+  .contact-header {
+    margin-bottom: 48px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--white-15);
+  }
+  .contact-section .eyebrow {
+    font-size: var(--t-eyebrow-size);
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .contact-section .eyebrow::before {
+    content: "";
+    width: 32px; height: 1px;
+    background: var(--brand-blue);
+  }
+  .contact-section .section-title {
+    font-size: var(--t-h1-size);
+    font-weight: var(--w-h1);
+    line-height: var(--lh-h1);
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  .contact-section .section-title em {
+    font-style: normal;
+    color: var(--brand-blue);
+  }
+  .contact-section .section-lede {
+    font-size: var(--t-lg-size);
+    font-weight: var(--w-base);
+    line-height: var(--lh-base);
+    color: var(--white-72);
+    max-width: 640px;
+  }
+
+  /* ============================================================
+     FORM
+     ============================================================ */
+  .contact-form {
+    display: grid;
+    gap: 22px;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+  }
+  .form-label {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: var(--t-eyebrow-size);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--white-72);
+  }
+  .form-optional {
+    letter-spacing: 0;
+    text-transform: lowercase;
+    color: var(--white-30);
+    font-weight: 500;
+    font-size: 0.75rem;
+  }
+
+  .form-field input,
+  .form-field select,
+  .form-field textarea {
+    width: 100%;
+    background: var(--neutral-secondary);
+    border: 1px solid var(--white-15);
+    color: var(--white);
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: var(--t-base-size);
+    font-weight: 500;
+    line-height: 1.4;
+    border-radius: var(--radius-sm);
+    transition:
+      border-color 0.2s ease,
+      background 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+  .form-field textarea {
+    resize: vertical;
+    min-height: 140px;
+  }
+  .form-field input::placeholder,
+  .form-field textarea::placeholder {
+    color: var(--white-30);
+  }
+  .form-field input:focus,
+  .form-field select:focus,
+  .form-field textarea:focus {
+    outline: none;
+    border-color: var(--brand-blue);
+    background: var(--surface-3);
+    box-shadow: 0 0 0 1px var(--brand-blue), 0 0 24px rgba(0, 71, 255, 0.18);
+  }
+  /* Native validation styling — only after the user has submitted at
+     least once (handled by the .has-attempted class on the form). */
+  .contact-form.has-attempted .form-field input:invalid,
+  .contact-form.has-attempted .form-field textarea:invalid {
+    border-color: var(--error);
+  }
+
+  /* Custom select chevron — `appearance: none` plus a background SVG. */
+  .form-field select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 38px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230047FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 14px 14px;
+  }
+  .form-field select option {
+    background: var(--neutral-secondary);
+    color: var(--white);
+  }
+
+  /* Webflow's runtime toggles `.w-form-done` / `.w-form-fail` via
+     inline `display`. Hide them by default; Webflow's JS flips
+     `display: block` on success/fail. We use [hidden] only as a
+     defensive default for non-Webflow contexts. */
+  .w-form-done,
+  .w-form-fail { display: none; }
+  .w-form-done[hidden],
+  .w-form-fail[hidden] { display: none; }
+
+  /* ============================================================
+     SUBMIT FOOTER
+     ============================================================ */
+  .form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-top: 8px;
+    padding-top: 22px;
+    border-top: 1px solid var(--white-15);
+    flex-wrap: wrap;
+  }
+  .form-meta {
+    font-size: var(--t-eyebrow-size);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--white-50);
+    margin: 0;
+  }
+  .form-meta strong {
+    color: var(--brand-blue);
+    font-weight: 700;
+  }
+
+  .form-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 28px;
+    background: var(--brand-blue);
+    color: var(--white);
+    font-family: inherit;
+    font-size: var(--t-base-size);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    border: 1px solid var(--brand-blue);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition:
+      background 0.25s ease,
+      transform 0.25s ease,
+      box-shadow 0.25s ease,
+      opacity 0.25s ease;
+  }
+  .form-submit:hover {
+    background: var(--brand-blue-hover);
+    box-shadow: 0 0 28px rgba(0, 71, 255, 0.45);
+    transform: translateY(-1px);
+  }
+  .form-submit:disabled,
+  .form-submit.is-sending {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  .form-submit-arrow {
+    width: 16px; height: 16px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.25s ease;
+  }
+  .form-submit:hover .form-submit-arrow { transform: translateX(4px); }
+
+  /* Tiny three-dot loader for the sending state. */
+  .form-submit.is-sending .form-submit-arrow { display: none; }
+  .form-submit.is-sending::after {
+    content: "";
+    width: 16px; height: 16px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: submitSpin 0.8s linear infinite;
+  }
+  @keyframes submitSpin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ============================================================
+     ERROR + SUCCESS STATES
+     ============================================================ */
+  .form-error {
+    margin-top: 14px;
+    padding: 12px 16px;
+    background: rgba(225, 56, 56, 0.10);
+    border: 1px solid rgba(225, 56, 56, 0.4);
+    border-radius: var(--radius-sm);
+    color: #ff8a8a;
+    font-size: var(--t-base-size);
+    line-height: 1.4;
+  }
+  .form-error[hidden] { display: none; }
+
+  .form-success {
+    text-align: center;
+    padding: 56px 28px;
+    border: 1px solid rgba(0, 71, 255, 0.45);
+    border-radius: var(--radius-md);
+    background: linear-gradient(180deg, var(--neutral-secondary) 0%, rgba(0, 71, 255, 0.08) 100%);
+    box-shadow: 0 0 60px rgba(0, 71, 255, 0.18);
+  }
+  .form-success[hidden] { display: none; }
+  .form-success-eyebrow {
+    font-size: var(--t-eyebrow-size);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .form-success-title {
+    font-size: var(--t-h2-size);
+    font-weight: var(--w-h1);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--white);
+    margin-bottom: 14px;
+  }
+  .form-success-title em { font-style: normal; color: var(--brand-blue); }
+  .form-success-body {
+    font-size: var(--t-lg-size);
+    line-height: 1.55;
+    color: var(--white-72);
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  /* A small breathing tick mark — celebratory but quiet. */
+  .form-success-tick {
+    width: 56px; height: 56px;
+    margin: 0 auto 22px;
+    border-radius: 50%;
+    border: 1.5px solid var(--brand-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brand-blue);
+    box-shadow: 0 0 20px rgba(0, 71, 255, 0.25);
+    animation: tickBreath 3s ease-in-out infinite;
+  }
+  .form-success-tick svg {
+    width: 26px; height: 26px;
+    stroke: currentColor; fill: none;
+    stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+  }
+  @keyframes tickBreath {
+    0%, 100% { box-shadow: 0 0 20px rgba(0, 71, 255, 0.25); transform: scale(1); }
+    50%      { box-shadow: 0 0 32px rgba(0, 71, 255, 0.45); transform: scale(1.04); }
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 720px) {
+    .contact-section { padding: 48px 24px 64px; }
+    .form-row { grid-template-columns: 1fr; }
+    .form-footer { flex-direction: column; align-items: stretch; gap: 14px; }
+    .form-submit { justify-content: center; }
+    .form-success { padding: 40px 24px; }
+  }
+</style>
+</head>
+
+<body>
+
+<section class="contact-section" id="dmc01-contact" aria-label="Open a brief">
+  <div class="section-inner">
+
+    <!-- HEADER -->
+    <header class="contact-header">
+      <div class="eyebrow">Contact</div>
+      <h2 class="section-title">Open a <em>brief.</em></h2>
+      <p class="section-lede">Tell me about the data product, the team, and what you're trying to unlock. I read everything that comes through and reply within one working day.</p>
+    </header>
+
+    <!-- FORM
+         Webflow form structure: `.w-form` wrapper, the form itself
+         with `data-name` + Webflow's `name="wf-form-…"` convention,
+         each field's `data-name` mirrored from `name`, and the
+         submit carrying `.w-button` + `data-wait`. Webflow's runtime
+         intercepts the submit and AJAX-posts to its own endpoint;
+         on success it flips the `.w-form-done` panel into view. -->
+    <div class="w-form">
+
+      <form class="contact-form" id="contactForm"
+            name="wf-form-Open-a-brief"
+            data-name="Open a brief"
+            method="post" action=""
+            novalidate>
+
+        <div class="form-row">
+          <label class="form-field">
+            <span class="form-label">Name</span>
+            <input type="text" name="Name" data-name="Name" required autocomplete="name" placeholder="Your full name"/>
+          </label>
+          <label class="form-field">
+            <span class="form-label">Email</span>
+            <input type="email" name="Email" data-name="Email" required autocomplete="email" placeholder="you@company.com"/>
+          </label>
+        </div>
+
+        <div class="form-row">
+          <label class="form-field">
+            <span class="form-label">Company <span class="form-optional">optional</span></span>
+            <input type="text" name="Company" data-name="Company" autocomplete="organization" placeholder="Where you work"/>
+          </label>
+          <label class="form-field">
+            <span class="form-label">Project context <span class="form-optional">optional</span></span>
+            <select name="Context" data-name="Context">
+              <option value="">Pick the closest fit…</option>
+              <option value="enterprise">Enterprise selling</option>
+              <option value="pipeline">Pipeline growth</option>
+              <option value="investor">Investor readiness</option>
+              <option value="launch">Data product launch &amp; land</option>
+              <option value="marketplace">Marketplace enablement</option>
+              <option value="delivery">Delivery modernisation</option>
+              <option value="other">Something else</option>
+            </select>
+          </label>
+        </div>
+
+        <label class="form-field">
+          <span class="form-label">Brief description</span>
+          <textarea name="Message" data-name="Message" required rows="6"
+                    placeholder="A few lines on the data, the team, the timing, and what 'good' looks like — even rough, even early."></textarea>
+        </label>
+
+        <div class="form-footer">
+          <p class="form-meta">Reply within <strong>1 working day</strong></p>
+          <button type="submit" class="form-submit w-button" data-wait="Sending…">
+            <span>Send brief</span>
+            <svg class="form-submit-arrow" viewBox="0 0 24 24" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </button>
+        </div>
+      </form>
+
+      <!-- SUCCESS — Webflow shows this on submit success. -->
+      <div class="w-form-done form-success" role="status">
+        <div class="form-success-tick" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-11"/></svg>
+        </div>
+        <div class="form-success-eyebrow">Brief received</div>
+        <h3 class="form-success-title">Thanks — <em>I'll be in touch</em>.</h3>
+        <p class="form-success-body">You'll get a reply within one working day, often the same day. If anything's urgent, mention it in the subject of your follow-up.</p>
+      </div>
+
+      <!-- FAIL — Webflow shows this on submit failure. -->
+      <div class="w-form-fail form-error" role="alert">
+        Something went wrong sending your brief. Please try again, or email <strong>greg@dmc01.com</strong> directly.
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<script>
+(function() {
+  'use strict';
+
+  /* The form is handled by Webflow's runtime (`webflow.js`) on the
+     deployed Webflow site — submission, AJAX post, success/fail
+     panel toggling, and email notification all happen there.
+
+     This script only adds two niceties:
+       1. Validation: light up invalid fields after a first submit
+          attempt (the `.has-attempted` class drives the red border).
+       2. Dev-mode fallback: when the form is loaded in Live Server
+          (or anywhere `webflow.js` isn't present), Webflow's runtime
+          can't intercept the submit — the browser would default-POST
+          to the local URL and 405. We detect that case and short-
+          circuit with a simulated success panel so the design can be
+          previewed end-to-end. */
+
+  function isWebflowRuntime() {
+    return typeof window.Webflow !== 'undefined';
+  }
+
+  function init() {
+    const wForm   = document.querySelector('.w-form');
+    const form    = document.getElementById('contactForm');
+    const done    = wForm && wForm.querySelector('.w-form-done');
+    const fail    = wForm && wForm.querySelector('.w-form-fail');
+    if (!form || !done || !fail) {
+      console.error('[DMC01-contact] Form scaffolding missing.');
+      return;
+    }
+
+    /* (1) Validation feedback after first attempt. */
+    form.addEventListener('submit', function(e) {
+      form.classList.add('has-attempted');
+      if (!form.checkValidity()) {
+        e.preventDefault();
+        form.reportValidity();
+        return;
+      }
+
+      /* (2) Dev-mode fallback. If we're outside Webflow's runtime,
+         simulate a success without actually sending anything. */
+      if (!isWebflowRuntime()) {
+        e.preventDefault();
+        form.style.display = 'none';
+        done.style.display = 'block';
+        done.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        console.info('[DMC01-contact] Dev preview — simulated submit (no email sent).');
+      }
+      /* Otherwise: do nothing. Webflow's runtime takes over from here. */
+    });
+
+    console.log('[DMC01-contact] Initialised.' + (isWebflowRuntime() ? '' : ' (dev preview)'));
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+</body>
+</html>

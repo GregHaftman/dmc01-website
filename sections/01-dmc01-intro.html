@@ -228,21 +228,27 @@
     pointer-events: none;
     opacity: 0.78;
     filter: drop-shadow(0 0 14px rgba(0, 71, 255, 0.35));
-    transition: opacity 0.45s ease, transform 0.45s ease;
+    transition: opacity 0.55s ease, transform 0.85s cubic-bezier(0.34, 0, 0.25, 1);
+    transform-origin: top left;
   }
   .intro-mark svg { width: 100%; height: 100%; display: block; }
   .intro-mark .mark-stroke {
     stroke: var(--white);
-    stroke-width: 14;
+    stroke-width: 18;
     stroke-miterlimit: 10;
+    stroke-linecap: round;
+    stroke-linejoin: round;
     fill: none;
   }
   /* `.is-leaving` is added by JS (or by the fullsite shell) when the
-     intro is mostly scrolled past. The mark dissolves down-right,
-     synchronised with the nav fading in. */
+     intro is mostly scrolled past. The mark *flies* up-and-left toward
+     where the sticky nav is about to land — translation is in vw/vh
+     so the trajectory scales with the viewport. The nav slides down
+     from the top simultaneously, so brain reads it as one continuous
+     migration. */
   .intro-section.is-leaving .intro-mark {
     opacity: 0;
-    transform: translate(12px, 12px);
+    transform: translate(-32vw, -42vh) scale(0.32);
   }
 
   /* Reduced motion — SMIL animations on the road SVG are paused via
