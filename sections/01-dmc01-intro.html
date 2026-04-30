@@ -213,6 +213,29 @@
     flex-shrink: 0;
   }
 
+  /* ----- LOGO MARK (bottom-right corner) -----
+     Static signature mark that sits below the right-hand rail,
+     out of the way of the centred content. Subtle blue drop-shadow
+     ties it to the rest of the section's atmosphere. */
+  .intro-mark {
+    position: absolute;
+    bottom: clamp(20px, 4vw, 44px);
+    right: clamp(20px, 4vw, 44px);
+    width: clamp(64px, 8vw, 100px);
+    aspect-ratio: 1;
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0.78;
+    filter: drop-shadow(0 0 14px rgba(0, 71, 255, 0.35));
+  }
+  .intro-mark svg { width: 100%; height: 100%; display: block; }
+  .intro-mark .mark-stroke {
+    stroke: var(--white);
+    stroke-width: 14;
+    stroke-miterlimit: 10;
+    fill: none;
+  }
+
   /* Reduced motion — SMIL animations on the road SVG are paused via
      JS in init(); nothing CSS-driven left to freeze here. */
 
@@ -226,6 +249,8 @@
     .cred-row { flex-direction: column; gap: 6px; }
     .cred-row li { padding: 0; }
     .cred-row li:not(:last-child)::after { display: none; }
+    /* Hide the corner mark on small viewports — already-tight composition. */
+    .intro-mark { display: none; }
   }
 </style>
 </head>
@@ -313,6 +338,15 @@
       </li>
     </ul>
 
+  </div>
+
+  <!-- Signature mark, bottom-right. Decorative; positioned outside
+       the .section-inner stack so it doesn't shift the centred content. -->
+  <div class="intro-mark" aria-hidden="true">
+    <svg viewBox="0 0 595.28 595.28" xmlns="http://www.w3.org/2000/svg">
+      <polyline class="mark-stroke"
+                points="297.17 265.57 417.4 148.9 177.87 148.9 297.19 479.32 297.17 265.57 177.87 148.9"/>
+    </svg>
   </div>
 </section>
 
