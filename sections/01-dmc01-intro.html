@@ -8,6 +8,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+<!-- FOUC-prevention: read theme from localStorage (or system pref) and
+     set data-theme on <html> BEFORE first paint. The nav's toggle later
+     updates this attribute and the value in storage. -->
+<script>(function(){try{var t=localStorage.getItem('dmc01-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+
 <style>
   /* ============================================================
      DMC01 · Intro hero — "Data Monetisation Concept"
@@ -62,6 +67,31 @@
     /* Brand-blue derived alphas */
     --blue-glow:  var(--accent-primary-glow, rgba(0, 71, 255, 0.55));
     --blue-faint: var(--accent-primary-faint, rgba(0, 71, 255, 0.10));
+  }
+
+  /* ============================================================
+     LIGHT THEME OVERRIDES
+     `data-theme="light"` on <html> flips surfaces, text and
+     borders to a light palette; brand blue + glows stay (they
+     read on both backgrounds). SVG illustrations keep their dark
+     "device-screen" look on purpose. The nav's toggle sets this
+     attribute; localStorage persists it; the inline FOUC script
+     in <head> applies it before first paint.
+     ============================================================ */
+  [data-theme="light"] {
+    --neutral-primary:   #f5f5f7;
+    --neutral-secondary: #ffffff;
+    --surface-3:         #ebebee;
+    --white:    #070708;
+    --white-72: rgba(7, 7, 8, 0.72);
+    --white-70: rgba(7, 7, 8, 0.70);
+    --white-50: rgba(7, 7, 8, 0.55);
+    --white-30: rgba(7, 7, 8, 0.42);
+    --white-15: rgba(7, 7, 8, 0.10);
+  }
+  /* Vignette fades to the page colour, so it needs to flip too. */
+  [data-theme="light"] .intro-section::after {
+    background: radial-gradient(ellipse 80% 60% at 50% 50%, transparent 30%, rgba(245, 245, 247, 0.55) 100%);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
