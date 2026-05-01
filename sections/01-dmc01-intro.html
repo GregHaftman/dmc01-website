@@ -203,82 +203,38 @@
     font-weight: var(--w-bold);
   }
 
-  /* ----- CREDIBILITY ROW (no boxes — icon + label, hairline dividers) ----- */
-  .cred-row {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 0;
-    font-size: var(--t-base-size);
+  /* ----- CLOSING LINE — reflective bookend below the description.
+     Moved up from the orbital section: it's the WHY beneath the
+     headline + lede, and reads as the section's quiet finishing
+     thought rather than a decoration on a different page. */
+  .closing-line {
+    margin-top: clamp(24px, 4vh, 48px);
+    padding-top: 32px;
+    border-top: 1px solid rgba(25, 75, 205, 0.2);
+    text-align: center;
+    width: 100%;
+    max-width: 900px;
+  }
+  .closing-line-eyebrow {
+    font-size: var(--t-eyebrow-size);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .closing-line-text {
+    font-size: var(--t-xl-size);
     font-weight: 500;
-    color: var(--white-50);
-    line-height: 1.4;
-    margin-top: 8px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--white-72);
+    margin: 0 auto;
   }
-  .cred-row li {
-    position: relative;
-    padding: 0 24px;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-  }
-  /* Vertical hairline between items — feels architectural, ties to the rails. */
-  .cred-row li:not(:last-child)::after {
-    content: "";
-    position: absolute;
-    right: 0; top: 20%; bottom: 20%;
-    width: 1px;
-    background: var(--white-15);
-  }
-  .cred-icon {
-    width: 16px;
-    height: 16px;
-    stroke: var(--brand-blue);
-    fill: none;
-    stroke-width: 1.6;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    flex-shrink: 0;
-  }
-
-  /* ----- LOGO MARK (bottom-right corner) -----
-     Static signature mark hugging the bottom-right corner. As the
-     user starts scrolling away from this section, it fades and
-     drops out — visually "migrating" into the sticky nav header
-     that takes over from the next section onwards. */
-  .intro-mark {
-    position: absolute;
-    bottom: clamp(6px, 1.2vw, 16px);
-    right: clamp(6px, 1.2vw, 16px);
-    width: clamp(64px, 8vw, 104px);
-    aspect-ratio: 1;
-    z-index: 3;
-    pointer-events: none;
-    opacity: 0.78;
-    filter: drop-shadow(0 0 14px rgba(0, 71, 255, 0.35));
-    transition: opacity 0.55s ease, transform 0.85s cubic-bezier(0.34, 0, 0.25, 1);
-    transform-origin: top left;
-  }
-  .intro-mark svg { width: 100%; height: 100%; display: block; }
-  .intro-mark .mark-stroke {
-    stroke: var(--white);
-    stroke-width: 18;
-    stroke-miterlimit: 10;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    fill: none;
-  }
-  /* `.is-leaving` is added by JS (or by the fullsite shell) when the
-     intro is mostly scrolled past. The mark *flies* up-and-left toward
-     where the sticky nav is about to land — translation is in vw/vh
-     so the trajectory scales with the viewport. The nav slides down
-     from the top simultaneously, so brain reads it as one continuous
-     migration. */
-  .intro-section.is-leaving .intro-mark {
-    opacity: 0;
-    transform: translate(-32vw, -42vh) scale(0.32);
+  .closing-line-text em {
+    font-style: normal;
+    color: var(--brand-blue);
+    font-weight: 600;
   }
 
   /* Reduced motion — SMIL animations on the road SVG are paused via
@@ -290,12 +246,7 @@
   @media (max-width: 720px) {
     .intro-section { padding: 56px 20px; min-height: 80vh; }
     .section-inner { gap: 18px; }
-    /* Stack KPI labels vertically on narrow viewports — dividers off. */
-    .cred-row { flex-direction: column; gap: 6px; }
-    .cred-row li { padding: 0; }
-    .cred-row li:not(:last-child)::after { display: none; }
-    /* Hide the corner mark on small viewports — already-tight composition. */
-    .intro-mark { display: none; }
+    .closing-line-text { font-size: var(--t-lg-size); }
   }
 </style>
 </head>
@@ -362,37 +313,15 @@
       DMC01 is the <em>orchestration layer</em> for monetising data assets — and charting the optimum route to market.
     </p>
 
-    <ul class="cred-row">
-      <li>
-        <svg class="cred-icon" viewBox="0 0 24 24" aria-hidden="true">
-          <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
-        </svg>
-        <span>15+ years sector expertise</span>
-      </li>
-      <li>
-        <svg class="cred-icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M5 21V11M11 21V5M17 21v-9M3 21h18"/>
-        </svg>
-        <span>$7m ARR built from scratch</span>
-      </li>
-      <li>
-        <svg class="cred-icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12 3L4 7v10l8 4 8-4V7l-8-4zM4 7l8 4 8-4M12 11v10"/>
-        </svg>
-        <span>Go-to-market strategy for data products</span>
-      </li>
-    </ul>
+    <!-- Closing-line — moved up from the orbital section; sits as
+         the reflective bookend beneath the description. -->
+    <div class="closing-line">
+      <div class="closing-line-eyebrow">Why this matters</div>
+      <p class="closing-line-text">Great things are built by people <em>fascinated</em> with how they work.</p>
+    </div>
 
   </div>
 
-  <!-- Signature mark, bottom-right. Decorative; positioned outside
-       the .section-inner stack so it doesn't shift the centred content. -->
-  <div class="intro-mark" aria-hidden="true">
-    <svg viewBox="0 0 595.28 595.28" xmlns="http://www.w3.org/2000/svg">
-      <polyline class="mark-stroke"
-                points="297.17 265.57 417.4 148.9 177.87 148.9 297.19 479.32 297.17 265.57 177.87 148.9"/>
-    </svg>
-  </div>
 </section>
 
 <script>
@@ -414,20 +343,6 @@
       const svg = root.querySelector('.neon-svg');
       if (svg && typeof svg.pauseAnimations === 'function') svg.pauseAnimations();
     }
-
-    /* Fade the corner mark out as the section is scrolled past, so
-       the migration into the sticky nav header reads as a movement.
-       Triggers when the section's bottom edge is past 60% of the
-       viewport height. (The fullsite shell triggers the same class
-       via cross-iframe DOM access — both paths converge here.) */
-    function syncLeaving() {
-      const rect = root.getBoundingClientRect();
-      const isLeaving = rect.bottom < window.innerHeight * 0.6;
-      root.classList.toggle('is-leaving', isLeaving);
-    }
-    syncLeaving();
-    window.addEventListener('scroll', syncLeaving, { passive: true });
-    window.addEventListener('resize', syncLeaving, { passive: true });
 
     console.log('[DMC01-intro] Initialised.');
   }
