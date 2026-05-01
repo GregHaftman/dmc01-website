@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DMC01 — Solutions · What I help you achieve</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script>(function(){try{var t=localStorage.getItem('dmc01-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+
+<style>
+  /* ============================================================
+     DMC01 · Solutions — "What I help you achieve."
+     v2 (compact 4-tile grid)
+
+     Replaces the v1 editorial vertical-strip layout, which read
+     too close to the framework section's vertical timeline. This
+     version is a single horizontal grid of four tiles — number on
+     top, title, one punchy outcome paragraph, modules row pinned
+     to the bottom. Half the vertical footprint, distinct visual
+     vocabulary from framework, still uses Vercel-style Product /
+     Solutions framing.
+     ============================================================ */
+
+  :root {
+    --brand-blue:        var(--accent-primary, #0047FF);
+    --brand-blue-hover:  var(--accent-primary-hover, #3c6ce7);
+    --neutral-primary:   var(--bg-primary, #070708);
+    --neutral-secondary: var(--bg-secondary, #161617);
+    --surface-3:         #1d1e22;
+    --font:              var(--font-body, "Rajdhani", system-ui, sans-serif);
+    --t-h1-size:    var(--h1-size, 5.65rem);
+    --t-h2-size:    var(--h2-size, 2.83rem);
+    --t-base-size:  var(--base-font-size, 1rem);
+    --t-lg-size:    var(--text-lg-size, 1.1rem);
+    --t-xl-size:    var(--text-xl-size, 1.2rem);
+    --t-eyebrow-size: var(--eyebrow-size, 0.8rem);
+    --w-h1:    var(--h1-weight, 600);
+    --w-h2:    var(--h2-weight, 600);
+    --w-base:  var(--base-font-weight, 400);
+    --w-bold:  var(--base-font-weight-bold, 600);
+    --lh-h1:   var(--h1-line-height, 1.04em);
+    --lh-h2:   var(--h2-line-height, 1.04em);
+    --lh-base: var(--base-line-height, 1.6em);
+    --white:    var(--text-primary, #FFFFFF);
+    --white-72: rgba(255, 255, 255, 0.72);
+    --white-70: rgba(255, 255, 255, 0.70);
+    --white-50: rgba(255, 255, 255, 0.50);
+    --white-30: rgba(255, 255, 255, 0.30);
+    --white-15: var(--border-secondary, rgba(255, 255, 255, 0.15));
+    --blue-glow:  var(--accent-primary-glow, rgba(0, 71, 255, 0.55));
+    --blue-faint: var(--accent-primary-faint, rgba(0, 71, 255, 0.10));
+    --blue-grid:  var(--brand-grid, rgba(73, 72, 192, 0.04));
+    --radius-sm: var(--radius-base, 2px);
+    --radius-md: calc(var(--radius-sm) * 2);
+  }
+
+  [data-theme="light"] {
+    --neutral-primary:   #f5f5f7;
+    --neutral-secondary: #ffffff;
+    --surface-3:         #ebebee;
+    --white:    #070708;
+    --white-72: rgba(7, 7, 8, 0.72);
+    --white-70: rgba(7, 7, 8, 0.70);
+    --white-50: rgba(7, 7, 8, 0.55);
+    --white-30: rgba(7, 7, 8, 0.42);
+    --white-15: rgba(7, 7, 8, 0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--neutral-primary);
+    color: var(--white);
+    font-family: var(--font);
+    font-weight: var(--w-base);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ============================================================
+     SECTION FRAME
+     ============================================================ */
+  .solutions-section {
+    position: relative;
+    z-index: 1;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    padding: 64px clamp(24px, 4vw, 64px) 80px;
+    background: var(--neutral-primary);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .solutions-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      linear-gradient(var(--blue-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--blue-grid) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black 40%, transparent 100%);
+  }
+  .solutions-section .section-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+
+  /* ============================================================
+     HEADER
+     ============================================================ */
+  .solutions-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: clamp(40px, 6vw, 96px);
+    align-items: end;
+    margin-bottom: 56px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--white-15);
+  }
+  .header-left  { min-width: 0; }
+  .header-right { min-width: 0; padding-bottom: 6px; }
+
+  .eyebrow {
+    font-size: var(--t-eyebrow-size);
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 32px; height: 1px;
+    background: var(--brand-blue);
+  }
+
+  .section-title {
+    font-size: var(--t-h1-size);
+    font-weight: var(--w-h1);
+    line-height: var(--lh-h1);
+    letter-spacing: -0.02em;
+  }
+  .section-title em { font-style: normal; color: var(--brand-blue); }
+
+  .section-lede {
+    font-size: var(--t-lg-size);
+    font-weight: var(--w-base);
+    line-height: var(--lh-base);
+    color: var(--white-70);
+    max-width: 520px;
+  }
+
+  @media (max-width: 800px) {
+    .solutions-header { grid-template-columns: 1fr; gap: 16px; align-items: start; }
+    .header-right { padding-bottom: 0; }
+  }
+
+  /* ============================================================
+     SOLUTIONS GRID — 4 tiles in a horizontal row.
+     Each tile is a flex column so the modules row pins to the
+     bottom regardless of how much body copy lives above it
+     (uniform card heights via grid stretching).
+
+     Top brand-blue accent strip on each tile is the design DNA
+     that ties them visually — like a colour-coded chapter index
+     rather than a vertical timeline (framework) or a stage panel
+     (the old tailored).
+     ============================================================ */
+  .solutions-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .solution-tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 28px 24px 22px;
+    background: var(--neutral-secondary);
+    border: 1px solid var(--white-15);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition:
+      border-color 0.3s ease,
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+  /* Brand-blue accent strip at the top — shared visual DNA
+     across all four tiles, gives them a "chapter index" feel. */
+  .solution-tile::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--brand-blue);
+    opacity: 0.55;
+    transition: opacity 0.3s ease, height 0.3s ease;
+  }
+  .solution-tile:hover {
+    border-color: rgba(0, 71, 255, 0.5);
+    transform: translateY(-3px);
+    box-shadow: 0 0 36px rgba(0, 71, 255, 0.22);
+  }
+  .solution-tile:hover::before {
+    opacity: 1;
+    height: 3px;
+  }
+
+  /* Solution icon — Feather-style line icon, brand-blue, ~36px square.
+     Sits where the number used to. Icons rather than 01/02/03/04
+     because solutions are independent outcomes, not a sequence. */
+  .solution-icon {
+    width: 36px;
+    height: 36px;
+    color: var(--brand-blue);
+    flex-shrink: 0;
+  }
+  .solution-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .solution-title {
+    font-size: var(--t-xl-size);
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.18;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .solution-body {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--white-72);
+    margin: 0;
+    flex: 1;
+  }
+  .solution-body strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  .solution-modules-row {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px dashed var(--white-15);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .solution-modules-label {
+    font-size: var(--t-eyebrow-size);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--white-50);
+  }
+  .solution-modules-list {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+  .solution-module-chip {
+    background: transparent;
+    border: 1px solid var(--white-15);
+    color: var(--white-72);
+    font-family: inherit;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 4px 9px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-variant-numeric: tabular-nums;
+    transition:
+      border-color 0.2s ease,
+      background 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
+  .solution-module-chip:hover {
+    border-color: var(--brand-blue);
+    background: rgba(0, 71, 255, 0.14);
+    color: var(--brand-blue);
+    transform: translateY(-1px);
+  }
+
+  /* Subtle entrance — single fade-up per tile when the row enters
+     viewport; staggered so the four tiles cascade rather than pop
+     in unison. */
+  .solution-tile {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+      transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+  .solutions-grid.is-visible .solution-tile {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .solutions-grid.is-visible .solution-tile:nth-child(1) { transition-delay: 0s; }
+  .solutions-grid.is-visible .solution-tile:nth-child(2) { transition-delay: 0.08s; }
+  .solutions-grid.is-visible .solution-tile:nth-child(3) { transition-delay: 0.16s; }
+  .solutions-grid.is-visible .solution-tile:nth-child(4) { transition-delay: 0.24s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .solution-tile { transition: none !important; opacity: 1; transform: none; }
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 1100px) {
+    .solutions-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .solutions-section { padding: 48px 20px 64px; }
+    .solutions-grid { grid-template-columns: 1fr; }
+    .solution-tile { padding: 22px 20px 18px; }
+  }
+</style>
+</head>
+
+<body>
+
+<section class="solutions-section" id="dmc01-solutions" aria-label="Solutions — what I help you achieve">
+
+  <div class="section-inner">
+
+    <header class="solutions-header">
+      <div class="header-left">
+        <div class="eyebrow">Solutions</div>
+        <h1 class="section-title">What I help you <em>achieve.</em></h1>
+      </div>
+      <div class="header-right">
+        <p class="section-lede">Four outcomes I deliver, each combining several modules from the product above. Click any module chip to scroll back up and open it.</p>
+      </div>
+    </header>
+
+    <div class="solutions-grid" id="solutionsGrid">
+
+      <article class="solution-tile">
+        <div class="solution-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <h2 class="solution-title">Sell smarter.</h2>
+        <p class="solution-body">A commercial framework, value narrative, and pricing logic that lets your team sell <strong>solution-first</strong> — not feature-first. Expansion becomes a pattern, not a hope.</p>
+        <div class="solution-modules-row">
+          <span class="solution-modules-label">Modules</span>
+          <div class="solution-modules-list">
+            <button class="solution-module-chip" data-module="04" type="button" aria-label="Module 04">04</button>
+            <button class="solution-module-chip" data-module="02" type="button" aria-label="Module 02">02</button>
+            <button class="solution-module-chip" data-module="01" type="button" aria-label="Module 01">01</button>
+            <button class="solution-module-chip" data-module="05" type="button" aria-label="Module 05">05</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="solution-tile">
+        <div class="solution-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        </div>
+        <h2 class="solution-title">Bring new offerings to market.</h2>
+        <p class="solution-body">Sequencing the launch — high-value asset, route to market, client material, internal ownership, licensing — all moving to the same calendar. <strong>Marketplace-native</strong> packaging where it applies.</p>
+        <div class="solution-modules-row">
+          <span class="solution-modules-label">Modules</span>
+          <div class="solution-modules-list">
+            <button class="solution-module-chip" data-module="03" type="button" aria-label="Module 03">03</button>
+            <button class="solution-module-chip" data-module="05" type="button" aria-label="Module 05">05</button>
+            <button class="solution-module-chip" data-module="01" type="button" aria-label="Module 01">01</button>
+            <button class="solution-module-chip" data-module="06" type="button" aria-label="Module 06">06</button>
+            <button class="solution-module-chip" data-module="02" type="button" aria-label="Module 02">02</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="solution-tile">
+        <div class="solution-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <h2 class="solution-title">Modernise delivery.</h2>
+        <p class="solution-body">Delivery aligned to what customers actually integrate today: <strong>APIs, streaming, marketplace endpoints</strong>. Specifications precise enough that your team can deliver and your customers can price.</p>
+        <div class="solution-modules-row">
+          <span class="solution-modules-label">Modules</span>
+          <div class="solution-modules-list">
+            <button class="solution-module-chip" data-module="06" type="button" aria-label="Module 06">06</button>
+            <button class="solution-module-chip" data-module="03" type="button" aria-label="Module 03">03</button>
+            <button class="solution-module-chip" data-module="04" type="button" aria-label="Module 04">04</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="solution-tile">
+        <div class="solution-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h2 class="solution-title">Get deal-ready.</h2>
+        <p class="solution-body">Due-diligence material a serious counterparty actually wants to see. Pricing and packaging that hold up. Revenue projections grounded in <strong>real customer behaviour</strong>.</p>
+        <div class="solution-modules-row">
+          <span class="solution-modules-label">Modules</span>
+          <div class="solution-modules-list">
+            <button class="solution-module-chip" data-module="02" type="button" aria-label="Module 02">02</button>
+            <button class="solution-module-chip" data-module="05" type="button" aria-label="Module 05">05</button>
+            <button class="solution-module-chip" data-module="01" type="button" aria-label="Module 01">01</button>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+</section>
+
+<script>
+(function() {
+  'use strict';
+
+  function init() {
+    const root = document.querySelector('.solutions-section');
+    if (!root) {
+      console.error('[DMC01-solutions] Could not find .solutions-section.');
+      return;
+    }
+    const grid = root.querySelector('.solutions-grid');
+
+    /* Reveal the row of tiles on first scroll-into-view. The row is
+       observed (not each tile separately) so all four animate as a
+       coordinated cascade — see the staggered transition-delays in
+       the CSS. Once revealed, stay revealed. */
+    if (grid && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+      io.observe(grid);
+    } else if (grid) {
+      grid.classList.add('is-visible');
+    }
+
+    /* Module chip → product section bridge.
+       Each chip dispatches `dmc01:openModule` on the document; the
+       orbital section listens for it and opens the corresponding
+       module + scrolls itself into view. In the fullsite preview
+       the iframes are isolated, so 00-dmc01-fullsite.html relays
+       the event between docs. */
+    const chips = root.querySelectorAll('.solution-module-chip');
+    chips.forEach(function(chip) {
+      chip.addEventListener('click', function(e) {
+        e.preventDefault();
+        const id = chip.getAttribute('data-module');
+        if (!id) return;
+        document.dispatchEvent(new CustomEvent('dmc01:openModule', { detail: { id: id } }));
+      });
+    });
+
+    console.log('[DMC01-solutions] Initialised. ' + chips.length + ' chips wired.');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+</body>
+</html>
