@@ -447,10 +447,10 @@ body::before {
   transition: opacity 0.4s ease;
   will-change: transform;
   /* Hidden until the external JS finishes loading and runs the first
-     positioning tick. Without this guard, during the (potentially
-     several-second) window where the embed has rendered but the
-     gist-hosted JS hasn't executed yet, all six nodes pile up at the
-     centre on top of the logo and the section reads as broken. */
+     positioning tick. Without this guard, during the brief window
+     where the embed has rendered but the Cloudflare-Pages-hosted JS
+     hasn't executed yet, all six nodes pile up at the centre on top
+     of the logo and the section reads as broken. */
   opacity: 0;
 }
 .orbital.is-positioned .node {
@@ -965,9 +965,14 @@ body::before {
      Webflow's 50kB-per-embed limit. The MODULES data array
      and animation code live in webflow/dmc01-orbital.js.
 
-     LOCAL DEV: relative path resolves to the project file.
-     IN WEBFLOW: replace the src below with the Asset URL after
-     uploading webflow/dmc01-orbital.js to Webflow → Assets.
+     LOCAL DEV: the relative path below resolves directly to the
+     repo file via Live Server.
+
+     IN WEBFLOW: replace the src below with the Cloudflare Pages
+     URL for the same file, e.g.
+       https://<project>.pages.dev/webflow/dmc01-orbital.js
+     Pages auto-deploys on push, so future edits to this file are
+     served from the same URL — no embed change needed.
      ============================================================ -->
 <script src="../webflow/dmc01-orbital.js" defer></script>
 
