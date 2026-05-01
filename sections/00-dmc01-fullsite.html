@@ -243,8 +243,8 @@
       <div class="nav-panel-eyebrow">On this page</div>
       <ul class="nav-panel-list">
         <li><a href="#dmc01-intro" data-target="intro" role="menuitem"><span class="nav-panel-num">01</span><span>Hero</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
-        <li><a href="#dmc01-services" data-target="orbital" role="menuitem"><span class="nav-panel-num">02</span><span>Services</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
-        <li><a href="#dmc01-tailored" data-target="tailored" role="menuitem"><span class="nav-panel-num">03</span><span>Use cases</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
+        <li><a href="#dmc01-product"   data-target="product"   role="menuitem"><span class="nav-panel-num">02</span><span>Product</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
+        <li><a href="#dmc01-solutions" data-target="solutions" role="menuitem"><span class="nav-panel-num">03</span><span>Solutions</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
         <li><a href="#dmc01-framework" data-target="framework" role="menuitem"><span class="nav-panel-num">04</span><span>Framework</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
         <li><a href="#dmc01-testimonials" data-target="testimonials" role="menuitem"><span class="nav-panel-num">05</span><span>Work with me</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
         <li><a href="#dmc01-contact" data-target="contact" role="menuitem"><span class="nav-panel-num">06</span><span>Open a brief</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
@@ -275,8 +275,8 @@
 
 <!-- ================ SECTION IFRAMES ================ -->
 <iframe src="01-dmc01-intro.html"     title="DMC01 — Data Monetisation Concept" data-section="intro"></iframe>
-<iframe src="02-dmc01-orbital.html"   title="DMC01 — Specialised advisory"     data-section="orbital"></iframe>
-<iframe src="03-dmc01-tailored.html"  title="DMC01 — Tailored to your context" data-section="tailored"></iframe>
+<iframe src="02-dmc01-orbital.html"   title="DMC01 — Product · Six modules"          data-section="product"></iframe>
+<iframe src="03-dmc01-solutions.html" title="DMC01 — Solutions · What I help you achieve" data-section="solutions"></iframe>
 <iframe src="04-dmc01-framework.html"    title="DMC01 — Powered by a rigorous framework" data-section="framework"></iframe>
 <iframe src="05-dmc01-testimonials.html" title="DMC01 — Work with me, what to expect?"     data-section="testimonials"></iframe>
 <iframe src="06-dmc01-contact.html"      title="DMC01 — Open a brief"                      data-section="contact"></iframe>
@@ -308,21 +308,25 @@
   });
 
   /* ============================================================
-     CROSS-EMBED BRIDGE — tailored "Modules" pill → orbital open.
-     Same as before; survives even now that nav scrolls the page. */
+     CROSS-EMBED BRIDGE — solutions module-chip → product open.
+     Solutions section fires `dmc01:openModule` on its own document
+     when a chip is clicked; in the fullsite preview the iframes
+     are isolated so we manually forward the event from solutions'
+     document into product's document, then scroll the product
+     iframe into view. */
   function bridge() {
-    const tailored = document.querySelector('iframe[data-section="tailored"]');
-    const orbital  = document.querySelector('iframe[data-section="orbital"]');
-    if (!tailored || !orbital) return;
-    const td = tailored.contentDocument, od = orbital.contentDocument;
-    if (!td || !od) return;
-    td.addEventListener('dmc01:openModule', function(e) {
-      od.dispatchEvent(new CustomEvent('dmc01:openModule', { detail: e.detail }));
-      orbital.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const solutions = document.querySelector('iframe[data-section="solutions"]');
+    const product   = document.querySelector('iframe[data-section="product"]');
+    if (!solutions || !product) return;
+    const sd = solutions.contentDocument, pd = product.contentDocument;
+    if (!sd || !pd) return;
+    sd.addEventListener('dmc01:openModule', function(e) {
+      pd.dispatchEvent(new CustomEvent('dmc01:openModule', { detail: e.detail }));
+      product.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   }
   let loaded = 0;
-  ['tailored', 'orbital'].forEach(function(name) {
+  ['solutions', 'product'].forEach(function(name) {
     const f = document.querySelector('iframe[data-section="' + name + '"]');
     if (!f) return;
     f.addEventListener('load', function() {
