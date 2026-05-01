@@ -31,12 +31,18 @@
    ===================================================================== */
 
 /* IIFE + DOMContentLoaded for Webflow embed compatibility.
-   All DOM lookups are scoped to `root` (the .section container) so multiple
-   embeds on the same page can't collide. */
+   All DOM lookups are scoped to `root` (the orbital section) so multiple
+   embeds on the same page can't collide.
+   We anchor on the section's unique ID `#dmc01-product` rather than its
+   `.section` class — Webflow ships its own `.section` class on native
+   components, and `document.querySelector('.section')` was matching one
+   of those wrappers instead of our orbital container, leaving every
+   `root.querySelector('#orbital')` lookup null and the nodes piled at
+   the centre with no orbit transform applied. */
 (function() {
   'use strict';
   function init() {
-    const root = document.querySelector('.section');
+    const root = document.querySelector('#dmc01-product');
     if (!root) return;
 
 /* ============ MODULE DATA ============
