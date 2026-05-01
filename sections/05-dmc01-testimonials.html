@@ -258,11 +258,21 @@
     background: var(--white-15);
   }
 
+  /* Marquee — uses native horizontal scroll (overflow-x: auto) with
+     the scrollbar visually hidden. JS drives a slow auto-advance via
+     scrollLeft and pauses on hover OR when the user scrolls horizontally
+     with a trackpad. The container scrolls naturally; the auto-loop
+     wraps invisibly (the cards are duplicated to make the seam smooth).
+     Doing it this way — instead of CSS transform animation — lets users
+     two-finger-scroll without fighting the animation. */
   .testimonials-marquee {
     position: relative;
     width: 100vw;
     margin-left: calc(50% - 50vw);
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;            /* Firefox */
+    -ms-overflow-style: none;          /* old IE/Edge */
     /* Edge fade so cards dissolve in/out at left/right rather than
        cutting off hard against the viewport. */
     mask-image: linear-gradient(
@@ -272,29 +282,23 @@
       90deg, transparent 0%, black 6%, black 94%, transparent 100%
     );
   }
+  .testimonials-marquee::-webkit-scrollbar { display: none; }
 
   .testimonials-track {
     display: flex;
     gap: 20px;
     width: max-content;
-    /* The track contains the 10 testimonials twice. We translate
-       from 0 to -50% (one full set width) over the duration —
-       the second copy slides in seamlessly behind the first. */
-    animation: marqueeScroll 90s linear infinite;
-    will-change: transform;
-  }
-  .testimonials-marquee:hover .testimonials-track,
-  .testimonials-marquee:focus-within .testimonials-track {
-    animation-play-state: paused;
-  }
-  @keyframes marqueeScroll {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
+    /* No CSS animation — JS increments scrollLeft frame-by-frame. */
   }
 
+  /* Cards have a fixed height (was min-height) so very long quotes
+     can't push their card taller than the others — the long
+     "Macrobond Pre-Sales" testimonial used to overflow the box on
+     wider viewports. Click anywhere on a card to read the full
+     quote in a modal. */
   .testimonial-card {
     flex: 0 0 380px;
-    min-height: 220px;
+    height: 260px;
     padding: 24px 26px;
     background: var(--neutral-secondary);
     border: 1px solid var(--white-15);
@@ -302,12 +306,17 @@
     display: flex;
     flex-direction: column;
     position: relative;
+    cursor: pointer;
     transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
   }
   .testimonial-card:hover {
     border-color: rgba(0, 71, 255, 0.45);
     transform: translateY(-2px);
     box-shadow: 0 0 28px rgba(0, 71, 255, 0.18);
+  }
+  .testimonial-card:focus-visible {
+    outline: 2px solid var(--brand-blue);
+    outline-offset: 2px;
   }
   /* Stylised opening quote mark in the top-left corner. */
   .testimonial-card::before {
@@ -322,25 +331,130 @@
     font-family: Georgia, serif;
     pointer-events: none;
   }
+  /* Subtle "read more" affordance in the bottom-right corner of every
+     card — pairs with the cursor:pointer to invite the click. */
+  .testimonial-card::after {
+    content: "Read full →";
+    position: absolute;
+    bottom: 8px;
+    right: 14px;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--white-30);
+    pointer-events: none;
+    transition: color 0.3s ease;
+  }
+  .testimonial-card:hover::after { color: var(--brand-blue); }
 
   .quote-text {
     font-size: 0.98rem;
     line-height: 1.55;
     color: var(--white-72);
-    flex: 1;
     margin-top: 18px;
     padding-left: 8px;
-    /* Ellipsize very long quotes to keep cards uniform. */
+    /* Ellipsize very long quotes to keep cards uniform.
+       Clamp at 5 lines (was 6) so the longest quote sits comfortably
+       inside the new fixed card height. */
     display: -webkit-box;
-    -webkit-line-clamp: 6;
+    -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
 
   .quote-author {
-    margin-top: 18px;
+    margin-top: auto;                  /* push to the bottom of the card */
     padding-top: 14px;
     border-top: 1px solid var(--white-15);
+  }
+
+  /* ============================================================
+     READ-FULL MODAL — opens when a card is clicked.
+     ============================================================ */
+  .testimonial-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .testimonial-modal.is-visible { opacity: 1; pointer-events: auto; }
+  .testimonial-modal[hidden] { display: none; }
+  .testimonial-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(7, 7, 8, 0.78);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+  .testimonial-modal-card {
+    position: relative;
+    max-width: 640px;
+    width: 100%;
+    max-height: 84vh;
+    overflow-y: auto;
+    background: var(--neutral-secondary);
+    border: 1px solid var(--brand-blue);
+    padding: 40px 44px 36px;
+    border-radius: var(--radius-md);
+    box-shadow: 0 0 60px rgba(0, 71, 255, 0.35);
+    transform: scale(0.96);
+    transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .testimonial-modal.is-visible .testimonial-modal-card { transform: scale(1); }
+  .testimonial-modal-close {
+    position: absolute;
+    top: 10px; right: 14px;
+    background: transparent;
+    border: 0;
+    color: var(--white-50);
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 8px 10px;
+    font-family: inherit;
+    transition: color 0.2s ease;
+  }
+  .testimonial-modal-close:hover { color: var(--white); }
+  .testimonial-modal-quote {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--white);
+    font-weight: 500;
+    margin: 0 0 24px;
+  }
+  .testimonial-modal-quote::before {
+    content: "“";
+    display: block;
+    font-size: 3.6rem;
+    line-height: 0.8;
+    color: var(--brand-blue);
+    opacity: 0.45;
+    font-family: Georgia, serif;
+    margin-bottom: 14px;
+  }
+  .testimonial-modal-author {
+    padding-top: 18px;
+    border-top: 1px solid var(--white-15);
+  }
+  .testimonial-modal .author-title {
+    font-size: var(--t-base-size);
+    font-weight: 700;
+    color: var(--white);
+  }
+  .testimonial-modal .author-company {
+    margin-top: 4px;
+    font-size: var(--t-eyebrow-size);
+    font-weight: 600;
+    color: var(--brand-blue);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
   }
   .author-title {
     font-size: var(--t-base-size);
@@ -371,13 +485,15 @@
       width: 220px;
       margin: 0 auto;
     }
-    .testimonial-card { flex-basis: 320px; min-height: 200px; }
+    .testimonial-card { flex-basis: 320px; height: 250px; }
   }
 
   @media (max-width: 540px) {
     .testimonials-section { padding: 48px 0 64px; }
     .testimonials-section .section-inner { padding: 0 20px; }
-    .testimonial-card { flex-basis: 280px; padding: 20px 22px; }
+    .testimonial-card { flex-basis: 280px; height: 240px; padding: 20px 22px; }
+    .testimonial-modal-card { padding: 32px 26px 28px; }
+    .testimonial-modal-quote { font-size: 1rem; }
     /* Stack KPI row vertically on narrow viewports — dividers off. */
     .cred-row { flex-direction: column; align-items: flex-start; gap: 8px; }
     .cred-row li { padding: 0; }
@@ -481,11 +597,24 @@
   </div>
 
   <!-- The marquee escapes .section-inner so cards run edge-to-edge. -->
-  <div class="testimonials-marquee" id="testimonialsMarquee" tabindex="0" aria-label="Testimonials carousel">
+  <div class="testimonials-marquee" id="testimonialsMarquee" tabindex="0" aria-label="Testimonials carousel — scroll horizontally to browse">
     <div class="testimonials-track" id="testimonialsTrack">
       <!-- Cards are rendered here by JS — the source list lives in
            the script, and we duplicate it for seamless looping. -->
     </div>
+  </div>
+
+  <!-- Read-full modal — populated and shown when a card is clicked. -->
+  <div class="testimonial-modal" id="testimonialModal" role="dialog" aria-modal="true" aria-labelledby="testimonialModalTitle" hidden>
+    <div class="testimonial-modal-backdrop"></div>
+    <article class="testimonial-modal-card">
+      <button class="testimonial-modal-close" id="testimonialModalClose" type="button" aria-label="Close">&times;</button>
+      <blockquote class="testimonial-modal-quote" id="testimonialModalQuote"></blockquote>
+      <footer class="testimonial-modal-author">
+        <div class="author-title" id="testimonialModalTitle"></div>
+        <div class="author-company" id="testimonialModalCompany"></div>
+      </footer>
+    </article>
   </div>
 
 </section>
@@ -554,16 +683,25 @@
       console.error('[DMC01-testimonials] Could not find .testimonials-section.');
       return;
     }
-    const track = root.querySelector('#testimonialsTrack');
-    if (!track) return;
+    const marquee = root.querySelector('#testimonialsMarquee');
+    const track   = root.querySelector('#testimonialsTrack');
+    if (!marquee || !track) return;
 
     /* Render the cards twice into the track so the loop seam is
-       invisible — when the first set has scrolled off-left, the
-       duplicate slides in from the right, then the animation resets
-       to translate(0) which now shows the original first card again. */
+       invisible — when the first set has scrolled past, scrollLeft
+       wraps back to 0 inside the duplicate range, which visually
+       shows the original first card again with no jump.
+       Each card carries the full quote/title/company on data-* so
+       the modal can read it back without re-querying the source. */
     function buildCard(t) {
       const card = document.createElement('article');
       card.className = 'testimonial-card';
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-label', 'Read full testimonial from ' + t.title + ', ' + t.company);
+      card.dataset.title = t.title;
+      card.dataset.company = t.company;
+      card.dataset.quote = t.quote;
       card.innerHTML =
         '<blockquote class="quote-text">' + escapeHtml(t.quote) + '</blockquote>' +
         '<footer class="quote-author">' +
@@ -585,10 +723,105 @@
     TESTIMONIALS.forEach(function(t) { frag.appendChild(buildCard(t)); });
     track.appendChild(frag);
 
-    /* Honour prefers-reduced-motion — pause the marquee. */
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      track.style.animation = 'none';
+    /* ============ MODAL — click any card to read the full quote ============ */
+    const modal        = root.querySelector('#testimonialModal');
+    const modalQuote   = modal.querySelector('#testimonialModalQuote');
+    const modalTitle   = modal.querySelector('#testimonialModalTitle');
+    const modalCompany = modal.querySelector('#testimonialModalCompany');
+    const modalClose   = modal.querySelector('#testimonialModalClose');
+    const modalBackdrop = modal.querySelector('.testimonial-modal-backdrop');
+
+    function openModal(card) {
+      modalQuote.textContent   = card.dataset.quote   || '';
+      modalTitle.textContent   = card.dataset.title   || '';
+      modalCompany.textContent = card.dataset.company || '';
+      modal.hidden = false;
+      void modal.offsetWidth;
+      modal.classList.add('is-visible');
     }
+    function closeModal() {
+      modal.classList.remove('is-visible');
+      setTimeout(function() { modal.hidden = true; }, 300);
+    }
+    modalClose.addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', closeModal);
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && !modal.hidden) closeModal();
+    });
+
+    /* Click anywhere on a card opens the modal. We attach a single
+       delegated listener on the track instead of one per card. The
+       click is suppressed if the user just finished a horizontal
+       trackpad scroll (so a swipe-then-release doesn't pop a modal). */
+    let suppressClickUntil = 0;
+    track.addEventListener('click', function(e) {
+      if (performance.now() < suppressClickUntil) return;
+      const card = e.target.closest('.testimonial-card');
+      if (card) openModal(card);
+    });
+    track.addEventListener('keydown', function(e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const card = e.target.closest('.testimonial-card');
+      if (!card) return;
+      e.preventDefault();
+      openModal(card);
+    });
+
+    /* ============ AUTO-SCROLL + MANUAL TRACKPAD SCROLL ============
+       The marquee uses native overflow-x scroll (so two-finger
+       horizontal trackpad gestures Just Work). On top of that, a
+       requestAnimationFrame loop nudges scrollLeft forward at a
+       slow constant rate. Auto-advance pauses while:
+         - the user is hovering the marquee, OR
+         - the user is touching/wheel-scrolling it, OR
+         - the modal is open, OR
+         - prefers-reduced-motion is on. */
+    const SPEED = 35;                 /* px per second */
+    const WHEEL_RESUME_DELAY = 1500;  /* ms after last user-scroll */
+    const reduced = window.matchMedia
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let isHovering = false;
+    let lastUserScrollTime = 0;
+    let lastFrame = 0;
+
+    function tick(now) {
+      const userHold = (now - lastUserScrollTime) < WHEEL_RESUME_DELAY;
+      const paused = isHovering || userHold || !modal.hidden || reduced;
+      if (lastFrame && !paused) {
+        const dt = (now - lastFrame) / 1000;
+        marquee.scrollLeft += SPEED * dt;
+      }
+      lastFrame = now;
+      /* Seamless wrap. Track is two duplicate sets, so wrapping at
+         half the scrollable width is invisible. */
+      const half = track.scrollWidth / 2;
+      if (half > 0) {
+        if (marquee.scrollLeft >= half)      marquee.scrollLeft -= half;
+        else if (marquee.scrollLeft < 0)     marquee.scrollLeft += half;
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    marquee.addEventListener('mouseenter', function() { isHovering = true; });
+    marquee.addEventListener('mouseleave', function() { isHovering = false; });
+    marquee.addEventListener('wheel', function(e) {
+      lastUserScrollTime = performance.now();
+      /* If the user is producing horizontal wheel deltas (trackpad
+         two-finger swipe), suppress the next click for a short
+         window so the swipe doesn't fire a card click on release. */
+      if (Math.abs(e.deltaX) > 0) {
+        suppressClickUntil = performance.now() + 250;
+      }
+    }, { passive: true });
+    marquee.addEventListener('touchstart', function() {
+      lastUserScrollTime = performance.now();
+    }, { passive: true });
+    marquee.addEventListener('touchmove', function() {
+      lastUserScrollTime = performance.now();
+      suppressClickUntil = performance.now() + 250;
+    }, { passive: true });
 
     console.log('[DMC01-testimonials] Initialised. ' + TESTIMONIALS.length + ' quotes loaded.');
   }

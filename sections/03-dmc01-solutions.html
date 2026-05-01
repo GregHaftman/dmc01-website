@@ -258,25 +258,29 @@
     font-weight: 600;
   }
 
+  /* Modules row — pinned to bottom of each tile.
+     Chip labels are short module names ("Pricing", "Licensing"…) rather
+     than numeric codes ("02", "01"…). The earlier numbers needed a
+     mental lookup back to the orbital; the names carry meaning on their
+     own and still link through to the matching module on click. */
   .solution-modules-row {
     margin-top: auto;
     padding-top: 14px;
     border-top: 1px dashed var(--white-15);
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 10px;
-    flex-wrap: wrap;
   }
   .solution-modules-label {
-    font-size: var(--t-eyebrow-size);
-    letter-spacing: 0.2em;
+    font-size: calc(var(--t-eyebrow-size) * 0.85);
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--white-50);
   }
   .solution-modules-list {
     display: flex;
-    gap: 5px;
+    gap: 6px;
     flex-wrap: wrap;
   }
   .solution-module-chip {
@@ -284,13 +288,13 @@
     border: 1px solid var(--white-15);
     color: var(--white-72);
     font-family: inherit;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    padding: 4px 9px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    padding: 5px 10px;
     border-radius: var(--radius-sm);
     cursor: pointer;
-    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
     transition:
       border-color 0.2s ease,
       background 0.2s ease,
@@ -302,6 +306,10 @@
     background: rgba(0, 71, 255, 0.14);
     color: var(--brand-blue);
     transform: translateY(-1px);
+  }
+  .solution-module-chip:focus-visible {
+    outline: 2px solid var(--brand-blue);
+    outline-offset: 2px;
   }
 
   /* Subtle entrance — single fade-up per tile when the row enters
@@ -368,12 +376,12 @@
         <h2 class="solution-title">Sell smarter.</h2>
         <p class="solution-body">A commercial framework, value narrative, and pricing logic that lets your team sell <strong>solution-first</strong> — not feature-first. Expansion becomes a pattern, not a hope.</p>
         <div class="solution-modules-row">
-          <span class="solution-modules-label">Modules</span>
+          <span class="solution-modules-label">Modules involved</span>
           <div class="solution-modules-list">
-            <button class="solution-module-chip" data-module="04" type="button" aria-label="Module 04">04</button>
-            <button class="solution-module-chip" data-module="02" type="button" aria-label="Module 02">02</button>
-            <button class="solution-module-chip" data-module="01" type="button" aria-label="Module 01">01</button>
-            <button class="solution-module-chip" data-module="05" type="button" aria-label="Module 05">05</button>
+            <button class="solution-module-chip" data-module="04" type="button" aria-label="Module 04 — Value Strategy &amp; Enablement">Enablement</button>
+            <button class="solution-module-chip" data-module="02" type="button" aria-label="Module 02 — Monetisation Model &amp; Pricing">Pricing</button>
+            <button class="solution-module-chip" data-module="01" type="button" aria-label="Module 01 — Rights &amp; Licensing">Licensing</button>
+            <button class="solution-module-chip" data-module="05" type="button" aria-label="Module 05 — Offer Design &amp; Packaging">Packaging</button>
           </div>
         </div>
       </article>
@@ -385,13 +393,14 @@
         <h2 class="solution-title">Bring new offerings to market.</h2>
         <p class="solution-body">Sequencing the launch — high-value asset, route to market, client material, internal ownership, licensing — all moving to the same calendar. <strong>Marketplace-native</strong> packaging where it applies.</p>
         <div class="solution-modules-row">
-          <span class="solution-modules-label">Modules</span>
+          <span class="solution-modules-label">Modules involved</span>
           <div class="solution-modules-list">
-            <button class="solution-module-chip" data-module="03" type="button" aria-label="Module 03">03</button>
-            <button class="solution-module-chip" data-module="05" type="button" aria-label="Module 05">05</button>
-            <button class="solution-module-chip" data-module="01" type="button" aria-label="Module 01">01</button>
-            <button class="solution-module-chip" data-module="06" type="button" aria-label="Module 06">06</button>
-            <button class="solution-module-chip" data-module="02" type="button" aria-label="Module 02">02</button>
+            <button class="solution-module-chip" data-module="03" type="button" aria-label="Module 03 — Product Direction &amp; Roadmap">Roadmap</button>
+            <button class="solution-module-chip" data-module="05" type="button" aria-label="Module 05 — Offer Design &amp; Packaging">Packaging</button>
+            <button class="solution-module-chip" data-module="01" type="button" aria-label="Module 01 — Rights &amp; Licensing">Licensing</button>
+            <button class="solution-module-chip" data-module="06" type="button" aria-label="Module 06 — Distribution &amp; Delivery">Distribution</button>
+            <button class="solution-module-chip" data-module="02" type="button" aria-label="Module 02 — Monetisation Model &amp; Pricing">Pricing</button>
+            <button class="solution-module-chip" data-module="04" type="button" aria-label="Module 04 — Value Strategy &amp; Enablement">Enablement</button>
           </div>
         </div>
       </article>
@@ -403,11 +412,11 @@
         <h2 class="solution-title">Modernise delivery.</h2>
         <p class="solution-body">Delivery aligned to what customers actually integrate today: <strong>APIs, streaming, marketplace endpoints</strong>. Specifications precise enough that your team can deliver and your customers can price.</p>
         <div class="solution-modules-row">
-          <span class="solution-modules-label">Modules</span>
+          <span class="solution-modules-label">Modules involved</span>
           <div class="solution-modules-list">
-            <button class="solution-module-chip" data-module="06" type="button" aria-label="Module 06">06</button>
-            <button class="solution-module-chip" data-module="03" type="button" aria-label="Module 03">03</button>
-            <button class="solution-module-chip" data-module="04" type="button" aria-label="Module 04">04</button>
+            <button class="solution-module-chip" data-module="06" type="button" aria-label="Module 06 — Distribution &amp; Delivery">Distribution</button>
+            <button class="solution-module-chip" data-module="03" type="button" aria-label="Module 03 — Product Direction &amp; Roadmap">Roadmap</button>
+            <button class="solution-module-chip" data-module="04" type="button" aria-label="Module 04 — Value Strategy &amp; Enablement">Enablement</button>
           </div>
         </div>
       </article>
@@ -419,11 +428,11 @@
         <h2 class="solution-title">Get deal-ready.</h2>
         <p class="solution-body">Due-diligence material a serious counterparty actually wants to see. Pricing and packaging that hold up. Revenue projections grounded in <strong>real customer behaviour</strong>.</p>
         <div class="solution-modules-row">
-          <span class="solution-modules-label">Modules</span>
+          <span class="solution-modules-label">Modules involved</span>
           <div class="solution-modules-list">
-            <button class="solution-module-chip" data-module="02" type="button" aria-label="Module 02">02</button>
-            <button class="solution-module-chip" data-module="05" type="button" aria-label="Module 05">05</button>
-            <button class="solution-module-chip" data-module="01" type="button" aria-label="Module 01">01</button>
+            <button class="solution-module-chip" data-module="02" type="button" aria-label="Module 02 — Monetisation Model &amp; Pricing">Pricing</button>
+            <button class="solution-module-chip" data-module="05" type="button" aria-label="Module 05 — Offer Design &amp; Packaging">Packaging</button>
+            <button class="solution-module-chip" data-module="01" type="button" aria-label="Module 01 — Rights &amp; Licensing">Licensing</button>
           </div>
         </div>
       </article>
