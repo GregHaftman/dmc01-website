@@ -1,33 +1,50 @@
 /* =====================================================================
-   DMC01 — Orbital section JS (extracted for Webflow Assets upload)
+   DMC01 — Orbital section JS (hosted on Cloudflare Pages)
    =====================================================================
 
    WHY THIS FILE EXISTS
    The orbital section embed (sections/02-dmc01-orbital.html) was 78kB,
-   above Webflow's 50kB-per-embed limit. The bulk was the MODULES array
+   above Webflow's 50kB-per-embed limit. The bulk is the MODULES array
    and animation code below. Hosting that here keeps the embed itself
    well under the limit.
 
-   HOW TO WIRE UP IN WEBFLOW
-   1. Upload this file to Webflow → Project Settings → Assets.
-   2. Copy the resulting Asset URL (https://uploads-ssl.webflow.com/.../dmc01-orbital.js).
-   3. In the orbital section's Embed component, the markup ends with:
-        <script src="../webflow/dmc01-orbital.js" defer></script>
-      Replace `../webflow/dmc01-orbital.js` with the Asset URL.
-   4. To update later: edit this file, re-upload to Assets (Webflow
-      replaces the file in place), and the new version is served
-      immediately — no embed change needed.
+   HOW IT'S SERVED IN PRODUCTION
+   This repo is connected to Cloudflare Pages. On every push to `main`,
+   Pages builds the repo and exposes its files at:
+     https://<project>.pages.dev/webflow/dmc01-orbital.js
+   The orbital embed in Webflow loads that URL via <script src=…>.
+   Cloudflare's global edge serves it with the right Content-Type and
+   no cold-start, so reliability rides on the same Cloudflare we
+   already use for DNS — no additional third party.
+
+   TO UPDATE
+   Edit this file, commit, push. Pages auto-deploys (~30 seconds).
+   The embed's <script src> URL never changes — there's no commit
+   hash to swap. Cloudflare's cache picks up the new file on next
+   request (or use the Pages dashboard to purge if needed).
 
    LOCAL DEV
    Live Server resolves the relative path `../webflow/dmc01-orbital.js`
    straight to this file, so the orbital works in dev preview without
-   any URL swap.
+   any URL swap. The Webflow embed uses the absolute Pages URL; the
+   local HTML uses the relative repo path. Both find the same file.
+
+   HISTORY (in case anyone wonders)
+   We tried Webflow Assets first — Webflow blocks .js uploads (XSS).
+   Then a public GitHub Gist via gist.githubusercontent.com — the Raw
+   URL serves Content-Type: text/plain, which strict browsers refuse
+   to execute. Then Statically.io (a Gist CDN that rewrites the type)
+   — worked, but ~10 s cold-cache fetch on first-of-region. Cloudflare
+   Pages is the destination after that detour; no third-party CDN we
+   don't already use, no character-by-character URL swap on every
+   edit, no cold-start.
 
    IMPORTANT
-   This script scopes all DOM lookups to `document.querySelector('.section')`
-   — the orbital section's container class. If you ever embed it on a
-   page that has multiple `.section` elements (unlikely in this project
-   but possible), narrow the selector to `#dmc01-product` instead.
+   This script scopes all DOM lookups to `document.querySelector('#dmc01-product')`
+   — the orbital section's unique ID. We previously used `.section`
+   but Webflow ships its own `.section` class on native components,
+   so that selector matched a Webflow wrapper instead and every
+   `root.querySelector('#orbital')` returned null.
    ===================================================================== */
 
 /* IIFE + DOMContentLoaded for Webflow embed compatibility.
@@ -215,8 +232,8 @@ function tick() {
 
   /* Reveal the nodes once they've been moved to their orbit positions.
      Pairs with the `opacity: 0` default in the embed's CSS — keeps the
-     section from showing six modules piled at the centre while the
-     gist-hosted JS is still in flight. */
+     section from showing six modules piled at the centre during the
+     window between embed render and external-JS execution. */
   if (!orbital.classList.contains('is-positioned')) {
     orbital.classList.add('is-positioned');
   }
