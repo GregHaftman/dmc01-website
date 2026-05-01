@@ -446,7 +446,17 @@ body::before {
   text-align: center;
   transition: opacity 0.4s ease;
   will-change: transform;
+  /* Hidden until the external JS finishes loading and runs the first
+     positioning tick. Without this guard, during the (potentially
+     several-second) window where the embed has rendered but the
+     gist-hosted JS hasn't executed yet, all six nodes pile up at the
+     centre on top of the logo and the section reads as broken. */
+  opacity: 0;
 }
+.orbital.is-positioned .node {
+  opacity: 1;
+}
+.orbital.has-hover .node:not(:hover) { opacity: 0.3; }
 
 .node-circle {
   width: 80px;
@@ -503,8 +513,6 @@ body::before {
 }
 
 .node:hover .node-title { color: var(--brand-blue); }
-
-.orbital.has-hover .node:not(:hover) { opacity: 0.3; }
 
 /* ==========================================================
    UNFOLDED VIEW (unchanged)

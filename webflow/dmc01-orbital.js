@@ -213,6 +213,14 @@ function tick() {
     nodePositions[id] = { x: pos.vx, y: pos.vy + iconOffsetVy };
   });
 
+  /* Reveal the nodes once they've been moved to their orbit positions.
+     Pairs with the `opacity: 0` default in the embed's CSS — keeps the
+     section from showing six modules piled at the centre while the
+     gist-hosted JS is still in flight. */
+  if (!orbital.classList.contains('is-positioned')) {
+    orbital.classList.add('is-positioned');
+  }
+
   requestAnimationFrame(tick);
 }
 
