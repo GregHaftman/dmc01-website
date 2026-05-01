@@ -1,0 +1,38 @@
+# =====================================================================
+# Cloudflare Workers — Static Assets configuration
+# =====================================================================
+#
+# This file tells Cloudflare's Workers runtime to serve the contents of
+# this repo as static files, with no custom code (no Worker handler).
+# The project is connected via Cloudflare Dashboard → Workers & Pages →
+# Connect to Git, and auto-deploys on push to `main`.
+#
+# WHAT GETS SERVED
+# Every file in the repo becomes addressable under the project's
+# `<project>.<account>.workers.dev` hostname. The path mirrors the
+# repo path. Examples:
+#   webflow/dmc01-orbital.js → https://dmc01-website.../webflow/dmc01-orbital.js
+#   sections/02-dmc01-orbital.html → https://dmc01-website.../sections/02-dmc01-orbital.html
+#
+# That's intentional: any file we add to the repo is public-readable.
+# The repo is private on GitHub, but the deployed assets are not — that's
+# the whole point of hosting them here, so Webflow can `<script src=…>`
+# them. Treat the repo accordingly: nothing secret in tracked files.
+#
+# WHY DO WE NEED THIS
+# The orbital section's JS (~47kB) exceeds Webflow's 50kB-per-embed
+# limit, so the embed loads it externally. Cloudflare Pages used to be
+# the obvious place to host it, but new Cloudflare accounts only get
+# the unified Workers flow now (May 2026). The Workers `npx wrangler
+# deploy` command needs a wrangler.toml to know what to do — this is
+# that file.
+# =====================================================================
+
+name = "dmc01-website"
+compatibility_date = "2026-05-01"
+
+# Assets-only Worker: serve every file in the repo as a static asset.
+# `directory = "."` means "the repo root". Wrangler will skip its own
+# config files (wrangler.toml, .git, etc.) automatically.
+[assets]
+directory = "."
