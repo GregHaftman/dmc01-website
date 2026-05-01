@@ -602,6 +602,137 @@ body::before {
 .rail-item-icon svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .rail-item-title { font-size: var(--t-base-size); font-weight: var(--w-bold); line-height: 1.15; letter-spacing: -0.005em; }
 
+/* ==========================================================
+   CURIOSITY POPUP — easter egg
+   Shown once per session after the user has clicked the centre
+   logo CURIOSITY_THRESHOLD times. Explains what the dots mean
+   so the click-curious user gets a real reward, not just an
+   ambient pulse. Backdrop is fixed-position so the popup floats
+   above the storm/orbit; the card itself is theme-aware via
+   the CSS variables it inherits.
+   ========================================================== */
+.curiosity-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.curiosity-popup.is-visible { opacity: 1; pointer-events: auto; }
+.curiosity-popup[hidden] { display: none; }
+.curiosity-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 7, 8, 0.78);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.curiosity-card {
+  position: relative;
+  max-width: 580px;
+  width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--neutral-secondary);
+  border: 1px solid var(--brand-blue);
+  padding: 36px 40px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 60px rgba(0, 71, 255, 0.4);
+  transform: scale(0.94);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.curiosity-popup.is-visible .curiosity-card { transform: scale(1); }
+.curiosity-close {
+  position: absolute;
+  top: 10px; right: 14px;
+  background: transparent;
+  border: 0;
+  color: var(--white-50);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 8px 10px;
+  font-family: inherit;
+  transition: color 0.2s ease;
+}
+.curiosity-close:hover { color: var(--white); }
+.curiosity-eyebrow {
+  font-size: var(--t-eyebrow-size);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--brand-blue);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.curiosity-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--white);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0 0 14px;
+}
+.curiosity-lead {
+  font-size: var(--t-base-size);
+  color: var(--white-72);
+  line-height: 1.6;
+  margin: 0 0 18px;
+}
+.curiosity-body {
+  font-size: 0.95rem;
+  color: var(--white-72);
+  line-height: 1.6;
+  margin: 0 0 18px;
+}
+.curiosity-body strong { color: var(--white); font-weight: 600; }
+.curiosity-lead em,
+.curiosity-body em,
+.curiosity-examples em {
+  font-style: normal;
+  color: var(--brand-blue);
+  font-weight: 600;
+}
+.curiosity-examples {
+  list-style: none;
+  padding: 16px 0;
+  border-top: 1px solid var(--white-15);
+  border-bottom: 1px solid var(--white-15);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 0 18px;
+}
+.curiosity-examples li {
+  font-size: 0.9rem;
+  color: var(--white-72);
+  line-height: 1.55;
+  padding-left: 18px;
+  position: relative;
+}
+.curiosity-examples li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 10px;
+  width: 10px; height: 1px;
+  background: var(--brand-blue);
+}
+.curiosity-foot {
+  font-size: 0.85rem;
+  color: var(--white-50);
+  line-height: 1.5;
+  font-style: italic;
+  margin: 0;
+}
+@media (max-width: 600px) {
+  .curiosity-card { padding: 28px 24px; }
+  .curiosity-title { font-size: 1.3rem; }
+}
+
 @media (max-width: 1000px) {
   .section { padding: 48px 20px 80px; }
   .stage { min-height: auto; }
@@ -799,6 +930,26 @@ body::before {
        section — it reads better as the hero's quiet finishing
        thought than as an orbital bookend.) -->
 
+  <!-- Curiosity easter-egg popup. Hidden by default; revealed once the
+       user has clicked the centre logo CURIOSITY_THRESHOLD times in a
+       single session. JS handles show/hide + Esc + backdrop dismissal. -->
+  <div class="curiosity-popup" id="curiosityPopup" role="dialog" aria-modal="true" aria-labelledby="curiosityTitle" hidden>
+    <div class="curiosity-backdrop"></div>
+    <div class="curiosity-card">
+      <button class="curiosity-close" id="curiosityClose" type="button" aria-label="Close">&times;</button>
+      <div class="curiosity-eyebrow">Easter egg</div>
+      <h3 class="curiosity-title" id="curiosityTitle">You've been curious — and patient.</h3>
+      <p class="curiosity-lead">Clicking the logo <em>does</em> trigger something. Here's what's actually going on across the orbital:</p>
+      <p class="curiosity-body">Each glowing dot drifting between modules is one <strong>interaction weight</strong> — a moment where two modules influence each other in real engagements. The denser the dot traffic between two modules, the more they tend to iterate together in practice.</p>
+      <ul class="curiosity-examples">
+        <li>The more we iterate on <em>Monetisation Model &amp; Pricing</em>, the more we have to retrain the Sales team — so dots flow heavily from there into <em>Value Strategy &amp; Enablement</em>.</li>
+        <li><em>Offer Design &amp; Packaging</em> usually precedes the pricing engine, which is why those two share a constant back-and-forth.</li>
+        <li>And the pricing engine itself is built on the back of the <em>licensing terms</em> and <em>workflow rights</em> agreed upstream — so dots cascade in from <em>Rights &amp; Licensing</em>.</li>
+      </ul>
+      <p class="curiosity-foot">It's not random. It's the choreography of how the modules actually fit together.</p>
+    </div>
+  </div>
+
 </section>
 
 <script>
@@ -820,7 +971,7 @@ body::before {
    responds to Webflow overrides; these embedded illustrations don't. */
 const MODULES = [
   {
-    id: '01', code: 'MDL-LSG', title: 'Rights &amp; Licensing Framework', eyebrow: 'Module One',
+    id: '01', code: 'Licensing', title: 'Rights &amp; Licensing Framework', eyebrow: 'Module One',
     icon: '<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
     paragraph: 'Advisory and review of Master Service Agreements (MSA), order forms, and commercial terms governing data licensing and delivery. Aligns contractual language with monetisation best practice — including modern use cases such as API distribution, downstream access or consumption to derived data, and AI-driven applications with clearly defined permissioning tiers.',
     reportTitle: 'Licensing Framework Review', previewLabel: 'Clause Coverage Matrix',
@@ -828,7 +979,7 @@ const MODULES = [
     deliverables: ['MSA &amp; order form clause review with redline recommendations','Trial Agreement review and alignement on permitted workflows','AI-use permissioning matrix across data tiers','Redistribution &amp; downstream use framework','Audit-ready entitlement model']
   },
   {
-    id: '02', code: 'MDL-COM', title: 'Monetisation Model &amp; Pricing', eyebrow: 'Module Two',
+    id: '02', code: 'Pricing', title: 'Monetisation Model &amp; Pricing', eyebrow: 'Module Two',
     icon: '<svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>',
     paragraph: 'Design and assessment of pricing frameworks and commercial models (seat-based, usage-based, enterprise, embedded). Aligns pricing with packaging, segmentation, and real client workflows, from direct data consumption to advanced integration use cases, ensuring models scale as customer utilisation and value creation evolve.',
     reportTitle: 'Monetisation Model &amp; Pricing', previewLabel: 'Pricing Engine',
@@ -836,7 +987,7 @@ const MODULES = [
     deliverables: ['Pricing framework design across seat / usage / enterprise / embedded','Bespoke workflow rights aligned onto transfer of IP and corresponding premium','Segmentation-driven pricing tiers with elasticity assumptions','Three-year revenue projection scenarios','Discounting guardrails &amp; commercial governance']
   },
   {
-    id: '03', code: 'MDL-RDM', title: 'Product Direction &amp; Roadmap', eyebrow: 'Module Three',
+    id: '03', code: 'Roadmap', title: 'Product Direction &amp; Roadmap', eyebrow: 'Module Three',
     icon: '<svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>',
     paragraph: 'Strategic input on long-term product development — including prioritisation of data assets, API improvements, and delivery channels to support future scalability and monetisation. Translates business ambition into a sequenced delivery plan with clear trade-offs and dependencies.',
     reportTitle: 'Product Roadmap &amp; Sequencing', previewLabel: '12-Month Roadmap Sequencing',
@@ -844,7 +995,7 @@ const MODULES = [
     deliverables: ['Roadmap outline with quarterly sequencing','Asset prioritisation matrix (impact × effort × dependency)','Trade-off framework for build / buy / partner decisions','Delivery planning &amp; resource modelling']
   },
   {
-    id: '04', code: 'MDL-ENB', title: 'Value Strategy &amp; Enablement', eyebrow: 'Module Four',
+    id: '04', code: 'Enablement', title: 'Value Strategy &amp; Enablement', eyebrow: 'Module Four',
     icon: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
     paragraph: 'Product positioning and value proposition design. Includes review or creation of pitch decks and go-to-market narratives that equip Sales and Pre-Sales teams to articulate the commercial and strategic value of data products to specific buyer personas.',
     reportTitle: 'Value Proposition &amp; Sales Enablement', previewLabel: 'Buyer Persona — Value Mapping',
@@ -852,7 +1003,7 @@ const MODULES = [
     deliverables: ['Pitch deck refinement (cover, problem, solution, proof, CTA)','Persona-mapped value propositions with proof points','Sales enablement playbook &amp; objection-handling guide','Discovery question library by buyer role']
   },
   {
-    id: '05', code: 'MDL-PKG', title: 'Offer Design &amp; Packaging', eyebrow: 'Module Five',
+    id: '05', code: 'Packaging', title: 'Offer Design &amp; Packaging', eyebrow: 'Module Five',
     icon: '<svg viewBox="0 0 24 24"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
     paragraph: 'Review or creation of data packaging strategy, ensuring alignment with customer workflows, investment strategies, and commercial models. Covers asset-type bundles, regional groupings, and thematic or cross-asset packages calibrated for clear price/value laddering.',
     reportTitle: 'Offer Design &amp; Packaging Strategy', previewLabel: 'Hybrid Package Architecture',
@@ -860,7 +1011,7 @@ const MODULES = [
     deliverables: ['Tiered package architecture','Asset-type bundles aligned to buyer workflows','Entity Mastery evaluation','Thematic cross-asset packages','Data Dictionary & Content Methodology guidance','Data-driven evaluation of packaging options']
   },
   {
-    id: '06', code: 'MDL-DLV', title: 'Distribution &amp; Delivery Architecture', eyebrow: 'Module Six',
+    id: '06', code: 'Distribution', title: 'Distribution &amp; Delivery Architecture', eyebrow: 'Module Six',
     icon: '<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
     paragraph: 'Technical and functional advisory on data delivery channels — APIs, file-based delivery, marketplace listings. Includes endpoint specifications, recommended delivery workflows, and architecture for listing on platforms such as Snowflake or Databricks.',
     reportTitle: 'Distribution &amp; Delivery Architecture', previewLabel: 'API Endpoint Specifications',
@@ -1002,6 +1153,9 @@ function spawnFlowPulse(flow) {
     }
   }
 
+  /* Dot only — no tail. Earlier directional pulses had a short trailing
+     line; feedback was that the comet shape read as something we'd rather
+     it didn't. Plain circular dots are clearer about "discrete signal". */
   const pulse = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
   pulse.setAttribute('cx', sx);
   pulse.setAttribute('cy', sy);
@@ -1009,18 +1163,6 @@ function spawnFlowPulse(flow) {
   pulse.setAttribute('fill', C_BRAND);
   pulse.setAttribute('filter', flow.weight === 1.0 ? 'url(#strongGlow)' : 'url(#pulseGlow)');
   pulsesGroup.appendChild(pulse);
-
-  let tail = null;
-  if (flow.directional && flow.weight === 1.0) {
-    tail = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    tail.setAttribute('x1', sx); tail.setAttribute('y1', sy);
-    tail.setAttribute('x2', sx); tail.setAttribute('y2', sy);
-    tail.setAttribute('stroke', C_BRAND);
-    tail.setAttribute('stroke-width', '1.2');
-    tail.setAttribute('stroke-opacity', '0');
-    tail.setAttribute('stroke-linecap', 'round');
-    pulsesGroup.insertBefore(tail, pulse);
-  }
 
   const startTime = Date.now();
   const duration = flow.speed;
@@ -1042,19 +1184,10 @@ function spawnFlowPulse(flow) {
       else if (t > 0.85) opacity = (1 - t) / 0.15;
       else opacity = 1;
       pulse.setAttribute('opacity', opacity);
-
-      if (tail) {
-        const trailT = Math.max(0, eased - 0.15);
-        const tx = sx + (currentTo.x - sx) * trailT;
-        const ty = sy + (currentTo.y - sy) * trailT;
-        tail.setAttribute('x1', tx); tail.setAttribute('y1', ty);
-        tail.setAttribute('x2', cx); tail.setAttribute('y2', cy);
-        tail.setAttribute('stroke-opacity', opacity * 0.4);
-      }
     }
 
     if (t < 1) requestAnimationFrame(animate);
-    else { pulse.remove(); if (tail) tail.remove(); }
+    else { pulse.remove(); }
   }
   requestAnimationFrame(animate);
 }
@@ -1130,13 +1263,45 @@ setTimeout(() => {
   if (!root.querySelector('#stage').classList.contains('unfolded')) engagementMoment();
 }, 4000);
 
-/* ============ USER-TRIGGERED WAVES ============
+/* ============ USER-TRIGGERED WAVES + CURIOSITY POPUP ============
    Clicking the centre DMC01 mark fires an engagement wave on
    demand — same path as the auto-fire above, but the user gets
    to *play* with it. The .is-firing class on the wrap gives a
    short tactile pulse, so the click feels mechanical.
    The click is ignored while a module is unfolded (the centre
-   isn't visible then anyway). */
+   isn't visible then anyway).
+
+   Easter egg: after CURIOSITY_THRESHOLD clicks within the same
+   session, surface the popup that explains the dot-weight design
+   metaphor. Shown once per session — once dismissed, further
+   clicks just keep firing waves as before. */
+const CURIOSITY_THRESHOLD = 7;
+let centreClickCount = 0;
+let curiosityShown = false;
+
+const curiosityPopup = root.querySelector('#curiosityPopup');
+const curiosityClose = root.querySelector('#curiosityClose');
+const curiosityBackdrop = curiosityPopup ? curiosityPopup.querySelector('.curiosity-backdrop') : null;
+
+function showCuriosityPopup() {
+  if (!curiosityPopup) return;
+  curiosityShown = true;
+  curiosityPopup.hidden = false;
+  /* Force reflow so the .is-visible transition actually animates. */
+  void curiosityPopup.offsetWidth;
+  curiosityPopup.classList.add('is-visible');
+}
+function hideCuriosityPopup() {
+  if (!curiosityPopup) return;
+  curiosityPopup.classList.remove('is-visible');
+  setTimeout(() => { curiosityPopup.hidden = true; }, 400);
+}
+if (curiosityClose) curiosityClose.addEventListener('click', hideCuriosityPopup);
+if (curiosityBackdrop) curiosityBackdrop.addEventListener('click', hideCuriosityPopup);
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && curiosityPopup && !curiosityPopup.hidden) hideCuriosityPopup();
+});
+
 const centreLogoWrap = root.querySelector('.centre-logo-wrap');
 if (centreLogoWrap) {
   centreLogoWrap.addEventListener('click', () => {
@@ -1145,6 +1310,12 @@ if (centreLogoWrap) {
     void centreLogoWrap.offsetWidth; /* restart the keyframe */
     centreLogoWrap.classList.add('is-firing');
     engagementMoment();
+    centreClickCount++;
+    if (!curiosityShown && centreClickCount >= CURIOSITY_THRESHOLD) {
+      /* Slight delay so the user sees the engagement wave start
+         before the popup steals the spotlight. */
+      setTimeout(showCuriosityPopup, 700);
+    }
   });
   centreLogoWrap.addEventListener('animationend', () => {
     centreLogoWrap.classList.remove('is-firing');
