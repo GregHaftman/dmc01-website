@@ -18,20 +18,25 @@
      DMC01 · Intro hero — "Data Monetisation Concept"
 
      Atmosphere: a one-point perspective road. The vanishing point
-     sits behind the title (~22% down from the top), with two solid
+     sits behind the title (~22% down from the top), with two slim
      lane rails diverging out to the bottom corners. A soft brand-
-     blue halo at the vanishing point doubles as a backlight for the
-     title; a layered drop-shadow on the rails makes them glow
-     statically — present and "alive" without any motion.
+     blue halo at the vanishing point gives the title a quiet
+     backlight.
 
-     There is no centre line. Earlier iterations had perspective-
-     scaled rect dashes and then a stroke-dashed line; both felt
-     too busy and visually competed with the closing-line text. The
-     rails alone carry the depth cue cleanly.
+     The rails sit at a near-invisible baseline opacity — you can
+     almost miss them. Once every ~9 seconds, a layered drop-shadow
+     bloom flares up for a beat, the rails pop into view with strong
+     contrast, and then they fade back to subtle. Cinematic reveal
+     pattern — think of a dark scene where something appears briefly
+     before melting back into the dark. See @keyframes railBreathe.
 
-     All effects are intentionally low-contrast — content stays the
-     focus. (The road is now fully static; no SMIL animations to
-     gate behind prefers-reduced-motion.)
+     There is no centre line. Earlier iterations tried perspective-
+     scaled rect dashes and then a stroke-dashed line; both felt too
+     busy and visually competed with the closing-line text. The
+     rails alone carry the depth cue.
+
+     prefers-reduced-motion is honoured by disabling the breathing
+     animation (rails hold the dim baseline glow).
      ============================================================ */
 
   :root {
@@ -189,18 +194,46 @@
     width: 100%;
     height: 100%;
     display: block;
-    /* Three stacked drop-shadows in increasing blur radius simulate a
-       real neon-tube bloom: a tight bright inner halo (the hot core),
-       a mid-range glow (the bulb's atmosphere), and a wide soft ambient
-       (the colour spilling onto whatever is nearby). Aggressive on
-       purpose — this is the road's "alive" cue, no motion needed.
-       Be aware: stacked drop-shadows are GPU-shader-heavy on large
-       SVGs; if perf becomes a problem on weak devices, drop the widest
-       layer first. */
+    /* Cinematic breathing glow — most of the time the rails sit at a
+       barely-there baseline (you can almost miss them), then once per
+       cycle the drop-shadow bloom flares up briefly so the rails pop
+       into view with strong contrast before fading back to subtle.
+       Think of a dark scene in a film where something quietly reveals
+       itself for a beat. See @keyframes railBreathe below for the
+       intensity curve. */
+    animation: railBreathe 9s ease-in-out infinite;
+    /* Initial state matches the keyframe baseline so the first paint
+       isn't a sudden flare. */
     filter:
-      drop-shadow(0 0 5px  rgba(0, 71, 255, 0.95))
-      drop-shadow(0 0 16px rgba(0, 71, 255, 0.70))
-      drop-shadow(0 0 40px rgba(0, 71, 255, 0.40));
+      drop-shadow(0 0 2px  rgba(0, 71, 255, 0.30))
+      drop-shadow(0 0 6px  rgba(0, 71, 255, 0.12))
+      drop-shadow(0 0 14px rgba(0, 71, 255, 0.05));
+  }
+
+  /* Dim → bright → hold → dim. Both keyframes carry the same number
+     of drop-shadow layers (three) so the browser interpolates each
+     layer's blur radius and alpha smoothly between them. The hold
+     between 78% and 84% lets the bright moment linger for ~0.5s
+     before fading back. */
+  @keyframes railBreathe {
+    0%, 70%, 100% {
+      filter:
+        drop-shadow(0 0 2px  rgba(0, 71, 255, 0.30))
+        drop-shadow(0 0 6px  rgba(0, 71, 255, 0.12))
+        drop-shadow(0 0 14px rgba(0, 71, 255, 0.05));
+    }
+    78%, 84% {
+      filter:
+        drop-shadow(0 0 6px  rgba(0, 71, 255, 0.95))
+        drop-shadow(0 0 22px rgba(0, 71, 255, 0.65))
+        drop-shadow(0 0 52px rgba(0, 71, 255, 0.40));
+    }
+  }
+
+  /* Honour reduced-motion preference — disable the breathing flare,
+     hold a low-intensity static glow instead. */
+  @media (prefers-reduced-motion: reduce) {
+    .neon-svg { animation: none; }
   }
 
   /* All gradient stops share the brand colour; opacity varies per stop. */
@@ -347,25 +380,27 @@
   <div class="neon-bg" aria-hidden="true">
     <svg class="neon-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
       <defs>
-        <!-- Brand-blue halo at the VP — backlights the title. Bumped
-             a notch alongside the rail glow so they're visually in the
-             same intensity neighbourhood; if the title legibility
-             suffers, drop the inner stop back toward 0.28. -->
+        <!-- Brand-blue halo at the VP — quiet backlight for the title.
+             Pulled back from 0.45 → 0.25 inner so the title text reads
+             cleanly; the rail flare now carries the main "wow" moment. -->
         <radialGradient id="introHorizon" cx="50" cy="22" r="40" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stop-opacity="0.45"/>
-          <stop offset="45%"  stop-opacity="0.15"/>
+          <stop offset="0%"   stop-opacity="0.25"/>
+          <stop offset="45%"  stop-opacity="0.08"/>
           <stop offset="100%" stop-opacity="0"/>
         </radialGradient>
 
-        <!-- Lane-rail gradient: invisible at the VP, ramps up steeply
-             so the rails are bright and saturated across most of their
-             length. Pushed to full opacity at the foreground. -->
+        <!-- Lane-rail gradient: very dim baseline (rails are barely
+             visible most of the time). The cinematic effect comes
+             from the railBreathe animation on .neon-svg below — at
+             baseline, the rails read as faint suggestions; when the
+             flare hits, the bloom around them lights up the whole
+             road area. So keep these stops modest. -->
         <linearGradient id="introRail" gradientUnits="userSpaceOnUse"
                         x1="50" y1="22" x2="50" y2="100">
           <stop offset="0%"   stop-opacity="0"/>
-          <stop offset="15%"  stop-opacity="0.45"/>
-          <stop offset="40%"  stop-opacity="0.85"/>
-          <stop offset="100%" stop-opacity="1"/>
+          <stop offset="20%"  stop-opacity="0.18"/>
+          <stop offset="55%"  stop-opacity="0.28"/>
+          <stop offset="100%" stop-opacity="0.38"/>
         </linearGradient>
 
       </defs>
@@ -373,13 +408,15 @@
       <!-- Horizon glow behind the title -->
       <rect x="0" y="0" width="100" height="100" fill="url(#introHorizon)"/>
 
-      <!-- Left lane rail: VP (50, 22) → bottom-left (-14..-10, 100). -->
+      <!-- Left lane rail: VP (50, 22) → bottom-left, centred on x=-12.
+           ~25% slimmer than the previous version (top 0.30→0.225 vbu,
+           bottom 4→3 vbu). -->
       <polygon fill="url(#introRail)"
-               points="49.85,22 50.15,22 -10,100 -14,100"/>
+               points="49.8875,22 50.1125,22 -10.5,100 -13.5,100"/>
 
-      <!-- Right lane rail: VP (50, 22) → bottom-right (110..114, 100). -->
+      <!-- Right lane rail: mirror, centred on x=112. -->
       <polygon fill="url(#introRail)"
-               points="49.85,22 50.15,22 114,100 110,100"/>
+               points="49.8875,22 50.1125,22 113.5,100 110.5,100"/>
 
       <!-- (No centre line. Earlier iterations had perspective-scaled
            rect dashes and then a stroke-dashed line; both read as
