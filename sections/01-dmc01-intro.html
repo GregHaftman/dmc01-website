@@ -19,19 +19,19 @@
 
      Atmosphere: a one-point perspective road. The vanishing point
      sits behind the title (~22% down from the top), with two solid
-     lane rails diverging out to the bottom corners and a dotted
-     centre line running straight down through the middle. Dashes
-     scale up as they descend (perspective foreshortening) and flow
-     continuously toward the viewer — the road feels like it's
-     moving forward through the screen, with the title at the
-     destination and the closing line in the foreground.
+     lane rails diverging out to the bottom corners. A soft brand-
+     blue halo at the vanishing point doubles as a backlight for the
+     title; a layered drop-shadow on the rails makes them glow
+     statically — present and "alive" without any motion.
 
-     A soft brand-blue halo at the vanishing point doubles as a
-     backlight for the title.
+     There is no centre line. Earlier iterations had perspective-
+     scaled rect dashes and then a stroke-dashed line; both felt
+     too busy and visually competed with the closing-line text. The
+     rails alone carry the depth cue cleanly.
 
      All effects are intentionally low-contrast — content stays the
-     focus. Honour prefers-reduced-motion via the JS init() which
-     pauses SMIL animations on the road SVG.
+     focus. (The road is now fully static; no SMIL animations to
+     gate behind prefers-reduced-motion.)
      ============================================================ */
 
   :root {
@@ -157,18 +157,15 @@
   }
 
   /* ----- PERSPECTIVE ROAD BACKGROUND -----
-     One-point perspective: vanishing point at (50, 22) in viewBox
+     One-point perspective. Vanishing point at (50, 22) in viewBox
      coords (50% across, 22% down — sitting behind the title). Two
-     lane rails are polygons that diverge from the VP outward to the
-     bottom corners (-14, 100) and (114, 100). A dotted centre line
-     is composed of six rect dashes that animate from VP downward,
-     growing in size as they descend (perspective foreshortening) and
-     fading in/out at the endpoints so respawns are invisible. Stagger
-     of 0.75s on a 4.5s cycle gives a continuous dash flow toward the
-     viewer.
+     lane-rail polygons diverge from the VP outward to the bottom
+     corners (-14, 100) and (114, 100). A radial brand-blue halo at
+     the VP backlights the title.
 
-     A radial brand-blue halo sits at the VP and acts as a soft back-
-     light for the title.
+     No centre dashes, no animation. The depth cue is the rails'
+     perspective shape; the "alive" cue is a static layered drop-
+     shadow glow on the SVG.
 
      viewBox is preserveAspectRatio="none", so x/y units stretch with
      the section's aspect ratio. The road is tuned for a typical hero
@@ -189,9 +186,13 @@
     width: 100%;
     height: 100%;
     display: block;
-    /* Drop-shadow gives every brand-blue element a soft halo — the
-       rails bloom subtly along their edges, dashes glow as they pass. */
-    filter: drop-shadow(0 0 6px rgba(0, 71, 255, 0.55));
+    /* Two stacked drop-shadows give the rails a layered glow — a
+       tight inner halo for crisp edge bloom, plus a wider softer one
+       for the "alive" ambient luminosity. No animation: the glow is
+       static, just present. */
+    filter:
+      drop-shadow(0 0 8px rgba(0, 71, 255, 0.70))
+      drop-shadow(0 0 22px rgba(0, 71, 255, 0.30));
   }
 
   /* All gradient stops share the brand colour; opacity varies per stop. */
@@ -333,8 +334,8 @@
 <section class="intro-section" id="dmc01-intro" aria-label="DMC01 — Data Monetisation Concept">
 
   <!-- Perspective road. Vanishing point at (50, 22) — behind the title.
-       Two lane rails diverge to the bottom corners; six dashes flow
-       down the centre, growing as they descend. -->
+       Two lane rails diverge to the bottom corners; layered drop-shadow
+       on the SVG gives them a static glow. No centre dashes. -->
   <div class="neon-bg" aria-hidden="true">
     <svg class="neon-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
       <defs>
@@ -346,26 +347,15 @@
         </radialGradient>
 
         <!-- Lane-rail gradient: invisible at the VP, ramps up toward
-             the foreground. Linear gradient running down the section. -->
+             the foreground. Linear gradient running down the section.
+             Slightly stronger now that the rails are the only road
+             element (no centre dashes to share the visual load). -->
         <linearGradient id="introRail" gradientUnits="userSpaceOnUse"
                         x1="50" y1="22" x2="50" y2="100">
           <stop offset="0%"   stop-opacity="0"/>
-          <stop offset="20%"  stop-opacity="0.18"/>
-          <stop offset="65%"  stop-opacity="0.45"/>
-          <stop offset="100%" stop-opacity="0.65"/>
-        </linearGradient>
-
-        <!-- Centre-dashes stroke: same brand-blue, but fades to nothing
-             at both ends. Top fade keeps the dashes from popping into
-             existence at the VP; bottom fade hides them BEFORE they
-             reach the closing line so the text is never overlapped. -->
-        <linearGradient id="introCentre" gradientUnits="userSpaceOnUse"
-                        x1="50" y1="22" x2="50" y2="100">
-          <stop offset="0%"  stop-opacity="0"/>
-          <stop offset="18%" stop-opacity="0.55"/>
-          <stop offset="62%" stop-opacity="0.55"/>
-          <stop offset="85%" stop-opacity="0"/>
-          <stop offset="100%" stop-opacity="0"/>
+          <stop offset="20%"  stop-opacity="0.22"/>
+          <stop offset="65%"  stop-opacity="0.55"/>
+          <stop offset="100%" stop-opacity="0.78"/>
         </linearGradient>
       </defs>
 
@@ -380,33 +370,12 @@
       <polygon fill="url(#introRail)"
                points="49.85,22 50.15,22 114,100 110,100"/>
 
-      <!-- Centre line — single vertical stroke from VP to the bottom,
-           dashed via stroke-dasharray and animated by shifting
-           stroke-dashoffset (negative direction = dashes flow
-           downward, toward the viewer). The stroke colour is the
-           introCentre gradient, which fades the dashes IN at the VP
-           (so they don't pop into existence) and fades them OUT
-           well above the bottom (so they never reach the closing-
-           line text below).
-
-           Uniform dash length and spacing — no per-dash perspective
-           scaling. The reference image has only the slightest
-           perspective on its centre dashes; the side rails are
-           already carrying the depth cue, so a clean uniform stroke
-           reads better than the chunky scaled rectangles we tried
-           first. -->
-      <line x1="50" y1="22" x2="50" y2="100"
-            stroke="url(#introCentre)" stroke-width="0.45"
-            stroke-dasharray="1.4 4.2" stroke-linecap="butt"
-            fill="none">
-        <!-- One full pattern period (1.4 + 4.2 = 5.6) per second of
-             flow ≈ four periods over the 4.5s cycle. Negative offset
-             shifts the pattern in the line's direction (top → bottom),
-             so dashes appear to advance toward the viewer. -->
-        <animate attributeName="stroke-dashoffset"
-                 from="0" to="-22.4"
-                 dur="4s" repeatCount="indefinite"/>
-      </line>
+      <!-- (No centre line. Earlier iterations had perspective-scaled
+           rect dashes and then a stroke-dashed line; both read as
+           too busy and competed with the closing-line text. The two
+           side rails alone carry the perspective depth cue, with the
+           drop-shadow filter on .neon-svg providing a static glow
+           that makes the rails feel "alive" without any motion.) -->
     </svg>
   </div>
 
