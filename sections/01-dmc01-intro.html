@@ -42,12 +42,12 @@
     --font:              var(--font-body, "Rajdhani", system-ui, sans-serif);
 
     /* Typography — sizes (responsive via Webflow per-breakpoint values) */
-    --t-h1-size:      var(--h1-size, 5.65rem);
+    --t-h1-size:      var(--h1-size, 4.65rem);
     --t-h2-size:      var(--h2-size, 2.83rem);
-    --t-base-size:    var(--base-font-size, 1.0625rem);
-    --t-lg-size:      var(--text-lg-size, 1.2rem);
-    --t-xl-size:      var(--text-xl-size, 1.3rem);
-    --t-eyebrow-size: var(--eyebrow-size, 0.85rem);
+    --t-base-size:    var(--base-font-size, 1.1rem);
+    --t-lg-size:      var(--text-lg-size, 1.4rem);
+    --t-xl-size:      var(--text-xl-size, 1.5rem);
+    --t-eyebrow-size: var(--eyebrow-size, 1.1rem);
 
     /* Typography — weights & line heights */
     --w-h1:    var(--h1-weight, 600);
@@ -112,14 +112,27 @@
     position: relative;
     width: 100vw;
     margin-left: calc(-50vw + 50%);
-    padding: clamp(72px, 10vh, 120px) 32px clamp(72px, 10vh, 120px);
+    /* Asymmetric padding so the two content blocks land in the
+       right slots relative to the road rails (which sit at y≈22%
+       and y≈78% of the section height):
+         - top padding ~24vh pushes the title group BELOW the top
+           rail, so the rail frames the title rather than cutting
+           through it
+         - bottom padding ~6vh pulls the closing line DOWN past the
+           bottom rail, so "Why this matters" sits in the bottom
+           strip rather than straddling the rail
+       Previously both were ~10vh and the title sat above the top
+       rail entirely. */
+    padding: clamp(80px, 24vh, 240px) 32px clamp(48px, 6vh, 88px);
     background: var(--neutral-primary);
     overflow: hidden;
     isolation: isolate;
     min-height: 88vh;
+    /* Flex column so .section-inner can flex:1 and distribute its
+       children (title group at top, closing line at bottom) via
+       justify-content: space-between. */
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
   }
 
   /* Soft vignette — pulls focus to the centred content */
@@ -175,10 +188,27 @@
     margin: 0 auto;
     width: 100%;
     text-align: center;
+    /* Fill remaining vertical space inside .intro-section so the
+       space-between distribution actually has room to push the
+       closing line to the bottom. Without flex:1 the section-inner
+       would collapse to its content height and both children would
+       sit stacked at the top. */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Title + description grouped — sits in the upper half of the
+     section, framed by the top road rail. */
+  .intro-main {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 24px;
+    width: 100%;
+    max-width: 1100px;
   }
 
   .intro-title {
@@ -203,17 +233,17 @@
     font-weight: var(--w-bold);
   }
 
-  /* ----- CLOSING LINE — reflective bookend below the description.
-     Moved up from the orbital section: it's the WHY beneath the
-     headline + lede, and reads as the section's quiet finishing
-     thought rather than a decoration on a different page. */
+  /* ----- CLOSING LINE — pinned to the bottom of the section.
+     Originally sat directly under the description as a divider-led
+     bookend; now it lives at the foot of the landing area, framed
+     by the bottom road rail. The dividing border + top padding are
+     gone (no longer adjacent to anything to divide from). */
   .closing-line {
-    margin-top: clamp(24px, 4vh, 48px);
-    padding-top: 32px;
-    border-top: 1px solid rgba(25, 75, 205, 0.2);
     text-align: center;
     width: 100%;
     max-width: 900px;
+    margin: 0;
+    padding: 0;
   }
   .closing-line-eyebrow {
     font-size: var(--t-eyebrow-size);
@@ -237,6 +267,32 @@
     font-weight: 600;
   }
 
+  /* ----- LOGO MARK (bottom-right corner) -----
+     Static signature mark hugging the bottom-right corner of the
+     section. Decorative — sits outside .section-inner so it doesn't
+     shift the centred content above. Hidden on narrow viewports
+     (already-tight composition). */
+  .intro-mark {
+    position: absolute;
+    bottom: clamp(6px, 1.2vw, 16px);
+    right: clamp(6px, 1.2vw, 16px);
+    width: clamp(64px, 8vw, 104px);
+    aspect-ratio: 1;
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0.78;
+    filter: drop-shadow(0 0 14px rgba(0, 71, 255, 0.35));
+  }
+  .intro-mark svg { width: 100%; height: 100%; display: block; }
+  .intro-mark .mark-stroke {
+    stroke: var(--white);
+    stroke-width: 18;
+    stroke-miterlimit: 10;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
+
   /* Reduced motion — SMIL animations on the road SVG are paused via
      JS in init(); nothing CSS-driven left to freeze here. */
 
@@ -245,8 +301,10 @@
      ============================================================ */
   @media (max-width: 720px) {
     .intro-section { padding: 56px 20px; min-height: 80vh; }
-    .section-inner { gap: 18px; }
+    .intro-main { gap: 18px; }
     .closing-line-text { font-size: var(--t-lg-size); }
+    /* Hide the corner mark on narrow viewports — already-tight composition. */
+    .intro-mark { display: none; }
   }
 </style>
 </head>
@@ -307,19 +365,34 @@
 
   <div class="section-inner">
 
-    <h1 class="intro-title">Data Monetisation Concept</h1>
+    <!-- Title + description grouped in .intro-main so they form a
+         single block at the top of the section. The closing line
+         is a separate child of .section-inner and is pushed to the
+         bottom by the parent's justify-content: space-between. -->
+    <div class="intro-main">
+      <h1 class="intro-title">Data Monetisation Concept</h1>
 
-    <p class="intro-description">
-      DMC01 is the <em>orchestration layer</em> for monetising data assets — and charting the optimum route to market.
-    </p>
+      <p class="intro-description">
+        DMC01 is the <em>orchestration layer</em> for monetising data assets — and charting the optimum route to market.
+      </p>
+    </div>
 
-    <!-- Closing-line — moved up from the orbital section; sits as
-         the reflective bookend beneath the description. -->
+    <!-- Closing-line — sits at the bottom of the landing area,
+         framed by the bottom road rail. -->
     <div class="closing-line">
       <div class="closing-line-eyebrow">Why this matters</div>
       <p class="closing-line-text">Great things are built by people <em>fascinated</em> with how they work.</p>
     </div>
 
+  </div>
+
+  <!-- Signature mark, bottom-right. Decorative; positioned outside
+       the .section-inner stack so it doesn't shift the centred content. -->
+  <div class="intro-mark" aria-hidden="true">
+    <svg viewBox="0 0 595.28 595.28" xmlns="http://www.w3.org/2000/svg">
+      <polyline class="mark-stroke"
+                points="297.17 265.57 417.4 148.9 177.87 148.9 297.19 479.32 297.17 265.57 177.87 148.9"/>
+    </svg>
   </div>
 
 </section>

@@ -68,11 +68,11 @@
 
   /* ───── TYPOGRAPHY: SIZES (desktop values; on Webflow these are responsive) ───── */
   /* For dev preview these are static. Live site applies per-breakpoint values
-     via Webflow. The base bump from 1rem → 1.0625rem (16 → 17px) and the
-     opacity bump on text below were applied after a contrast/readability
-     review — feedback was that body copy felt washed out. Match these in
-     Webflow's Typography panel so the live site stays in sync. */
-  --base-font-size:        1.0625rem; /* 17px (was 1rem) */
+     via Webflow. Sizes here mirror the current Webflow Variables → Typography
+     panel exactly (May 2026): base 1.1rem, lg 1.4rem, xl 1.5rem, xxl 2rem,
+     eyebrow 1.1rem, h1 4.65rem. If you bump a value in Webflow, mirror it
+     here AND in each section's :root fallback so dev preview stays accurate. */
+  --base-font-size:        1.1rem;    /* matches Webflow Variables → Base Font Size */
   --base-font-weight:      400;
   --base-font-weight-bold: 600;
   --base-line-height:      1.6em;
@@ -83,7 +83,7 @@
   --h0-line-height:    1.04em;
   --h0-letter-spacing: 0.01em;
 
-  --h1-size:           5.65rem;     /* desktop ~90px; mobile ~46px */
+  --h1-size:           4.65rem;     /* desktop ~74px; matches Webflow H1 Size */
   --h1-weight:         600;
   --h1-line-height:    1.04em;
   --h1-letter-spacing: 0.01em;
@@ -98,12 +98,12 @@
   --h4-size:           1.03rem;
   --h4-weight:         500;
 
-  --text-xxl-size: 1.5rem;     /* was 1.4rem */
-  --text-xl-size:  1.3rem;     /* was 1.2rem */
-  --text-lg-size:  1.2rem;     /* was 1.1rem */
+  --text-xxl-size: 2rem;       /* matches Webflow XXL Text Size */
+  --text-xl-size:  1.5rem;     /* matches Webflow XL Text Size */
+  --text-lg-size:  1.4rem;     /* matches Webflow LG Text Size */
   --text-sm-size:  1rem;
 
-  --eyebrow-size:           0.85rem;   /* was 0.8rem */
+  --eyebrow-size:           1.1rem;    /* matches Webflow Eyebrow Size */
   --eyebrow-line-height:    1.3em;
   --eyebrow-letter-spacing: 0.01em;
 
