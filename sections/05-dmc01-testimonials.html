@@ -472,6 +472,45 @@
   }
 
   /* ============================================================
+     CLOSING LINE — moved here from the intro hero. Sits at the
+     foot of the social-proof block as the final reflective beat
+     before the contact form. Same typography as it had in intro;
+     wrapped in .closing-line-wrap so it shares the section-inner
+     constraint while staying outside the bio-block grid above.
+     ============================================================ */
+  .closing-line-wrap {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 56px 64px 0;
+  }
+  .closing-line {
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .closing-line-eyebrow {
+    font-size: var(--t-eyebrow-size);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .closing-line-text {
+    font-size: var(--t-xl-size);
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--white-72);
+    margin: 0 auto;
+  }
+  .closing-line-text em {
+    font-style: normal;
+    color: var(--brand-blue);
+    font-weight: 600;
+  }
+
+  /* ============================================================
      RESPONSIVE
      ============================================================ */
   @media (max-width: 900px) {
@@ -498,6 +537,8 @@
     .cred-row { flex-direction: column; align-items: flex-start; gap: 8px; }
     .cred-row li { padding: 0; }
     .cred-row li:not(:last-child)::after { display: none; }
+    .closing-line-wrap { padding: 40px 20px 0; }
+    .closing-line-text { font-size: var(--t-lg-size); }
   }
 </style>
 </head>
@@ -601,6 +642,16 @@
     <div class="testimonials-track" id="testimonialsTrack">
       <!-- Cards are rendered here by JS — the source list lives in
            the script, and we duplicate it for seamless looping. -->
+    </div>
+  </div>
+
+  <!-- Closing line — moved here from the intro hero. The reflective
+       "why this matters" beat now sits at the foot of the social
+       proof, just before the contact form section that follows. -->
+  <div class="closing-line-wrap">
+    <div class="closing-line">
+      <div class="closing-line-eyebrow">Why this matters</div>
+      <p class="closing-line-text">Great things are built by people <em>fascinated</em> with how they work.</p>
     </div>
   </div>
 
