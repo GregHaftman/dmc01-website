@@ -18,23 +18,29 @@
      DMC01 · Intro hero — "Data Monetisation Concept"
 
      Atmosphere: a one-point perspective road. The vanishing point
-     sits behind the title (~22% down from the top), with two slim
-     lane rails diverging out to the bottom corners. The title sits
-     on a clean dark background — no horizon halo backlighting it.
+     sits behind the title (~22% down from the top), with two
+     wisp-thin lane rails diverging out to the bottom corners. A
+     very faint brand-blue halo sits at the VP — barely visible,
+     just a hint of light at the horizon (not a backlight that
+     would compete with the title text).
 
-     The rails sit at a near-invisible baseline opacity. A layered
-     drop-shadow bloom flickers irregularly over a 12s cycle: short
-     small flares early, a medium one mid-cycle, then a sustained
-     bright peak past the two-thirds mark, with dim stretches
-     between. Five flares of varying intensity at non-uniform
-     intervals — the unevenness reads as fluorescent matter glowing
-     organically rather than a manufactured uniform pulse. See
-     @keyframes railFlicker.
+     The rails sit at a near-invisible baseline opacity. A four-
+     layer drop-shadow bloom flickers irregularly over a 12s cycle:
+     short small flares early, a medium one mid-cycle, then a
+     sustained bright peak past the two-thirds mark, with dim
+     stretches between. Five flares of varying intensity at
+     non-uniform intervals — the unevenness reads as fluorescent
+     matter glowing organically rather than a manufactured uniform
+     pulse. The peak flare extends to a 110px wide outer halo, so
+     during those moments the brand colour bleeds well beyond the
+     rails into the surrounding dark. See @keyframes railFlicker.
 
      There is no centre line. Earlier iterations tried perspective-
      scaled rect dashes and then a stroke-dashed line; both felt too
-     busy and visually competed with the closing-line text. The
-     rails alone carry the depth cue.
+     busy. The closing line ("Why this matters / Great things are
+     built…") that used to anchor the bottom of this section has
+     also moved — it now lives at the foot of the testimonials
+     section as the final reflective beat after the social proof.
 
      prefers-reduced-motion is honoured by disabling the flicker
      animation (rails hold the dim baseline glow).
@@ -165,8 +171,10 @@
   /* ----- PERSPECTIVE ROAD BACKGROUND -----
      One-point perspective. Vanishing point at (50, 22) in viewBox
      coords (50% across, 22% down — sitting behind the title). Two
-     slim lane-rail polygons diverge from the VP outward to the
-     bottom corners. No horizon halo and no centre dashes.
+     wisp-thin lane-rail polygons diverge from the VP outward to the
+     bottom corners. A very subtle brand-blue radial halo sits at
+     the VP (small radius, low alpha) — just enough to suggest light
+     at the horizon without backlighting the title.
 
      The depth cue is the rails' perspective shape; the "alive" cue
      is an irregular drop-shadow flicker (railFlicker keyframes)
@@ -212,62 +220,76 @@
        first. */
     animation: railFlicker 12s ease-in-out infinite;
     /* Initial state matches the dim baseline so the first paint isn't
-       a sudden flare. */
+       a sudden flare. Four layers (was three) — the extra outer layer
+       is the wide ambient bloom that gives the flares their tripled
+       intensity without pushing alphas past their cap. */
     filter:
       drop-shadow(0 0 2px  rgba(0, 71, 255, 0.30))
-      drop-shadow(0 0 6px  rgba(0, 71, 255, 0.12))
-      drop-shadow(0 0 14px rgba(0, 71, 255, 0.05));
+      drop-shadow(0 0 8px  rgba(0, 71, 255, 0.15))
+      drop-shadow(0 0 18px rgba(0, 71, 255, 0.08))
+      drop-shadow(0 0 36px rgba(0, 71, 255, 0.04));
   }
 
   /* Five flares of varying intensity at irregular percentages.
      Baseline keyframes scattered between them so the bright moments
-     come and go cleanly. Both bright and baseline keyframes carry
-     the same number of drop-shadow layers (three) so the browser
-     interpolates each layer's blur radius and alpha smoothly across
-     transitions.
+     come and go cleanly. All keyframes carry the same number of
+     drop-shadow layers (four) so the browser interpolates each
+     layer's blur radius and alpha smoothly across transitions.
         0%, 16%, 35%, 48%, 64%, 87%, 100%  — dim baseline
         10%                                 — small flicker
         28% → 31%                           — medium flicker (held briefly)
         42%                                 — tiny flicker
         56%                                 — small flicker
         73% → 80%                           — main bright sustained flare
-     Adjust by moving keyframe percentages or per-shadow alphas. */
+     Glow intensity at the peak is roughly 3× what it was previously:
+     blur radii doubled-ish on the inner layers, plus a fourth wide
+     ambient bloom that wasn't there before. Adjust by moving
+     keyframe percentages or per-shadow alphas. */
   @keyframes railFlicker {
     0%, 16%, 35%, 48%, 64%, 87%, 100% {
       filter:
         drop-shadow(0 0 2px  rgba(0, 71, 255, 0.30))
-        drop-shadow(0 0 6px  rgba(0, 71, 255, 0.12))
-        drop-shadow(0 0 14px rgba(0, 71, 255, 0.05));
+        drop-shadow(0 0 8px  rgba(0, 71, 255, 0.15))
+        drop-shadow(0 0 18px rgba(0, 71, 255, 0.08))
+        drop-shadow(0 0 36px rgba(0, 71, 255, 0.04));
     }
     10% {
       filter:
-        drop-shadow(0 0 3px  rgba(0, 71, 255, 0.55))
-        drop-shadow(0 0 10px rgba(0, 71, 255, 0.30))
-        drop-shadow(0 0 22px rgba(0, 71, 255, 0.15));
+        drop-shadow(0 0 4px  rgba(0, 71, 255, 0.65))
+        drop-shadow(0 0 14px rgba(0, 71, 255, 0.45))
+        drop-shadow(0 0 32px rgba(0, 71, 255, 0.30))
+        drop-shadow(0 0 64px rgba(0, 71, 255, 0.18));
     }
     28%, 31% {
       filter:
-        drop-shadow(0 0 4px  rgba(0, 71, 255, 0.75))
-        drop-shadow(0 0 14px rgba(0, 71, 255, 0.45))
-        drop-shadow(0 0 32px rgba(0, 71, 255, 0.25));
+        drop-shadow(0 0 5px  rgba(0, 71, 255, 0.85))
+        drop-shadow(0 0 18px rgba(0, 71, 255, 0.65))
+        drop-shadow(0 0 44px rgba(0, 71, 255, 0.45))
+        drop-shadow(0 0 88px rgba(0, 71, 255, 0.28));
     }
     42% {
       filter:
-        drop-shadow(0 0 3px  rgba(0, 71, 255, 0.45))
-        drop-shadow(0 0 8px  rgba(0, 71, 255, 0.22))
-        drop-shadow(0 0 18px rgba(0, 71, 255, 0.10));
+        drop-shadow(0 0 3px  rgba(0, 71, 255, 0.55))
+        drop-shadow(0 0 10px rgba(0, 71, 255, 0.30))
+        drop-shadow(0 0 24px rgba(0, 71, 255, 0.18))
+        drop-shadow(0 0 48px rgba(0, 71, 255, 0.10));
     }
     56% {
       filter:
-        drop-shadow(0 0 3px  rgba(0, 71, 255, 0.55))
-        drop-shadow(0 0 10px rgba(0, 71, 255, 0.30))
-        drop-shadow(0 0 22px rgba(0, 71, 255, 0.15));
+        drop-shadow(0 0 4px  rgba(0, 71, 255, 0.65))
+        drop-shadow(0 0 14px rgba(0, 71, 255, 0.45))
+        drop-shadow(0 0 32px rgba(0, 71, 255, 0.30))
+        drop-shadow(0 0 64px rgba(0, 71, 255, 0.18));
     }
     73%, 80% {
+      /* Main bright sustained flare — ~3× more intense than before
+         (was 6/22/52 px @ 0.95/0.65/0.40; now adds an outer 110px
+         layer and pushes the inner alphas to their caps). */
       filter:
-        drop-shadow(0 0 6px  rgba(0, 71, 255, 0.95))
-        drop-shadow(0 0 22px rgba(0, 71, 255, 0.65))
-        drop-shadow(0 0 52px rgba(0, 71, 255, 0.40));
+        drop-shadow(0 0 8px   rgba(0, 71, 255, 1.0))
+        drop-shadow(0 0 24px  rgba(0, 71, 255, 0.95))
+        drop-shadow(0 0 60px  rgba(0, 71, 255, 0.70))
+        drop-shadow(0 0 110px rgba(0, 71, 255, 0.42));
     }
   }
 
@@ -303,12 +325,15 @@
   }
 
   /* Title + description grouped — sits in the upper half of the
-     section, framed by the top road rail. */
+     section, framed by the top road rail.
+     Larger gap pushes the description down past the rails' narrow
+     tip near the VP, so the rails don't visually cross the
+     description text. */
   .intro-main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 24px;
+    gap: clamp(40px, 6vh, 72px);
     width: 100%;
     max-width: 1100px;
   }
@@ -335,39 +360,9 @@
     font-weight: var(--w-bold);
   }
 
-  /* ----- CLOSING LINE — pinned to the bottom of the section.
-     Originally sat directly under the description as a divider-led
-     bookend; now it lives at the foot of the landing area, framed
-     by the bottom road rail. The dividing border + top padding are
-     gone (no longer adjacent to anything to divide from). */
-  .closing-line {
-    text-align: center;
-    width: 100%;
-    max-width: 900px;
-    margin: 0;
-    padding: 0;
-  }
-  .closing-line-eyebrow {
-    font-size: var(--t-eyebrow-size);
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    color: var(--brand-blue);
-    font-weight: 600;
-    margin-bottom: 12px;
-  }
-  .closing-line-text {
-    font-size: var(--t-xl-size);
-    font-weight: 500;
-    line-height: 1.3;
-    letter-spacing: -0.01em;
-    color: var(--white-72);
-    margin: 0 auto;
-  }
-  .closing-line-text em {
-    font-style: normal;
-    color: var(--brand-blue);
-    font-weight: 600;
-  }
+  /* (.closing-line styles moved to 05-dmc01-testimonials.html — the
+     reflective bookend now sits at the foot of the social-proof
+     block, after the testimonial marquee.) */
 
   /* ----- LOGO MARK (bottom-right corner) -----
      Static signature mark hugging the bottom-right corner of the
@@ -404,7 +399,6 @@
   @media (max-width: 720px) {
     .intro-section { padding: 56px 20px; min-height: 80vh; }
     .intro-main { gap: 18px; }
-    .closing-line-text { font-size: var(--t-lg-size); }
     /* Hide the corner mark on narrow viewports — already-tight composition. */
     .intro-mark { display: none; }
   }
@@ -437,21 +431,31 @@
           <stop offset="100%" stop-opacity="0.38"/>
         </linearGradient>
 
+        <!-- Very subtle brand-blue halo at the VP. Tiny radius (was
+             40, now 18), low alpha (was 0.45 → 0.25, now 0.10) — just
+             a faint suggestion of light at the horizon, not a visible
+             backlight. Title legibility stays intact. -->
+        <radialGradient id="introHorizon" cx="50" cy="22" r="18" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stop-opacity="0.10"/>
+          <stop offset="60%"  stop-opacity="0.03"/>
+          <stop offset="100%" stop-opacity="0"/>
+        </radialGradient>
+
       </defs>
 
-      <!-- (Horizon halo at the VP removed — title now sits on plain
-           dark background for cleanest legibility. Rail flares carry
-           all the "alive" cues.) -->
+      <!-- Faint horizon glow behind the title -->
+      <rect x="0" y="0" width="100" height="100" fill="url(#introHorizon)"/>
 
       <!-- Left lane rail: VP (50, 22) → bottom-left, centred on x=-12.
-           ~25% slimmer than the previous version (top 0.30→0.225 vbu,
-           bottom 4→3 vbu). -->
+           Slimmed twice now (top 0.30 → 0.225 → 0.169 vbu, bottom
+           4 → 3 → 2.25 vbu). The rails are wisp-thin at the top
+           and only modestly thicker at the foreground. -->
       <polygon fill="url(#introRail)"
-               points="49.8875,22 50.1125,22 -10.5,100 -13.5,100"/>
+               points="49.9155,22 50.0845,22 -10.875,100 -13.125,100"/>
 
       <!-- Right lane rail: mirror, centred on x=112. -->
       <polygon fill="url(#introRail)"
-               points="49.8875,22 50.1125,22 113.5,100 110.5,100"/>
+               points="49.9155,22 50.0845,22 113.125,100 110.875,100"/>
 
       <!-- (No centre line. Earlier iterations had perspective-scaled
            rect dashes and then a stroke-dashed line; both read as
@@ -476,12 +480,9 @@
       </p>
     </div>
 
-    <!-- Closing-line — sits at the bottom of the landing area,
-         framed by the bottom road rail. -->
-    <div class="closing-line">
-      <div class="closing-line-eyebrow">Why this matters</div>
-      <p class="closing-line-text">Great things are built by people <em>fascinated</em> with how they work.</p>
-    </div>
+    <!-- (Closing-line moved to the testimonials section — it now sits
+         at the very end of the social-proof block as the final
+         reflective beat before the contact form.) -->
 
   </div>
 
