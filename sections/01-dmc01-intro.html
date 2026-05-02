@@ -176,23 +176,31 @@
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    /* Radial mask softens the road's edges into the section background
-       so the rails dissolve at the corners rather than cutting hard. */
-    mask-image: radial-gradient(ellipse 90% 90% at 50% 60%, black 50%, transparent 100%);
-    -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 60%, black 50%, transparent 100%);
+    /* Radial mask softens just the FAR corners — kept gentle on
+       purpose so it doesn't suppress the rail glow at the foreground.
+       Earlier iterations had this much tighter (90% / 50% black stop)
+       which made the glow look weak even with aggressive drop-shadows
+       because the mask was eating the bloom. */
+    mask-image: radial-gradient(ellipse 130% 130% at 50% 55%, black 80%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 130% 130% at 50% 55%, black 80%, transparent 100%);
   }
 
   .neon-svg {
     width: 100%;
     height: 100%;
     display: block;
-    /* Two stacked drop-shadows give the rails a layered glow — a
-       tight inner halo for crisp edge bloom, plus a wider softer one
-       for the "alive" ambient luminosity. No animation: the glow is
-       static, just present. */
+    /* Three stacked drop-shadows in increasing blur radius simulate a
+       real neon-tube bloom: a tight bright inner halo (the hot core),
+       a mid-range glow (the bulb's atmosphere), and a wide soft ambient
+       (the colour spilling onto whatever is nearby). Aggressive on
+       purpose — this is the road's "alive" cue, no motion needed.
+       Be aware: stacked drop-shadows are GPU-shader-heavy on large
+       SVGs; if perf becomes a problem on weak devices, drop the widest
+       layer first. */
     filter:
-      drop-shadow(0 0 8px rgba(0, 71, 255, 0.70))
-      drop-shadow(0 0 22px rgba(0, 71, 255, 0.30));
+      drop-shadow(0 0 5px  rgba(0, 71, 255, 0.95))
+      drop-shadow(0 0 16px rgba(0, 71, 255, 0.70))
+      drop-shadow(0 0 40px rgba(0, 71, 255, 0.40));
   }
 
   /* All gradient stops share the brand colour; opacity varies per stop. */
@@ -339,24 +347,27 @@
   <div class="neon-bg" aria-hidden="true">
     <svg class="neon-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
       <defs>
-        <!-- Soft brand-blue halo at the VP — backlights the title. -->
+        <!-- Brand-blue halo at the VP — backlights the title. Bumped
+             a notch alongside the rail glow so they're visually in the
+             same intensity neighbourhood; if the title legibility
+             suffers, drop the inner stop back toward 0.28. -->
         <radialGradient id="introHorizon" cx="50" cy="22" r="40" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stop-opacity="0.28"/>
-          <stop offset="45%"  stop-opacity="0.10"/>
+          <stop offset="0%"   stop-opacity="0.45"/>
+          <stop offset="45%"  stop-opacity="0.15"/>
           <stop offset="100%" stop-opacity="0"/>
         </radialGradient>
 
-        <!-- Lane-rail gradient: invisible at the VP, ramps up toward
-             the foreground. Linear gradient running down the section.
-             Slightly stronger now that the rails are the only road
-             element (no centre dashes to share the visual load). -->
+        <!-- Lane-rail gradient: invisible at the VP, ramps up steeply
+             so the rails are bright and saturated across most of their
+             length. Pushed to full opacity at the foreground. -->
         <linearGradient id="introRail" gradientUnits="userSpaceOnUse"
                         x1="50" y1="22" x2="50" y2="100">
           <stop offset="0%"   stop-opacity="0"/>
-          <stop offset="20%"  stop-opacity="0.22"/>
-          <stop offset="65%"  stop-opacity="0.55"/>
-          <stop offset="100%" stop-opacity="0.78"/>
+          <stop offset="15%"  stop-opacity="0.45"/>
+          <stop offset="40%"  stop-opacity="0.85"/>
+          <stop offset="100%" stop-opacity="1"/>
         </linearGradient>
+
       </defs>
 
       <!-- Horizon glow behind the title -->
