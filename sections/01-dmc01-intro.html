@@ -19,23 +19,24 @@
 
      Atmosphere: a one-point perspective road. The vanishing point
      sits behind the title (~22% down from the top), with two slim
-     lane rails diverging out to the bottom corners. A soft brand-
-     blue halo at the vanishing point gives the title a quiet
-     backlight.
+     lane rails diverging out to the bottom corners. The title sits
+     on a clean dark background — no horizon halo backlighting it.
 
-     The rails sit at a near-invisible baseline opacity — you can
-     almost miss them. Once every ~9 seconds, a layered drop-shadow
-     bloom flares up for a beat, the rails pop into view with strong
-     contrast, and then they fade back to subtle. Cinematic reveal
-     pattern — think of a dark scene where something appears briefly
-     before melting back into the dark. See @keyframes railBreathe.
+     The rails sit at a near-invisible baseline opacity. A layered
+     drop-shadow bloom flickers irregularly over a 12s cycle: short
+     small flares early, a medium one mid-cycle, then a sustained
+     bright peak past the two-thirds mark, with dim stretches
+     between. Five flares of varying intensity at non-uniform
+     intervals — the unevenness reads as fluorescent matter glowing
+     organically rather than a manufactured uniform pulse. See
+     @keyframes railFlicker.
 
      There is no centre line. Earlier iterations tried perspective-
      scaled rect dashes and then a stroke-dashed line; both felt too
      busy and visually competed with the closing-line text. The
      rails alone carry the depth cue.
 
-     prefers-reduced-motion is honoured by disabling the breathing
+     prefers-reduced-motion is honoured by disabling the flicker
      animation (rails hold the dim baseline glow).
      ============================================================ */
 
@@ -164,13 +165,13 @@
   /* ----- PERSPECTIVE ROAD BACKGROUND -----
      One-point perspective. Vanishing point at (50, 22) in viewBox
      coords (50% across, 22% down — sitting behind the title). Two
-     lane-rail polygons diverge from the VP outward to the bottom
-     corners (-14, 100) and (114, 100). A radial brand-blue halo at
-     the VP backlights the title.
+     slim lane-rail polygons diverge from the VP outward to the
+     bottom corners. No horizon halo and no centre dashes.
 
-     No centre dashes, no animation. The depth cue is the rails'
-     perspective shape; the "alive" cue is a static layered drop-
-     shadow glow on the SVG.
+     The depth cue is the rails' perspective shape; the "alive" cue
+     is an irregular drop-shadow flicker (railFlicker keyframes)
+     that makes the rails glow like fluorescent matter — uneven,
+     occasional bright moments scattered across a 12s cycle.
 
      viewBox is preserveAspectRatio="none", so x/y units stretch with
      the section's aspect ratio. The road is tuned for a typical hero
@@ -194,35 +195,75 @@
     width: 100%;
     height: 100%;
     display: block;
-    /* Cinematic breathing glow — most of the time the rails sit at a
-       barely-there baseline (you can almost miss them), then once per
-       cycle the drop-shadow bloom flares up briefly so the rails pop
-       into view with strong contrast before fading back to subtle.
-       Think of a dark scene in a film where something quietly reveals
-       itself for a beat. See @keyframes railBreathe below for the
-       intensity curve. */
-    animation: railBreathe 9s ease-in-out infinite;
-    /* Initial state matches the keyframe baseline so the first paint
-       isn't a sudden flare. */
+    /* Irregular fluorescent flicker — the rails sit at a faint baseline
+       glow, punctuated by short flares of varying intensity at
+       non-uniform intervals. The unevenness is the whole point: a
+       uniform pulse reads as a manufactured breathing effect, but
+       scattered keyframes at irregular percentages give an organic
+       "fluorescent matter" feel — like glow paint with uneven
+       saturation across its length, or a tube light that's not quite
+       stable.
+
+       12s cycle, ease-in-out timing. See @keyframes railFlicker for
+       the intensity curve.
+
+       Stacked drop-shadows are GPU-shader-heavy on large SVGs; if
+       perf becomes a problem on weak devices, drop the widest layer
+       first. */
+    animation: railFlicker 12s ease-in-out infinite;
+    /* Initial state matches the dim baseline so the first paint isn't
+       a sudden flare. */
     filter:
       drop-shadow(0 0 2px  rgba(0, 71, 255, 0.30))
       drop-shadow(0 0 6px  rgba(0, 71, 255, 0.12))
       drop-shadow(0 0 14px rgba(0, 71, 255, 0.05));
   }
 
-  /* Dim → bright → hold → dim. Both keyframes carry the same number
-     of drop-shadow layers (three) so the browser interpolates each
-     layer's blur radius and alpha smoothly between them. The hold
-     between 78% and 84% lets the bright moment linger for ~0.5s
-     before fading back. */
-  @keyframes railBreathe {
-    0%, 70%, 100% {
+  /* Five flares of varying intensity at irregular percentages.
+     Baseline keyframes scattered between them so the bright moments
+     come and go cleanly. Both bright and baseline keyframes carry
+     the same number of drop-shadow layers (three) so the browser
+     interpolates each layer's blur radius and alpha smoothly across
+     transitions.
+        0%, 16%, 35%, 48%, 64%, 87%, 100%  — dim baseline
+        10%                                 — small flicker
+        28% → 31%                           — medium flicker (held briefly)
+        42%                                 — tiny flicker
+        56%                                 — small flicker
+        73% → 80%                           — main bright sustained flare
+     Adjust by moving keyframe percentages or per-shadow alphas. */
+  @keyframes railFlicker {
+    0%, 16%, 35%, 48%, 64%, 87%, 100% {
       filter:
         drop-shadow(0 0 2px  rgba(0, 71, 255, 0.30))
         drop-shadow(0 0 6px  rgba(0, 71, 255, 0.12))
         drop-shadow(0 0 14px rgba(0, 71, 255, 0.05));
     }
-    78%, 84% {
+    10% {
+      filter:
+        drop-shadow(0 0 3px  rgba(0, 71, 255, 0.55))
+        drop-shadow(0 0 10px rgba(0, 71, 255, 0.30))
+        drop-shadow(0 0 22px rgba(0, 71, 255, 0.15));
+    }
+    28%, 31% {
+      filter:
+        drop-shadow(0 0 4px  rgba(0, 71, 255, 0.75))
+        drop-shadow(0 0 14px rgba(0, 71, 255, 0.45))
+        drop-shadow(0 0 32px rgba(0, 71, 255, 0.25));
+    }
+    42% {
+      filter:
+        drop-shadow(0 0 3px  rgba(0, 71, 255, 0.45))
+        drop-shadow(0 0 8px  rgba(0, 71, 255, 0.22))
+        drop-shadow(0 0 18px rgba(0, 71, 255, 0.10));
+    }
+    56% {
+      filter:
+        drop-shadow(0 0 3px  rgba(0, 71, 255, 0.55))
+        drop-shadow(0 0 10px rgba(0, 71, 255, 0.30))
+        drop-shadow(0 0 22px rgba(0, 71, 255, 0.15));
+    }
+    73%, 80% {
       filter:
         drop-shadow(0 0 6px  rgba(0, 71, 255, 0.95))
         drop-shadow(0 0 22px rgba(0, 71, 255, 0.65))
@@ -230,7 +271,7 @@
     }
   }
 
-  /* Honour reduced-motion preference — disable the breathing flare,
+  /* Honour reduced-motion preference — disable the flicker,
      hold a low-intensity static glow instead. */
   @media (prefers-reduced-motion: reduce) {
     .neon-svg { animation: none; }
@@ -375,26 +416,19 @@
 <section class="intro-section" id="dmc01-intro" aria-label="DMC01 — Data Monetisation Concept">
 
   <!-- Perspective road. Vanishing point at (50, 22) — behind the title.
-       Two lane rails diverge to the bottom corners; layered drop-shadow
-       on the SVG gives them a static glow. No centre dashes. -->
+       Two slim lane rails diverge to the bottom corners; the SVG's
+       drop-shadow flickers irregularly (railFlicker keyframes) to
+       give them a fluorescent-matter glow. No horizon halo, no centre
+       dashes. -->
   <div class="neon-bg" aria-hidden="true">
     <svg class="neon-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
       <defs>
-        <!-- Brand-blue halo at the VP — quiet backlight for the title.
-             Pulled back from 0.45 → 0.25 inner so the title text reads
-             cleanly; the rail flare now carries the main "wow" moment. -->
-        <radialGradient id="introHorizon" cx="50" cy="22" r="40" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stop-opacity="0.25"/>
-          <stop offset="45%"  stop-opacity="0.08"/>
-          <stop offset="100%" stop-opacity="0"/>
-        </radialGradient>
-
         <!-- Lane-rail gradient: very dim baseline (rails are barely
-             visible most of the time). The cinematic effect comes
-             from the railBreathe animation on .neon-svg below — at
-             baseline, the rails read as faint suggestions; when the
-             flare hits, the bloom around them lights up the whole
-             road area. So keep these stops modest. -->
+             visible most of the time). The "alive" effect comes from
+             the railFlicker animation on .neon-svg below — at baseline,
+             the rails read as faint suggestions; the irregular flares
+             surround them with bloom that flickers like fluorescent
+             matter. So keep these stops modest. -->
         <linearGradient id="introRail" gradientUnits="userSpaceOnUse"
                         x1="50" y1="22" x2="50" y2="100">
           <stop offset="0%"   stop-opacity="0"/>
@@ -405,8 +439,9 @@
 
       </defs>
 
-      <!-- Horizon glow behind the title -->
-      <rect x="0" y="0" width="100" height="100" fill="url(#introHorizon)"/>
+      <!-- (Horizon halo at the VP removed — title now sits on plain
+           dark background for cleanest legibility. Rail flares carry
+           all the "alive" cues.) -->
 
       <!-- Left lane rail: VP (50, 22) → bottom-left, centred on x=-12.
            ~25% slimmer than the previous version (top 0.30→0.225 vbu,
