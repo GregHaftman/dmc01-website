@@ -17,10 +17,21 @@
   /* ============================================================
      DMC01 · Intro hero — "Data Monetisation Concept"
 
-     Atmosphere: a subtle BTTF homage. Faint horizontal road tracks
-     drift across the background, and a barely-perceptible flux pulse
-     runs through the three-prong DMC01 mark. Both effects are
-     intentionally low-contrast — content stays the focus.
+     Atmosphere: a one-point perspective road. The vanishing point
+     sits behind the title (~22% down from the top), with two solid
+     lane rails diverging out to the bottom corners and a dotted
+     centre line running straight down through the middle. Dashes
+     scale up as they descend (perspective foreshortening) and flow
+     continuously toward the viewer — the road feels like it's
+     moving forward through the screen, with the title at the
+     destination and the closing line in the foreground.
+
+     A soft brand-blue halo at the vanishing point doubles as a
+     backlight for the title.
+
+     All effects are intentionally low-contrast — content stays the
+     focus. Honour prefers-reduced-motion via the JS init() which
+     pauses SMIL animations on the road SVG.
      ============================================================ */
 
   :root {
@@ -145,38 +156,49 @@
     background: radial-gradient(ellipse 80% 60% at 50% 50%, transparent 30%, rgba(7, 7, 8, 0.55) 100%);
   }
 
-  /* ----- ROAD RAILS BACKGROUND -----
-     Two parallel rails framing the content top/bottom. Each rail is
-     a *spindle polygon* — thick in the middle, tapering to a thin tip
-     at both edges. That's the 3D cue: the road has mass at the centre
-     (where the content sits) and recedes into the distance at both
-     ends. The polygon is filled by a linear gradient running along
-     the rail axis; the gradient has a soft bell peak that sweeps via
-     SMIL `animateTransform`. Counter-flow on the two rails. The peak
-     is past the polygon's far edge at both animation endpoints, so
-     the loop reset is invisible. */
+  /* ----- PERSPECTIVE ROAD BACKGROUND -----
+     One-point perspective: vanishing point at (50, 22) in viewBox
+     coords (50% across, 22% down — sitting behind the title). Two
+     lane rails are polygons that diverge from the VP outward to the
+     bottom corners (-14, 100) and (114, 100). A dotted centre line
+     is composed of six rect dashes that animate from VP downward,
+     growing in size as they descend (perspective foreshortening) and
+     fading in/out at the endpoints so respawns are invisible. Stagger
+     of 0.75s on a 4.5s cycle gives a continuous dash flow toward the
+     viewer.
+
+     A radial brand-blue halo sits at the VP and acts as a soft back-
+     light for the title.
+
+     viewBox is preserveAspectRatio="none", so x/y units stretch with
+     the section's aspect ratio. The road is tuned for a typical hero
+     aspect (~16:9 to ~3:1); on extreme ratios it'll look slightly
+     foreshortened but still readable. */
   .neon-bg {
     position: absolute;
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    /* Radial mask softens the rails' far horizontal edges. */
-    mask-image: radial-gradient(ellipse 85% 75% at 50% 50%, black 35%, transparent 100%);
-    -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 50%, black 35%, transparent 100%);
+    /* Radial mask softens the road's edges into the section background
+       so the rails dissolve at the corners rather than cutting hard. */
+    mask-image: radial-gradient(ellipse 90% 90% at 50% 60%, black 50%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 60%, black 50%, transparent 100%);
   }
 
   .neon-svg {
     width: 100%;
     height: 100%;
     display: block;
-    /* Halo follows fill alpha — bright peak blooms, dim baseline barely
-       glows. Drop-shadow lives in pixel space so the halo stays uniform
-       even though the SVG is non-uniformly stretched. */
+    /* Drop-shadow gives every brand-blue element a soft halo — the
+       rails bloom subtly along their edges, dashes glow as they pass. */
     filter: drop-shadow(0 0 6px rgba(0, 71, 255, 0.55));
   }
 
   /* All gradient stops share the brand colour; opacity varies per stop. */
   .neon-svg stop { stop-color: var(--brand-blue); }
+  /* Lane dashes inherit the brand colour from CSS so a Webflow
+     variable change cascades automatically. */
+  .neon-svg .lane-dashes { fill: var(--brand-blue); }
 
   /* ============================================================
      CONTENT
@@ -313,53 +335,96 @@
 
 <section class="intro-section" id="dmc01-intro" aria-label="DMC01 — Data Monetisation Concept">
 
-  <!-- Road rails: two parallel spindle polygons (thick mid, thin tips)
-       framing the content above and below. Each is filled by a
-       gradient whose bell peak sweeps along the rail axis via SMIL.
-       Counter-flow on rail A vs B. -->
+  <!-- Perspective road. Vanishing point at (50, 22) — behind the title.
+       Two lane rails diverge to the bottom corners; six dashes flow
+       down the centre, growing as they descend. -->
   <div class="neon-bg" aria-hidden="true">
     <svg class="neon-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
       <defs>
-        <!-- Gradient axes match the rails' centre lines: A at y=32 (mid),
-             B at y=68 (mid). Translating ±80 in x slides the peak past
-             both polygon ends, so the loop reset is invisible. -->
-        <linearGradient id="introRailA" gradientUnits="userSpaceOnUse"
-                        x1="-5" y1="26" x2="105" y2="18">
-          <stop offset="0"    stop-opacity="0.05"/>
-          <stop offset="0.32" stop-opacity="0.05"/>
-          <stop offset="0.42" stop-opacity="0.30"/>
-          <stop offset="0.50" stop-opacity="0.85"/>
-          <stop offset="0.58" stop-opacity="0.30"/>
-          <stop offset="0.68" stop-opacity="0.05"/>
-          <stop offset="1"    stop-opacity="0.05"/>
-          <animateTransform attributeName="gradientTransform" type="translate"
-                            values="-80 0; 80 0" dur="9s" repeatCount="indefinite"/>
-        </linearGradient>
-        <linearGradient id="introRailB" gradientUnits="userSpaceOnUse"
-                        x1="-5" y1="82" x2="105" y2="74">
-          <stop offset="0"    stop-opacity="0.05"/>
-          <stop offset="0.32" stop-opacity="0.05"/>
-          <stop offset="0.42" stop-opacity="0.30"/>
-          <stop offset="0.50" stop-opacity="0.85"/>
-          <stop offset="0.58" stop-opacity="0.30"/>
-          <stop offset="0.68" stop-opacity="0.05"/>
-          <stop offset="1"    stop-opacity="0.05"/>
-          <animateTransform attributeName="gradientTransform" type="translate"
-                            values="80 0; -80 0" dur="11s" repeatCount="indefinite"/>
+        <!-- Soft brand-blue halo at the VP — backlights the title. -->
+        <radialGradient id="introHorizon" cx="50" cy="22" r="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%"   stop-opacity="0.28"/>
+          <stop offset="45%"  stop-opacity="0.10"/>
+          <stop offset="100%" stop-opacity="0"/>
+        </radialGradient>
+
+        <!-- Lane-rail gradient: invisible at the VP, ramps up toward
+             the foreground. Linear gradient running down the section. -->
+        <linearGradient id="introRail" gradientUnits="userSpaceOnUse"
+                        x1="50" y1="22" x2="50" y2="100">
+          <stop offset="0%"   stop-opacity="0"/>
+          <stop offset="20%"  stop-opacity="0.18"/>
+          <stop offset="65%"  stop-opacity="0.45"/>
+          <stop offset="100%" stop-opacity="0.65"/>
         </linearGradient>
       </defs>
 
-      <!-- Spindle polygons. 14 vertices each: 7 along the top edge
-           (left → right) then 7 along the bottom edge (right → left).
-           Thickness profile is parabolic — peak 1.0 viewBox unit at
-           the centre, tapering to 0.2 at both ends. Centre lines now
-           run from (-5, 26)→(105, 18) and (-5, 82)→(105, 74) so the
-           rails sit at y≈22% and y≈78% — wider apart, more breathing
-           room around the content. Slope held at -0.073. -->
-      <polygon fill="url(#introRailA)"
-               points="-5,25.9 15,24.21 35,22.62 50,21.5 65,20.44 85,19.11 105,17.9 105,18.1 85,19.79 65,21.38 50,22.5 35,23.56 15,24.89 -5,26.1"/>
-      <polygon fill="url(#introRailB)"
-               points="-5,81.9 15,80.21 35,78.62 50,77.5 65,76.44 85,75.11 105,73.9 105,74.1 85,75.79 65,77.38 50,78.5 35,79.56 15,80.89 -5,82.1"/>
+      <!-- Horizon glow behind the title -->
+      <rect x="0" y="0" width="100" height="100" fill="url(#introHorizon)"/>
+
+      <!-- Left lane rail: VP (50, 22) → bottom-left (-14..-10, 100). -->
+      <polygon fill="url(#introRail)"
+               points="49.85,22 50.15,22 -10,100 -14,100"/>
+
+      <!-- Right lane rail: VP (50, 22) → bottom-right (110..114, 100). -->
+      <polygon fill="url(#introRail)"
+               points="49.85,22 50.15,22 114,100 110,100"/>
+
+      <!-- Centre dashes — perspective-scaled rectangles flowing
+           toward the viewer. Each rect animates x, y, width, height,
+           and opacity together over a 4.5s cycle. Six dashes staggered
+           0.75s apart give a continuous flow. The negative `begin`
+           values pre-spread the dashes along the road on first paint,
+           so the road looks alive immediately rather than empty for
+           the first cycle.
+
+           Centre stays fixed on x=50: width grows from 0.3 → 3, so
+           x = 50 - width/2 grows from 49.85 → 48.5. Both x and width
+           are linearly interpolated; the centre stays put. -->
+      <g class="lane-dashes">
+        <rect>
+          <animate attributeName="x"       values="49.85;48.5"      dur="4.5s" begin="0s"     repeatCount="indefinite"/>
+          <animate attributeName="y"       values="22;98"            dur="4.5s" begin="0s"     repeatCount="indefinite"/>
+          <animate attributeName="width"   values="0.3;3"            dur="4.5s" begin="0s"     repeatCount="indefinite"/>
+          <animate attributeName="height"  values="0.3;3"            dur="4.5s" begin="0s"     repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.12;0.88;1" dur="4.5s" begin="0s"     repeatCount="indefinite"/>
+        </rect>
+        <rect>
+          <animate attributeName="x"       values="49.85;48.5"      dur="4.5s" begin="-0.75s" repeatCount="indefinite"/>
+          <animate attributeName="y"       values="22;98"            dur="4.5s" begin="-0.75s" repeatCount="indefinite"/>
+          <animate attributeName="width"   values="0.3;3"            dur="4.5s" begin="-0.75s" repeatCount="indefinite"/>
+          <animate attributeName="height"  values="0.3;3"            dur="4.5s" begin="-0.75s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.12;0.88;1" dur="4.5s" begin="-0.75s" repeatCount="indefinite"/>
+        </rect>
+        <rect>
+          <animate attributeName="x"       values="49.85;48.5"      dur="4.5s" begin="-1.5s"  repeatCount="indefinite"/>
+          <animate attributeName="y"       values="22;98"            dur="4.5s" begin="-1.5s"  repeatCount="indefinite"/>
+          <animate attributeName="width"   values="0.3;3"            dur="4.5s" begin="-1.5s"  repeatCount="indefinite"/>
+          <animate attributeName="height"  values="0.3;3"            dur="4.5s" begin="-1.5s"  repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.12;0.88;1" dur="4.5s" begin="-1.5s"  repeatCount="indefinite"/>
+        </rect>
+        <rect>
+          <animate attributeName="x"       values="49.85;48.5"      dur="4.5s" begin="-2.25s" repeatCount="indefinite"/>
+          <animate attributeName="y"       values="22;98"            dur="4.5s" begin="-2.25s" repeatCount="indefinite"/>
+          <animate attributeName="width"   values="0.3;3"            dur="4.5s" begin="-2.25s" repeatCount="indefinite"/>
+          <animate attributeName="height"  values="0.3;3"            dur="4.5s" begin="-2.25s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.12;0.88;1" dur="4.5s" begin="-2.25s" repeatCount="indefinite"/>
+        </rect>
+        <rect>
+          <animate attributeName="x"       values="49.85;48.5"      dur="4.5s" begin="-3s"    repeatCount="indefinite"/>
+          <animate attributeName="y"       values="22;98"            dur="4.5s" begin="-3s"    repeatCount="indefinite"/>
+          <animate attributeName="width"   values="0.3;3"            dur="4.5s" begin="-3s"    repeatCount="indefinite"/>
+          <animate attributeName="height"  values="0.3;3"            dur="4.5s" begin="-3s"    repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.12;0.88;1" dur="4.5s" begin="-3s"    repeatCount="indefinite"/>
+        </rect>
+        <rect>
+          <animate attributeName="x"       values="49.85;48.5"      dur="4.5s" begin="-3.75s" repeatCount="indefinite"/>
+          <animate attributeName="y"       values="22;98"            dur="4.5s" begin="-3.75s" repeatCount="indefinite"/>
+          <animate attributeName="width"   values="0.3;3"            dur="4.5s" begin="-3.75s" repeatCount="indefinite"/>
+          <animate attributeName="height"  values="0.3;3"            dur="4.5s" begin="-3.75s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.12;0.88;1" dur="4.5s" begin="-3.75s" repeatCount="indefinite"/>
+        </rect>
+      </g>
     </svg>
   </div>
 
