@@ -196,9 +196,6 @@
 
   /* All gradient stops share the brand colour; opacity varies per stop. */
   .neon-svg stop { stop-color: var(--brand-blue); }
-  /* Lane dashes inherit the brand colour from CSS so a Webflow
-     variable change cascades automatically. */
-  .neon-svg .lane-dashes { fill: var(--brand-blue); }
 
   /* ============================================================
      CONTENT
@@ -357,6 +354,19 @@
           <stop offset="65%"  stop-opacity="0.45"/>
           <stop offset="100%" stop-opacity="0.65"/>
         </linearGradient>
+
+        <!-- Centre-dashes stroke: same brand-blue, but fades to nothing
+             at both ends. Top fade keeps the dashes from popping into
+             existence at the VP; bottom fade hides them BEFORE they
+             reach the closing line so the text is never overlapped. -->
+        <linearGradient id="introCentre" gradientUnits="userSpaceOnUse"
+                        x1="50" y1="22" x2="50" y2="100">
+          <stop offset="0%"  stop-opacity="0"/>
+          <stop offset="18%" stop-opacity="0.55"/>
+          <stop offset="62%" stop-opacity="0.55"/>
+          <stop offset="85%" stop-opacity="0"/>
+          <stop offset="100%" stop-opacity="0"/>
+        </linearGradient>
       </defs>
 
       <!-- Horizon glow behind the title -->
@@ -370,61 +380,33 @@
       <polygon fill="url(#introRail)"
                points="49.85,22 50.15,22 114,100 110,100"/>
 
-      <!-- Centre dashes — perspective-scaled rectangles flowing
-           toward the viewer. Each rect animates x, y, width, height,
-           and opacity together over a 4.5s cycle. Six dashes staggered
-           0.75s apart give a continuous flow. The negative `begin`
-           values pre-spread the dashes along the road on first paint,
-           so the road looks alive immediately rather than empty for
-           the first cycle.
+      <!-- Centre line — single vertical stroke from VP to the bottom,
+           dashed via stroke-dasharray and animated by shifting
+           stroke-dashoffset (negative direction = dashes flow
+           downward, toward the viewer). The stroke colour is the
+           introCentre gradient, which fades the dashes IN at the VP
+           (so they don't pop into existence) and fades them OUT
+           well above the bottom (so they never reach the closing-
+           line text below).
 
-           Centre stays fixed on x=50: width grows from 0.3 → 3, so
-           x = 50 - width/2 grows from 49.85 → 48.5. Both x and width
-           are linearly interpolated; the centre stays put. -->
-      <g class="lane-dashes">
-        <rect>
-          <animate attributeName="x"       values="49.85;48.5"      dur="4.5s" begin="0s"     repeatCount="indefinite"/>
-          <animate attributeName="y"       values="22;98"            dur="4.5s" begin="0s"     repeatCount="indefinite"/>
-          <animate attributeName="width"   values="0.3;3"            dur="4.5s" begin="0s"     repeatCount="indefinite"/>
-          <animate attributeName="height"  values="0.3;3"            dur="4.5s" begin="0s"     repeatCount="indefinite"/>
-          <animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.12;0.88;1" dur="4.5s" begin="0s"     repeatCount="indefinite"/>
-        </rect>
-        <rect>
-          <animate attributeName="x"       values="49.85;48.5"      dur="4.5s" begin="-0.75s" repeatCount="indefinite"/>
-          <animate attributeName="y"       values="22;98"            dur="4.5s" begin="-0.75s" repeatCount="indefinite"/>
-          <animate attributeName="width"   values="0.3;3"            dur="4.5s" begin="-0.75s" repeatCount="indefinite"/>
-          <animate attributeName="height"  values="0.3;3"            dur="4.5s" begin="-0.75s" repeatCount="indefinite"/>
-          <animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.12;0.88;1" dur="4.5s" begin="-0.75s" repeatCount="indefinite"/>
-        </rect>
-        <rect>
-          <animate attributeName="x"       values="49.85;48.5"      dur="4.5s" begin="-1.5s"  repeatCount="indefinite"/>
-          <animate attributeName="y"       values="22;98"            dur="4.5s" begin="-1.5s"  repeatCount="indefinite"/>
-          <animate attributeName="width"   values="0.3;3"            dur="4.5s" begin="-1.5s"  repeatCount="indefinite"/>
-          <animate attributeName="height"  values="0.3;3"            dur="4.5s" begin="-1.5s"  repeatCount="indefinite"/>
-          <animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.12;0.88;1" dur="4.5s" begin="-1.5s"  repeatCount="indefinite"/>
-        </rect>
-        <rect>
-          <animate attributeName="x"       values="49.85;48.5"      dur="4.5s" begin="-2.25s" repeatCount="indefinite"/>
-          <animate attributeName="y"       values="22;98"            dur="4.5s" begin="-2.25s" repeatCount="indefinite"/>
-          <animate attributeName="width"   values="0.3;3"            dur="4.5s" begin="-2.25s" repeatCount="indefinite"/>
-          <animate attributeName="height"  values="0.3;3"            dur="4.5s" begin="-2.25s" repeatCount="indefinite"/>
-          <animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.12;0.88;1" dur="4.5s" begin="-2.25s" repeatCount="indefinite"/>
-        </rect>
-        <rect>
-          <animate attributeName="x"       values="49.85;48.5"      dur="4.5s" begin="-3s"    repeatCount="indefinite"/>
-          <animate attributeName="y"       values="22;98"            dur="4.5s" begin="-3s"    repeatCount="indefinite"/>
-          <animate attributeName="width"   values="0.3;3"            dur="4.5s" begin="-3s"    repeatCount="indefinite"/>
-          <animate attributeName="height"  values="0.3;3"            dur="4.5s" begin="-3s"    repeatCount="indefinite"/>
-          <animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.12;0.88;1" dur="4.5s" begin="-3s"    repeatCount="indefinite"/>
-        </rect>
-        <rect>
-          <animate attributeName="x"       values="49.85;48.5"      dur="4.5s" begin="-3.75s" repeatCount="indefinite"/>
-          <animate attributeName="y"       values="22;98"            dur="4.5s" begin="-3.75s" repeatCount="indefinite"/>
-          <animate attributeName="width"   values="0.3;3"            dur="4.5s" begin="-3.75s" repeatCount="indefinite"/>
-          <animate attributeName="height"  values="0.3;3"            dur="4.5s" begin="-3.75s" repeatCount="indefinite"/>
-          <animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.12;0.88;1" dur="4.5s" begin="-3.75s" repeatCount="indefinite"/>
-        </rect>
-      </g>
+           Uniform dash length and spacing — no per-dash perspective
+           scaling. The reference image has only the slightest
+           perspective on its centre dashes; the side rails are
+           already carrying the depth cue, so a clean uniform stroke
+           reads better than the chunky scaled rectangles we tried
+           first. -->
+      <line x1="50" y1="22" x2="50" y2="100"
+            stroke="url(#introCentre)" stroke-width="0.45"
+            stroke-dasharray="1.4 4.2" stroke-linecap="butt"
+            fill="none">
+        <!-- One full pattern period (1.4 + 4.2 = 5.6) per second of
+             flow ≈ four periods over the 4.5s cycle. Negative offset
+             shifts the pattern in the line's direction (top → bottom),
+             so dashes appear to advance toward the viewer. -->
+        <animate attributeName="stroke-dashoffset"
+                 from="0" to="-22.4"
+                 dur="4s" repeatCount="indefinite"/>
+      </line>
     </svg>
   </div>
 
