@@ -17,33 +17,26 @@
   /* ============================================================
      DMC01 · Intro hero — "Data Monetisation Concept"
 
-     Atmosphere: a one-point perspective road. The vanishing point
-     sits behind the title (~22% down from the top), with two
-     wisp-thin lane rails diverging out to the bottom corners. A
-     very faint brand-blue halo sits at the VP — barely visible,
-     just a hint of light at the horizon (not a backlight that
-     would compete with the title text).
+     Atmosphere: a wireframe floor grid receding into the distance,
+     vanishing point behind the title (~22% down from the top).
+     Seven receding lines and eight lateral lines (perspective-
+     compressed depth spacing) form a trapezoidal floor that fades
+     from bright at the foreground to invisible at the horizon
+     (atmospheric perspective via a stroke gradient). A very faint
+     brand-blue halo sits at the VP — just a hint of light at the
+     horizon, not a backlight that would compete with the title.
 
-     The rails sit at a near-invisible baseline opacity. A four-
-     layer drop-shadow bloom flickers irregularly over a 12s cycle:
-     short small flares early, a medium one mid-cycle, then a
-     sustained bright peak past the two-thirds mark, with dim
-     stretches between. Five flares of varying intensity at
-     non-uniform intervals — the unevenness reads as fluorescent
-     matter glowing organically rather than a manufactured uniform
-     pulse. The peak flare extends to a 110px wide outer halo, so
-     during those moments the brand colour bleeds well beyond the
-     rails into the surrounding dark. See @keyframes railFlicker.
+     Static. No animation. The elegance comes from stillness —
+     architectural precision instead of motion. A single soft drop-
+     shadow on the SVG gives every line a faint brand-blue halo so
+     the grid doesn't read as flat wire art, but stops well short
+     of bloom.
 
-     There is no centre line. Earlier iterations tried perspective-
-     scaled rect dashes and then a stroke-dashed line; both felt too
-     busy. The closing line ("Why this matters / Great things are
-     built…") that used to anchor the bottom of this section has
-     also moved — it now lives at the foot of the testimonials
-     section as the final reflective beat after the social proof.
-
-     prefers-reduced-motion is honoured by disabling the flicker
-     animation (rails hold the dim baseline glow).
+     Earlier iterations of this section tried two perspective lane
+     rails (with various centre-line and flicker treatments) — they
+     read as busy and competed with the copy. The wireframe floor
+     keeps the same depth metaphor but cleaner: no rails to look at,
+     just a quiet plane the title floats over.
      ============================================================ */
 
   :root {
@@ -168,23 +161,30 @@
     background: radial-gradient(ellipse 80% 60% at 50% 50%, transparent 30%, rgba(7, 7, 8, 0.55) 100%);
   }
 
-  /* ----- PERSPECTIVE ROAD BACKGROUND -----
-     One-point perspective. Vanishing point at (50, 22) in viewBox
-     coords (50% across, 22% down — sitting behind the title). Two
-     wisp-thin lane-rail polygons diverge from the VP outward to the
-     bottom corners. A very subtle brand-blue radial halo sits at
-     the VP (small radius, low alpha) — just enough to suggest light
-     at the horizon without backlighting the title.
+  /* ----- WIREFRAME FLOOR GRID BACKGROUND -----
+     One-point perspective floor plane. Vanishing point at (50, 22)
+     in viewBox coords (50% across, 22% down — sitting behind the
+     title). Seven receding lines from the VP fan out to the bottom
+     edge; eight lateral lines mark depth at perspective-compressed
+     y positions, bounded by the outermost receding lines so the
+     whole floor reads as a trapezoid receding into the distance.
 
-     The depth cue is the rails' perspective shape; the "alive" cue
-     is an irregular drop-shadow flicker (railFlicker keyframes)
-     that makes the rails glow like fluorescent matter — uneven,
-     occasional bright moments scattered across a 12s cycle.
+     A floorGrid linear gradient strokes every line, fading from
+     transparent at the horizon to ~55% opacity at the foreground
+     (atmospheric perspective).
 
-     viewBox is preserveAspectRatio="none", so x/y units stretch with
-     the section's aspect ratio. The road is tuned for a typical hero
-     aspect (~16:9 to ~3:1); on extreme ratios it'll look slightly
-     foreshortened but still readable. */
+     A subtle brand-blue radial halo sits at the VP — just enough
+     to suggest light at the horizon without backlighting the title.
+
+     Depth cue: the perspective grid itself. "Alive" cue: a single
+     soft drop-shadow on the SVG gives each line a faint brand-blue
+     halo. No animation — pure stillness, more elegant than the
+     flickering rails this replaces.
+
+     viewBox is preserveAspectRatio="none". Stroke width is held at
+     1px regardless of stretch via vector-effect="non-scaling-stroke"
+     on the grid <g>, so lines stay crisp and uniform whatever the
+     section's aspect ratio. */
   .neon-bg {
     position: absolute;
     inset: 0;
@@ -203,100 +203,12 @@
     width: 100%;
     height: 100%;
     display: block;
-    /* Irregular fluorescent flicker — the rails sit at a faint baseline
-       glow, punctuated by short flares of varying intensity at
-       non-uniform intervals. The unevenness is the whole point: a
-       uniform pulse reads as a manufactured breathing effect, but
-       scattered keyframes at irregular percentages give an organic
-       "fluorescent matter" feel — like glow paint with uneven
-       saturation across its length, or a tube light that's not quite
-       stable.
-
-       12s cycle, ease-in-out timing. See @keyframes railFlicker for
-       the intensity curve.
-
-       Stacked drop-shadows are GPU-shader-heavy on large SVGs; if
-       perf becomes a problem on weak devices, drop the widest layer
-       first. */
-    animation: railFlicker 12s ease-in-out infinite;
-    /* Initial state matches the dim baseline so the first paint isn't
-       a sudden flare. Four layers (was three) — the extra outer layer
-       is the wide ambient bloom that gives the flares their tripled
-       intensity without pushing alphas past their cap. */
-    filter:
-      drop-shadow(0 0 2px  rgba(0, 71, 255, 0.30))
-      drop-shadow(0 0 8px  rgba(0, 71, 255, 0.15))
-      drop-shadow(0 0 18px rgba(0, 71, 255, 0.08))
-      drop-shadow(0 0 36px rgba(0, 71, 255, 0.04));
-  }
-
-  /* Five flares of varying intensity at irregular percentages.
-     Baseline keyframes scattered between them so the bright moments
-     come and go cleanly. All keyframes carry the same number of
-     drop-shadow layers (four) so the browser interpolates each
-     layer's blur radius and alpha smoothly across transitions.
-        0%, 16%, 35%, 48%, 64%, 87%, 100%  — dim baseline
-        10%                                 — small flicker
-        28% → 31%                           — medium flicker (held briefly)
-        42%                                 — tiny flicker
-        56%                                 — small flicker
-        73% → 80%                           — main bright sustained flare
-     Glow intensity at the peak is roughly 3× what it was previously:
-     blur radii doubled-ish on the inner layers, plus a fourth wide
-     ambient bloom that wasn't there before. Adjust by moving
-     keyframe percentages or per-shadow alphas. */
-  @keyframes railFlicker {
-    0%, 16%, 35%, 48%, 64%, 87%, 100% {
-      filter:
-        drop-shadow(0 0 2px  rgba(0, 71, 255, 0.30))
-        drop-shadow(0 0 8px  rgba(0, 71, 255, 0.15))
-        drop-shadow(0 0 18px rgba(0, 71, 255, 0.08))
-        drop-shadow(0 0 36px rgba(0, 71, 255, 0.04));
-    }
-    10% {
-      filter:
-        drop-shadow(0 0 4px  rgba(0, 71, 255, 0.65))
-        drop-shadow(0 0 14px rgba(0, 71, 255, 0.45))
-        drop-shadow(0 0 32px rgba(0, 71, 255, 0.30))
-        drop-shadow(0 0 64px rgba(0, 71, 255, 0.18));
-    }
-    28%, 31% {
-      filter:
-        drop-shadow(0 0 5px  rgba(0, 71, 255, 0.85))
-        drop-shadow(0 0 18px rgba(0, 71, 255, 0.65))
-        drop-shadow(0 0 44px rgba(0, 71, 255, 0.45))
-        drop-shadow(0 0 88px rgba(0, 71, 255, 0.28));
-    }
-    42% {
-      filter:
-        drop-shadow(0 0 3px  rgba(0, 71, 255, 0.55))
-        drop-shadow(0 0 10px rgba(0, 71, 255, 0.30))
-        drop-shadow(0 0 24px rgba(0, 71, 255, 0.18))
-        drop-shadow(0 0 48px rgba(0, 71, 255, 0.10));
-    }
-    56% {
-      filter:
-        drop-shadow(0 0 4px  rgba(0, 71, 255, 0.65))
-        drop-shadow(0 0 14px rgba(0, 71, 255, 0.45))
-        drop-shadow(0 0 32px rgba(0, 71, 255, 0.30))
-        drop-shadow(0 0 64px rgba(0, 71, 255, 0.18));
-    }
-    73%, 80% {
-      /* Main bright sustained flare — ~3× more intense than before
-         (was 6/22/52 px @ 0.95/0.65/0.40; now adds an outer 110px
-         layer and pushes the inner alphas to their caps). */
-      filter:
-        drop-shadow(0 0 8px   rgba(0, 71, 255, 1.0))
-        drop-shadow(0 0 24px  rgba(0, 71, 255, 0.95))
-        drop-shadow(0 0 60px  rgba(0, 71, 255, 0.70))
-        drop-shadow(0 0 110px rgba(0, 71, 255, 0.42));
-    }
-  }
-
-  /* Honour reduced-motion preference — disable the flicker,
-     hold a low-intensity static glow instead. */
-  @media (prefers-reduced-motion: reduce) {
-    .neon-svg { animation: none; }
+    /* Single soft drop-shadow on the wireframe grid — gives every
+       line a faint brand-blue halo so the floor doesn't read as flat
+       wire art, but stops well short of bloom that would lose the
+       crispness. Static on purpose: the elegance comes from
+       stillness, not motion. */
+    filter: drop-shadow(0 0 3px rgba(0, 71, 255, 0.55));
   }
 
   /* All gradient stops share the brand colour; opacity varies per stop. */
@@ -409,60 +321,78 @@
 
 <section class="intro-section" id="dmc01-intro" aria-label="DMC01 — Data Monetisation Concept">
 
-  <!-- Perspective road. Vanishing point at (50, 22) — behind the title.
-       Two slim lane rails diverge to the bottom corners; the SVG's
-       drop-shadow flickers irregularly (railFlicker keyframes) to
-       give them a fluorescent-matter glow. No horizon halo, no centre
-       dashes. -->
+  <!-- Wireframe floor grid. Vanishing point at (50, 22) — behind
+       the title. Seven receding lines + eight lateral lines form a
+       perspective floor; atmospheric-fade stroke gradient + a quiet
+       drop-shadow halo on the SVG. Static, no animation. -->
   <div class="neon-bg" aria-hidden="true">
     <svg class="neon-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
       <defs>
-        <!-- Lane-rail gradient: very dim baseline (rails are barely
-             visible most of the time). The "alive" effect comes from
-             the railFlicker animation on .neon-svg below — at baseline,
-             the rails read as faint suggestions; the irregular flares
-             surround them with bloom that flickers like fluorescent
-             matter. So keep these stops modest. -->
-        <linearGradient id="introRail" gradientUnits="userSpaceOnUse"
+        <!-- Atmospheric perspective gradient — applied as the stroke
+             colour for every grid line. Brightness ramps up from
+             nothing at the horizon (y=22) to ~55% at the foreground
+             (y=100). Receding lines fade along their length;
+             horizontal lateral lines inherit the gradient at their
+             constant y, so deeper lines are fainter than nearer ones
+             — exactly how a real wireframe floor reads in atmosphere. -->
+        <linearGradient id="floorGrid" gradientUnits="userSpaceOnUse"
                         x1="50" y1="22" x2="50" y2="100">
           <stop offset="0%"   stop-opacity="0"/>
-          <stop offset="20%"  stop-opacity="0.18"/>
-          <stop offset="55%"  stop-opacity="0.28"/>
-          <stop offset="100%" stop-opacity="0.38"/>
+          <stop offset="15%"  stop-opacity="0.10"/>
+          <stop offset="50%"  stop-opacity="0.30"/>
+          <stop offset="100%" stop-opacity="0.55"/>
         </linearGradient>
 
-        <!-- Very subtle brand-blue halo at the VP. Tiny radius (was
-             40, now 18), low alpha (was 0.45 → 0.25, now 0.10) — just
-             a faint suggestion of light at the horizon, not a visible
-             backlight. Title legibility stays intact. -->
+        <!-- Very subtle brand-blue halo at the VP. Suggests a faint
+             light at the horizon, not a backlight that competes with
+             the title text. -->
         <radialGradient id="introHorizon" cx="50" cy="22" r="18" gradientUnits="userSpaceOnUse">
           <stop offset="0%"   stop-opacity="0.10"/>
           <stop offset="60%"  stop-opacity="0.03"/>
           <stop offset="100%" stop-opacity="0"/>
         </radialGradient>
-
       </defs>
 
       <!-- Faint horizon glow behind the title -->
       <rect x="0" y="0" width="100" height="100" fill="url(#introHorizon)"/>
 
-      <!-- Left lane rail: VP (50, 22) → bottom-left, centred on x=-12.
-           Slimmed twice now (top 0.30 → 0.225 → 0.169 vbu, bottom
-           4 → 3 → 2.25 vbu). The rails are wisp-thin at the top
-           and only modestly thicker at the foreground. -->
-      <polygon fill="url(#introRail)"
-               points="49.9155,22 50.0845,22 -10.875,100 -13.125,100"/>
+      <!-- Wireframe floor grid. Vanishing point at (50, 22) — same
+           horizon as the road we replaced. vector-effect on the <g>
+           keeps stroke-width at 1px regardless of the SVG's
+           non-uniform stretch (preserveAspectRatio="none"), so lines
+           render as crisp 1px strokes whatever the section's aspect
+           ratio. -->
+      <g stroke="url(#floorGrid)" stroke-width="1" fill="none"
+         vector-effect="non-scaling-stroke">
 
-      <!-- Right lane rail: mirror, centred on x=112. -->
-      <polygon fill="url(#introRail)"
-               points="49.9155,22 50.0845,22 113.125,100 110.875,100"/>
+        <!-- Receding lines (depth axis). Seven lines from the VP out
+             to bottom-edge x positions every 20 vbu (from -10 to 110,
+             so the outer two pass off-screen and the floor reads as
+             extending past the viewport). -->
+        <line x1="50" y1="22" x2="-10" y2="100"/>
+        <line x1="50" y1="22" x2="10"  y2="100"/>
+        <line x1="50" y1="22" x2="30"  y2="100"/>
+        <line x1="50" y1="22" x2="50"  y2="100"/>
+        <line x1="50" y1="22" x2="70"  y2="100"/>
+        <line x1="50" y1="22" x2="90"  y2="100"/>
+        <line x1="50" y1="22" x2="110" y2="100"/>
 
-      <!-- (No centre line. Earlier iterations had perspective-scaled
-           rect dashes and then a stroke-dashed line; both read as
-           too busy and competed with the closing-line text. The two
-           side rails alone carry the perspective depth cue, with the
-           drop-shadow filter on .neon-svg providing a static glow
-           that makes the rails feel "alive" without any motion.) -->
+        <!-- Lateral lines (width axis). Eight horizontal lines at
+             perspective-compressed depths (quadratic falloff toward
+             the horizon — looks like a real floor receding into the
+             distance, with lines packing closer as they approach the
+             VP). x extents match the outermost receding lines at
+             each y, so the lateral lines stay bounded by the floor
+             trapezoid. -->
+        <line x1="-10"    y1="100" x2="110"    y2="100"/>
+        <line x1="1.54"   y1="85"  x2="98.46"  y2="85"/>
+        <line x1="11.54"  y1="72"  x2="88.46"  y2="72"/>
+        <line x1="20.77"  y1="60"  x2="79.23"  y2="60"/>
+        <line x1="28.46"  y1="50"  x2="71.54"  y2="50"/>
+        <line x1="34.62"  y1="42"  x2="65.38"  y2="42"/>
+        <line x1="40"     y1="35"  x2="60"     y2="35"/>
+        <line x1="44.62"  y1="29"  x2="55.38"  y2="29"/>
+      </g>
     </svg>
   </div>
 
