@@ -18,25 +18,25 @@
      DMC01 · Intro hero — "Data Monetisation Concept"
 
      Atmosphere: a wireframe floor grid receding into the distance,
-     vanishing point behind the title (~22% down from the top).
-     Seven receding lines and eight lateral lines (perspective-
-     compressed depth spacing) form a trapezoidal floor that fades
-     from bright at the foreground to invisible at the horizon
-     (atmospheric perspective via a stroke gradient). A very faint
-     brand-blue halo sits at the VP — just a hint of light at the
-     horizon, not a backlight that would compete with the title.
+     read as a representation of space-time fabric. Vanishing point
+     behind the title (~22% down from the top). Seven hair-thin
+     receding lines and eight lateral lines (perspective-compressed
+     depth spacing) form a trapezoidal floor that fades from bright
+     at the foreground to invisible at the horizon (atmospheric
+     perspective via a stroke gradient).
 
-     Static. No animation. The elegance comes from stillness —
-     architectural precision instead of motion. A single soft drop-
-     shadow on the SVG gives every line a faint brand-blue halo so
-     the grid doesn't read as flat wire art, but stops well short
-     of bloom.
+     The whole grid is rasterised through an SVG displacement filter
+     (feTurbulence + feDisplacementMap). The turbulence's baseFreq
+     animates within a small range over 24s, so the noise field
+     shifts slowly and different "areas" of the floor curve up and
+     down organically — the fourth-dimension fabric breathing under
+     unseen mass. Subtle by design; a few percent of viewBox
+     displacement at peak.
 
-     Earlier iterations of this section tried two perspective lane
-     rails (with various centre-line and flicker treatments) — they
-     read as busy and competed with the copy. The wireframe floor
-     keeps the same depth metaphor but cleaner: no rails to look at,
-     just a quiet plane the title floats over.
+     A very faint brand-blue halo sits at the VP — just a hint of
+     light at the horizon, not a backlight that competes with the
+     title. A single soft drop-shadow on the SVG gives every line a
+     faint brand-blue halo so the grid feels alive without bloom.
      ============================================================ */
 
   :root {
@@ -162,29 +162,35 @@
   }
 
   /* ----- WIREFRAME FLOOR GRID BACKGROUND -----
-     One-point perspective floor plane. Vanishing point at (50, 22)
-     in viewBox coords (50% across, 22% down — sitting behind the
-     title). Seven receding lines from the VP fan out to the bottom
-     edge; eight lateral lines mark depth at perspective-compressed
-     y positions, bounded by the outermost receding lines so the
-     whole floor reads as a trapezoid receding into the distance.
+     One-point perspective floor plane reading as space-time fabric.
+     Vanishing point at (50, 22) in viewBox coords (50% across,
+     22% down — behind the title). Seven hair-thin receding lines
+     from the VP fan out to the bottom edge; eight lateral lines
+     mark depth at perspective-compressed y positions, bounded by
+     the outermost receding lines so the whole floor reads as a
+     trapezoid receding into the distance.
+
+     The fabric breathes via an SVG displacement filter:
+     feTurbulence generates a smooth fractal-noise field, and
+     feDisplacementMap warps every grid line by sampling that field.
+     baseFrequency animates over 24s, so the displaced pattern
+     shifts slowly — different "areas" of the floor curve up and
+     down organically as if mass nearby is bending it. Scale 5
+     keeps the deformation gentle (~5% of viewBox at peak).
 
      A floorGrid linear gradient strokes every line, fading from
      transparent at the horizon to ~55% opacity at the foreground
-     (atmospheric perspective).
+     (atmospheric perspective). A subtle brand-blue radial halo
+     sits at the VP — just enough to suggest light at the horizon.
 
-     A subtle brand-blue radial halo sits at the VP — just enough
-     to suggest light at the horizon without backlighting the title.
-
-     Depth cue: the perspective grid itself. "Alive" cue: a single
-     soft drop-shadow on the SVG gives each line a faint brand-blue
-     halo. No animation — pure stillness, more elegant than the
-     flickering rails this replaces.
+     Depth cue: the perspective grid itself. "Alive" cue: the slow
+     space-time deformation + a single soft drop-shadow halo on
+     the SVG.
 
      viewBox is preserveAspectRatio="none". Stroke width is held at
-     1px regardless of stretch via vector-effect="non-scaling-stroke"
-     on the grid <g>, so lines stay crisp and uniform whatever the
-     section's aspect ratio. */
+     0.7px regardless of stretch via vector-effect="non-scaling-stroke"
+     on the grid <g>, so the lines stay hair-thin and uniform
+     whatever the section's aspect ratio. */
   .neon-bg {
     position: absolute;
     inset: 0;
@@ -321,10 +327,11 @@
 
 <section class="intro-section" id="dmc01-intro" aria-label="DMC01 — Data Monetisation Concept">
 
-  <!-- Wireframe floor grid. Vanishing point at (50, 22) — behind
-       the title. Seven receding lines + eight lateral lines form a
-       perspective floor; atmospheric-fade stroke gradient + a quiet
-       drop-shadow halo on the SVG. Static, no animation. -->
+  <!-- Wireframe floor grid as space-time fabric. Vanishing point
+       at (50, 22) — behind the title. Seven hair-thin receding
+       lines + eight lateral lines through an SVG displacement
+       filter that warps the grid into slow organic curvature
+       (areas rise and fall over a 24s cycle). -->
   <div class="neon-bg" aria-hidden="true">
     <svg class="neon-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
       <defs>
@@ -351,18 +358,49 @@
           <stop offset="60%"  stop-opacity="0.03"/>
           <stop offset="100%" stop-opacity="0"/>
         </radialGradient>
+
+        <!-- Space-time fabric distortion. feTurbulence generates a
+             smooth fractal-noise field; feDisplacementMap uses the
+             R channel to displace each pixel in x and the G channel
+             to displace it in y. The result: the wireframe's lines
+             warp gently as if mass nearby is curving the floor.
+             baseFrequency animates within a small range over 24s so
+             the noise pattern shifts slowly — different "areas" of
+             the floor rise and fall organically, never quite
+             repeating. Scale 5 keeps the displacement subtle (~5%
+             of the viewBox at peak), enough to feel alive but never
+             so much that the grid looks broken. -->
+        <filter id="spacetime" x="-6%" y="-6%" width="112%" height="112%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018"
+                        numOctaves="2" seed="5" result="noise">
+            <animate attributeName="baseFrequency"
+                     values="0.012 0.018; 0.014 0.014; 0.011 0.020; 0.012 0.018"
+                     dur="24s" repeatCount="indefinite"/>
+          </feTurbulence>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="5"
+                             xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
       </defs>
 
       <!-- Faint horizon glow behind the title -->
       <rect x="0" y="0" width="100" height="100" fill="url(#introHorizon)"/>
 
       <!-- Wireframe floor grid. Vanishing point at (50, 22) — same
-           horizon as the road we replaced. vector-effect on the <g>
-           keeps stroke-width at 1px regardless of the SVG's
-           non-uniform stretch (preserveAspectRatio="none"), so lines
-           render as crisp 1px strokes whatever the section's aspect
+           horizon as the road we replaced.
+
+           filter="url(#spacetime)" — the whole grid is rasterised
+           into the displacement filter, so the noise field warps
+           every line at every point. As the noise's baseFrequency
+           animates, "areas" of the floor rise and fall slowly,
+           reading as the curvature of space-time fabric.
+
+           vector-effect on the <g> holds stroke-width at 0.7px in
+           CSS pixels regardless of the SVG's non-uniform stretch
+           (preserveAspectRatio="none"), so the lines render as
+           crisp hair-thin strokes whatever the section's aspect
            ratio. -->
-      <g stroke="url(#floorGrid)" stroke-width="1" fill="none"
+      <g filter="url(#spacetime)"
+         stroke="url(#floorGrid)" stroke-width="0.7" fill="none"
          vector-effect="non-scaling-stroke">
 
         <!-- Receding lines (depth axis). Seven lines from the VP out
