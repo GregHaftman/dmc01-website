@@ -25,13 +25,15 @@
      at the foreground to invisible at the horizon (atmospheric
      perspective via a stroke gradient).
 
-     The whole grid is rasterised through an SVG displacement filter
-     (feTurbulence + feDisplacementMap). The turbulence's baseFreq
-     animates within a small range over 24s, so the noise field
-     shifts slowly and different "areas" of the floor curve up and
-     down organically — the fourth-dimension fabric breathing under
-     unseen mass. Subtle by design; a few percent of viewBox
-     displacement at peak.
+     The whole grid is rasterised through a three-stage SVG filter
+     (feTurbulence → feGaussianBlur → feDisplacementMap). The blur
+     softens the noise field before it warps the lines, so the
+     deformation feels floaty rather than scratchy. baseFrequency
+     animates through five keyframes over 32s with spline easing,
+     keeping the wells small (~3% viewBox each) and continuously
+     drifting — multiple areas of the floor float up and down with
+     no two frames quite alike, like the fourth-dimension fabric
+     under unseen mass.
 
      A very faint brand-blue halo sits at the VP — just a hint of
      light at the horizon, not a backlight that competes with the
@@ -170,13 +172,15 @@
      the outermost receding lines so the whole floor reads as a
      trapezoid receding into the distance.
 
-     The fabric breathes via an SVG displacement filter:
-     feTurbulence generates a smooth fractal-noise field, and
-     feDisplacementMap warps every grid line by sampling that field.
-     baseFrequency animates over 24s, so the displaced pattern
-     shifts slowly — different "areas" of the floor curve up and
-     down organically as if mass nearby is bending it. Scale 5
-     keeps the deformation gentle (~5% of viewBox at peak).
+     The fabric floats via a three-stage SVG filter chain:
+     feTurbulence generates a fractal-noise field, feGaussianBlur
+     softens it (so the deformation feels floaty rather than
+     scratchy), and feDisplacementMap warps every grid line by
+     sampling the smoothed field. baseFrequency animates through
+     five keyframes over 32s with spline easing — small wells drift
+     up and down continuously, never quite repeating, modern in
+     feel. Scale 6 keeps deformation gentle relative to the wells'
+     reduced size.
 
      A floorGrid linear gradient strokes every line, fading from
      transparent at the horizon to ~55% opacity at the foreground
@@ -359,25 +363,32 @@
           <stop offset="100%" stop-opacity="0"/>
         </radialGradient>
 
-        <!-- Space-time fabric distortion. feTurbulence generates a
-             smooth fractal-noise field; feDisplacementMap uses the
-             R channel to displace each pixel in x and the G channel
-             to displace it in y. The result: the wireframe's lines
-             warp gently as if mass nearby is curving the floor.
-             baseFrequency animates within a small range over 24s so
-             the noise pattern shifts slowly — different "areas" of
-             the floor rise and fall organically, never quite
-             repeating. Scale 5 keeps the displacement subtle (~5%
-             of the viewBox at peak), enough to feel alive but never
-             so much that the grid looks broken. -->
+        <!-- Space-time fabric distortion. Three-stage filter chain:
+               1. feTurbulence generates a fractal-noise field
+               2. feGaussianBlur softens that field — smoother
+                  transitions = floatier-feeling deformation
+               3. feDisplacementMap warps the wireframe using the
+                  smoothed field's R channel for x-displacement,
+                  G channel for y-displacement
+             baseFrequency animates through five keyframes over 32s
+             with spline easing (ease-in-out per segment), so the
+             noise field morphs continuously — multiple small wells
+             drift up and down as if the floor itself is gently
+             floating. The first and last keyframes match for a
+             seamless loop. Scale 6 keeps deformation gentle relative
+             to the now-smaller wells. -->
         <filter id="spacetime" x="-6%" y="-6%" width="112%" height="112%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018"
-                        numOctaves="2" seed="5" result="noise">
+          <feTurbulence type="fractalNoise" baseFrequency="0.025 0.028"
+                        numOctaves="2" seed="7" result="noise">
             <animate attributeName="baseFrequency"
-                     values="0.012 0.018; 0.014 0.014; 0.011 0.020; 0.012 0.018"
-                     dur="24s" repeatCount="indefinite"/>
+                     values="0.025 0.028; 0.028 0.024; 0.022 0.030; 0.026 0.026; 0.024 0.029; 0.025 0.028"
+                     keyTimes="0; 0.2; 0.4; 0.6; 0.8; 1"
+                     calcMode="spline"
+                     keySplines="0.4 0 0.6 1; 0.4 0 0.6 1; 0.4 0 0.6 1; 0.4 0 0.6 1; 0.4 0 0.6 1"
+                     dur="32s" repeatCount="indefinite"/>
           </feTurbulence>
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="5"
+          <feGaussianBlur in="noise" stdDeviation="1.2" result="smoothNoise"/>
+          <feDisplacementMap in="SourceGraphic" in2="smoothNoise" scale="6"
                              xChannelSelector="R" yChannelSelector="G"/>
         </filter>
       </defs>
