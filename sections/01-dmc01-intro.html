@@ -17,28 +17,25 @@
   /* ============================================================
      DMC01 · Intro hero — "Data Monetisation Concept"
 
-     Atmosphere: a wireframe floor grid receding into the distance,
-     read as a representation of space-time fabric. Vanishing point
-     behind the title (~22% down from the top). Seven hair-thin
-     receding lines and eight lateral lines (perspective-compressed
-     depth spacing) form a trapezoidal floor that fades from bright
-     at the foreground to invisible at the horizon (atmospheric
-     perspective via a stroke gradient).
+     Atmosphere: a one-point perspective road read as a runway at
+     night. Vanishing point behind the title (~22% down from the
+     top). Two pencil-thin lane rails diverge from the VP outward
+     to the bottom corners; their actual polygon shapes are slim
+     (top 0.20 vbu, bottom 2.5 vbu), and a four-layer drop-shadow
+     stack on the SVG surrounds them with substantial fluorescent
+     bloom — bright hot core + tight halo + mid bloom + wide
+     ambient. The result reads as glowing runway lights against a
+     dark sky.
 
-     The whole grid is rasterised through a three-stage SVG filter
-     (feTurbulence → feGaussianBlur → feDisplacementMap). The blur
-     softens the noise field before it warps the lines, so the
-     deformation feels floaty rather than scratchy. baseFrequency
-     animates through five keyframes over 32s with spline easing,
-     keeping the wells small (~3% viewBox each) and continuously
-     drifting — multiple areas of the floor float up and down with
-     no two frames quite alike, like the fourth-dimension fabric
-     under unseen mass.
+     Continuous and static. No flicker, no breathing, no animation.
+     The rails just glow steadily. Earlier iterations tried various
+     animated treatments (intermittent flares, fluorescent flicker,
+     space-time distortion); all read as too active. Plain
+     continuous bloom is the look the brief asked for.
 
      A very faint brand-blue halo sits at the VP — just a hint of
      light at the horizon, not a backlight that competes with the
-     title. A single soft drop-shadow on the SVG gives every line a
-     faint brand-blue halo so the grid feels alive without bloom.
+     title.
      ============================================================ */
 
   :root {
@@ -163,38 +160,26 @@
     background: radial-gradient(ellipse 80% 60% at 50% 50%, transparent 30%, rgba(7, 7, 8, 0.55) 100%);
   }
 
-  /* ----- WIREFRAME FLOOR GRID BACKGROUND -----
-     One-point perspective floor plane reading as space-time fabric.
+  /* ----- RUNWAY-LIGHT ROAD BACKGROUND -----
+     One-point perspective road reading as a runway at night.
      Vanishing point at (50, 22) in viewBox coords (50% across,
-     22% down — behind the title). Seven hair-thin receding lines
-     from the VP fan out to the bottom edge; eight lateral lines
-     mark depth at perspective-compressed y positions, bounded by
-     the outermost receding lines so the whole floor reads as a
-     trapezoid receding into the distance.
+     22% down — behind the title). Two pencil-thin lane-rail
+     polygons diverge from the VP outward to the bottom corners
+     (-13.25..-10.75, 100) and (110.75..113.25, 100); they're
+     deliberately slim (top 0.20 vbu, bottom 2.5 vbu) so almost all
+     the visual presence comes from the four-layer drop-shadow
+     bloom on .neon-svg, not from the rail polygons themselves —
+     the rails read as bright glowing strips, not solid bars.
 
-     The fabric floats via a three-stage SVG filter chain:
-     feTurbulence generates a fractal-noise field, feGaussianBlur
-     softens it (so the deformation feels floaty rather than
-     scratchy), and feDisplacementMap warps every grid line by
-     sampling the smoothed field. baseFrequency animates through
-     five keyframes over 32s with spline easing — small wells drift
-     up and down continuously, never quite repeating, modern in
-     feel. Scale 6 keeps deformation gentle relative to the wells'
-     reduced size.
+     A introRail linear gradient fills the rails, ramping up
+     steeply from invisible at the VP to fully saturated by 60%
+     of the way down. A very subtle brand-blue radial halo sits
+     at the VP — just enough to suggest light at the horizon.
 
-     A floorGrid linear gradient strokes every line, fading from
-     transparent at the horizon to ~55% opacity at the foreground
-     (atmospheric perspective). A subtle brand-blue radial halo
-     sits at the VP — just enough to suggest light at the horizon.
-
-     Depth cue: the perspective grid itself. "Alive" cue: the slow
-     space-time deformation + a single soft drop-shadow halo on
-     the SVG.
-
-     viewBox is preserveAspectRatio="none". Stroke width is held at
-     0.7px regardless of stretch via vector-effect="non-scaling-stroke"
-     on the grid <g>, so the lines stay hair-thin and uniform
-     whatever the section's aspect ratio. */
+     Continuous and static — no animation. Earlier iterations
+     animated the glow (intermittent flares, fluorescent flicker,
+     space-time distortion of a wireframe floor); all of them read
+     as too active. Continuous bloom is the brief. */
   .neon-bg {
     position: absolute;
     inset: 0;
@@ -213,12 +198,22 @@
     width: 100%;
     height: 100%;
     display: block;
-    /* Single soft drop-shadow on the wireframe grid — gives every
-       line a faint brand-blue halo so the floor doesn't read as flat
-       wire art, but stops well short of bloom that would lose the
-       crispness. Static on purpose: the elegance comes from
-       stillness, not motion. */
-    filter: drop-shadow(0 0 3px rgba(0, 71, 255, 0.55));
+    /* Runway-light bloom. Four stacked drop-shadows in increasing
+       blur radius simulate a real fluorescent tube: a hot bright
+       core, a tight halo, a mid-range bloom, and a wide ambient
+       glow that spills the brand colour into the surrounding dark.
+       Continuous and static — never flickers, never fades. The
+       rails themselves are pencil-thin (~0.2 vbu wide); all the
+       presence comes from this stacked bloom around them.
+
+       Stacked drop-shadows are GPU-shader-heavy on large SVGs.
+       If perf becomes an issue on weaker devices, drop the widest
+       110px layer first. */
+    filter:
+      drop-shadow(0 0 4px   rgba(0, 71, 255, 1.0))
+      drop-shadow(0 0 14px  rgba(0, 71, 255, 0.85))
+      drop-shadow(0 0 36px  rgba(0, 71, 255, 0.55))
+      drop-shadow(0 0 80px  rgba(0, 71, 255, 0.30));
   }
 
   /* All gradient stops share the brand colour; opacity varies per stop. */
@@ -331,27 +326,25 @@
 
 <section class="intro-section" id="dmc01-intro" aria-label="DMC01 — Data Monetisation Concept">
 
-  <!-- Wireframe floor grid as space-time fabric. Vanishing point
-       at (50, 22) — behind the title. Seven hair-thin receding
-       lines + eight lateral lines through an SVG displacement
-       filter that warps the grid into slow organic curvature
-       (areas rise and fall over a 24s cycle). -->
+  <!-- Two perspective lane rails as runway lights. Vanishing point
+       at (50, 22) — behind the title. Pencil-thin polygons + a
+       four-layer drop-shadow bloom on the SVG = bright continuous
+       fluorescent glow. No animation. -->
   <div class="neon-bg" aria-hidden="true">
     <svg class="neon-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
       <defs>
-        <!-- Atmospheric perspective gradient — applied as the stroke
-             colour for every grid line. Brightness ramps up from
-             nothing at the horizon (y=22) to ~55% at the foreground
-             (y=100). Receding lines fade along their length;
-             horizontal lateral lines inherit the gradient at their
-             constant y, so deeper lines are fainter than nearer ones
-             — exactly how a real wireframe floor reads in atmosphere. -->
-        <linearGradient id="floorGrid" gradientUnits="userSpaceOnUse"
+        <!-- Lane-rail gradient. Ramps up steeply from invisible at
+             the horizon (y=22) to fully saturated brand-blue across
+             most of the rail's length. Steep on purpose: this is a
+             runway light, not a fading line — bright and present
+             from the foreground all the way back to almost the VP. -->
+        <linearGradient id="introRail" gradientUnits="userSpaceOnUse"
                         x1="50" y1="22" x2="50" y2="100">
           <stop offset="0%"   stop-opacity="0"/>
-          <stop offset="15%"  stop-opacity="0.10"/>
-          <stop offset="50%"  stop-opacity="0.30"/>
-          <stop offset="100%" stop-opacity="0.55"/>
+          <stop offset="10%"  stop-opacity="0.40"/>
+          <stop offset="30%"  stop-opacity="0.80"/>
+          <stop offset="60%"  stop-opacity="1"/>
+          <stop offset="100%" stop-opacity="1"/>
         </linearGradient>
 
         <!-- Very subtle brand-blue halo at the VP. Suggests a faint
@@ -362,86 +355,26 @@
           <stop offset="60%"  stop-opacity="0.03"/>
           <stop offset="100%" stop-opacity="0"/>
         </radialGradient>
-
-        <!-- Space-time fabric distortion. Three-stage filter chain:
-               1. feTurbulence generates a fractal-noise field
-               2. feGaussianBlur softens that field — smoother
-                  transitions = floatier-feeling deformation
-               3. feDisplacementMap warps the wireframe using the
-                  smoothed field's R channel for x-displacement,
-                  G channel for y-displacement
-             baseFrequency animates through five keyframes over 32s
-             with spline easing (ease-in-out per segment), so the
-             noise field morphs continuously — multiple small wells
-             drift up and down as if the floor itself is gently
-             floating. The first and last keyframes match for a
-             seamless loop. Scale 6 keeps deformation gentle relative
-             to the now-smaller wells. -->
-        <filter id="spacetime" x="-6%" y="-6%" width="112%" height="112%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.025 0.028"
-                        numOctaves="2" seed="7" result="noise">
-            <animate attributeName="baseFrequency"
-                     values="0.025 0.028; 0.028 0.024; 0.022 0.030; 0.026 0.026; 0.024 0.029; 0.025 0.028"
-                     keyTimes="0; 0.2; 0.4; 0.6; 0.8; 1"
-                     calcMode="spline"
-                     keySplines="0.4 0 0.6 1; 0.4 0 0.6 1; 0.4 0 0.6 1; 0.4 0 0.6 1; 0.4 0 0.6 1"
-                     dur="32s" repeatCount="indefinite"/>
-          </feTurbulence>
-          <feGaussianBlur in="noise" stdDeviation="1.2" result="smoothNoise"/>
-          <feDisplacementMap in="SourceGraphic" in2="smoothNoise" scale="6"
-                             xChannelSelector="R" yChannelSelector="G"/>
-        </filter>
       </defs>
 
       <!-- Faint horizon glow behind the title -->
       <rect x="0" y="0" width="100" height="100" fill="url(#introHorizon)"/>
 
-      <!-- Wireframe floor grid. Vanishing point at (50, 22) — same
-           horizon as the road we replaced.
+      <!-- Two perspective lane rails as runway lights. Both polygons
+           are slim (top 0.20 vbu, bottom 2.5 vbu) so the actual rail
+           shapes are pencil-thin; the four-layer drop-shadow stack
+           on .neon-svg is what gives them substantial fluorescent
+           bloom around the slim cores. Continuous static glow — no
+           animation. -->
 
-           filter="url(#spacetime)" — the whole grid is rasterised
-           into the displacement filter, so the noise field warps
-           every line at every point. As the noise's baseFrequency
-           animates, "areas" of the floor rise and fall slowly,
-           reading as the curvature of space-time fabric.
+      <!-- Left lane rail: VP (50, 22) → bottom-left, centred on x=-12.
+           Top 0.20 vbu, bottom 2.5 vbu. -->
+      <polygon fill="url(#introRail)"
+               points="49.9,22 50.1,22 -10.75,100 -13.25,100"/>
 
-           vector-effect on the <g> holds stroke-width at 0.7px in
-           CSS pixels regardless of the SVG's non-uniform stretch
-           (preserveAspectRatio="none"), so the lines render as
-           crisp hair-thin strokes whatever the section's aspect
-           ratio. -->
-      <g filter="url(#spacetime)"
-         stroke="url(#floorGrid)" stroke-width="0.7" fill="none"
-         vector-effect="non-scaling-stroke">
-
-        <!-- Receding lines (depth axis). Seven lines from the VP out
-             to bottom-edge x positions every 20 vbu (from -10 to 110,
-             so the outer two pass off-screen and the floor reads as
-             extending past the viewport). -->
-        <line x1="50" y1="22" x2="-10" y2="100"/>
-        <line x1="50" y1="22" x2="10"  y2="100"/>
-        <line x1="50" y1="22" x2="30"  y2="100"/>
-        <line x1="50" y1="22" x2="50"  y2="100"/>
-        <line x1="50" y1="22" x2="70"  y2="100"/>
-        <line x1="50" y1="22" x2="90"  y2="100"/>
-        <line x1="50" y1="22" x2="110" y2="100"/>
-
-        <!-- Lateral lines (width axis). Eight horizontal lines at
-             perspective-compressed depths (quadratic falloff toward
-             the horizon — looks like a real floor receding into the
-             distance, with lines packing closer as they approach the
-             VP). x extents match the outermost receding lines at
-             each y, so the lateral lines stay bounded by the floor
-             trapezoid. -->
-        <line x1="-10"    y1="100" x2="110"    y2="100"/>
-        <line x1="1.54"   y1="85"  x2="98.46"  y2="85"/>
-        <line x1="11.54"  y1="72"  x2="88.46"  y2="72"/>
-        <line x1="20.77"  y1="60"  x2="79.23"  y2="60"/>
-        <line x1="28.46"  y1="50"  x2="71.54"  y2="50"/>
-        <line x1="34.62"  y1="42"  x2="65.38"  y2="42"/>
-        <line x1="40"     y1="35"  x2="60"     y2="35"/>
-        <line x1="44.62"  y1="29"  x2="55.38"  y2="29"/>
-      </g>
+      <!-- Right lane rail: mirror, centred on x=112. -->
+      <polygon fill="url(#introRail)"
+               points="49.9,22 50.1,22 113.25,100 110.75,100"/>
     </svg>
   </div>
 
