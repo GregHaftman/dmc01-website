@@ -145,7 +145,7 @@
     width: 280px;
     aspect-ratio: 1;
   }
-  .bio-figure svg {
+  .bio-figure .bio-portrait {
     width: 100%;
     height: 100%;
     display: block;
@@ -169,6 +169,38 @@
     color: var(--brand-blue);
     letter-spacing: 0.3em;
     text-transform: uppercase;
+  }
+  /* LinkedIn icon — small touchable target sitting just below the
+     name/title. Defaults to muted white, hovers to brand-blue with a
+     tiny upward nudge. Opens in a new tab. */
+  .bio-figure-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 14px;
+    width: 36px;
+    height: 36px;
+    color: var(--white-50);
+    border: 1px solid var(--white-15);
+    border-radius: var(--radius-sm);
+    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+  }
+  .bio-figure-link:hover,
+  .bio-figure-link:focus-visible {
+    color: var(--brand-blue);
+    border-color: rgba(0, 71, 255, 0.5);
+    background: rgba(0, 71, 255, 0.08);
+    transform: translateY(-1px);
+    outline: none;
+  }
+  .bio-figure-link svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
   .bio-text {
@@ -557,47 +589,43 @@
     <!-- BIO BLOCK -->
     <div class="bio-block">
       <div class="bio-figure">
-        <!-- Placeholder portrait illustration. Stylised geometric
-             silhouette in brand-blue, framed by corner brackets and
-             dotted with orbital-echo accents. Will be swapped for a
-             real photo when one's chosen. -->
-        <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
-          <!-- Corner brackets — architectural framing detail -->
-          <g stroke="#0047FF" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M 4 24 V 4 H 24"/>
-            <path d="M 216 4 H 236 V 24"/>
-            <path d="M 4 216 V 236 H 24"/>
-            <path d="M 216 236 H 236 V 216"/>
-          </g>
-          <!-- Outer halo ring (subtle) -->
-          <circle cx="120" cy="120" r="92" fill="none" stroke="#0047FF" stroke-opacity="0.18" stroke-width="1"/>
-          <!-- Inner halo ring (bolder) -->
-          <circle cx="120" cy="120" r="78" fill="none" stroke="#0047FF" stroke-width="1.5" stroke-opacity="0.55"/>
-          <!-- Head -->
-          <circle cx="120" cy="100" r="34" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
-          <!-- Hair / silhouette top — slight curve so it doesn't read as a bald sphere -->
-          <path d="M 90 92 Q 100 70 120 68 Q 140 70 150 92"
-                fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/>
-          <!-- Shoulders / suit -->
-          <path d="M 56 196 Q 84 150 120 144 Q 156 150 184 196"
-                fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <!-- Shirt collar -->
-          <path d="M 108 152 L 120 164 L 132 152"
-                fill="none" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-          <!-- Lapel hint -->
-          <line x1="92" y1="170" x2="100" y2="195" stroke="#FFFFFF" stroke-opacity="0.55" stroke-width="1"/>
-          <line x1="148" y1="170" x2="140" y2="195" stroke="#FFFFFF" stroke-opacity="0.55" stroke-width="1"/>
-          <!-- Orbital-echo accent dots in the four diagonals -->
-          <g fill="#0047FF">
-            <circle cx="36"  cy="80"  r="2.2"/>
-            <circle cx="204" cy="80"  r="2.2"/>
-            <circle cx="36"  cy="160" r="2.2"/>
-            <circle cx="204" cy="160" r="2.2"/>
-          </g>
-        </svg>
+        <!-- Stylised portrait of Grégoire — line illustration on the
+             brand's near-black background with brand-blue corner
+             brackets. The SVG itself lives in webflow/portrait.svg
+             (externalised so this embed stays under Webflow's 50kB
+             limit). The inline loader below picks the right URL
+             based on hostname:
+               localhost / Live Server  → ../webflow/portrait.svg
+               anywhere else            → Cloudflare Worker URL
+             Same auto-detect pattern as the orbital JS, so the embed
+             can be re-pasted into Webflow verbatim — no manual URL
+             swap. To update the portrait: edit webflow/portrait.svg,
+             commit, push (Cloudflare auto-deploys ~30s). -->
+        <img class="bio-portrait" id="bioPortrait"
+             alt="Portrait of Grégoire Haftman">
+        <script>
+        (function(){
+          var h = location.hostname;
+          var isLocal = h === 'localhost' || h === '127.0.0.1' || h === '' || h.endsWith('.local');
+          var img = document.getElementById('bioPortrait');
+          if (img) img.src = isLocal
+            ? '../webflow/portrait.svg'
+            : 'https://dmc01-website.ghaftman.workers.dev/portrait.svg';
+        })();
+        </script>
         <div class="bio-figure-caption">
           <div class="bio-figure-name">Grégoire Haftman</div>
           <div class="bio-figure-title">Founder · Director</div>
+          <a class="bio-figure-link"
+             href="https://www.linkedin.com/in/gregoirehaftman/"
+             target="_blank" rel="noopener noreferrer"
+             aria-label="Grégoire Haftman on LinkedIn">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
+              <rect x="2" y="9" width="4" height="12"/>
+              <circle cx="4" cy="4" r="2"/>
+            </svg>
+          </a>
         </div>
       </div>
 
@@ -630,7 +658,7 @@
               <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
               <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
             </svg>
-            <span>Across Customer Success, Pre-Sales, Management &amp; Product</span>
+            <span>Customer Success, Pre-Sales, Management &amp; Product</span>
           </li>
         </ul>
       </div>
