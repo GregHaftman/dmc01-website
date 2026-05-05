@@ -114,19 +114,21 @@
   }
 
   /* ============================================================
-     HEADER
+     HEADER — eyebrow above, then a 2-col grid for title + lede
+     with first-line top-alignment so the lede sits beside the
+     title's first line regardless of how many lines either takes.
      ============================================================ */
   .solutions-header {
-    display: grid;
-    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-    gap: clamp(40px, 6vw, 96px);
-    align-items: end;
     margin-bottom: 56px;
     padding-bottom: 28px;
     border-bottom: 1px solid var(--white-15);
   }
-  .header-left  { min-width: 0; }
-  .header-right { min-width: 0; padding-bottom: 6px; }
+  .header-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: clamp(40px, 6vw, 96px);
+    align-items: start;
+  }
 
   .eyebrow {
     font-size: var(--t-eyebrow-size);
@@ -162,8 +164,7 @@
   }
 
   @media (max-width: 800px) {
-    .solutions-header { grid-template-columns: 1fr; gap: 16px; align-items: start; }
-    .header-right { padding-bottom: 0; }
+    .header-grid { grid-template-columns: 1fr; gap: 16px; }
   }
 
   /* ============================================================
@@ -358,11 +359,9 @@
   <div class="section-inner">
 
     <header class="solutions-header">
-      <div class="header-left">
-        <div class="eyebrow">Solutions</div>
+      <div class="eyebrow">Solutions</div>
+      <div class="header-grid">
         <h1 class="section-title">What this <em>unlocks.</em></h1>
-      </div>
-      <div class="header-right">
         <p class="section-lede">Four outcomes built from the modules above. Each one reflects a different way to make your data business work in practice.</p>
       </div>
     </header>

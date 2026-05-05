@@ -99,7 +99,7 @@
     z-index: 1;
     width: 100vw;
     margin-left: calc(-50vw + 50%);
-    padding: 56px 64px 72px;
+    padding: 56px clamp(24px, 4vw, 64px) 72px;
     background: var(--neutral-primary);
     overflow: hidden;
     isolation: isolate;
@@ -126,19 +126,21 @@
   }
 
   /* ============================================================
-     HEADER
+     HEADER — eyebrow above, then a 2-col grid for title + lede
+     with first-line top-alignment so the lede sits beside the
+     title's first line regardless of how many lines either takes.
      ============================================================ */
   .framework-header {
-    display: grid;
-    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-    gap: clamp(40px, 6vw, 96px);
-    align-items: end;
     margin-bottom: 56px;
     padding-bottom: 28px;
     border-bottom: 1px solid var(--white-15);
   }
-  .framework-header .header-left { min-width: 0; }
-  .framework-header .header-right { min-width: 0; padding-bottom: 6px; }
+  .framework-header .header-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: clamp(40px, 6vw, 96px);
+    align-items: start;
+  }
 
   .framework-section .eyebrow {
     font-size: var(--t-eyebrow-size);
@@ -401,10 +403,9 @@
      runs through it.
      ============================================================ */
   @media (max-width: 900px) {
-    .framework-header {
+    .framework-header .header-grid {
       grid-template-columns: 1fr;
       gap: 16px;
-      align-items: start;
     }
     .step-row {
       grid-template-columns: 56px 1fr;
@@ -444,11 +445,9 @@
 
     <!-- HEADER -->
     <header class="framework-header">
-      <div class="header-left">
-        <div class="eyebrow">Framework</div>
-        <h2 class="section-title">How the <em>work</em> actually <em>gets done</em>gets done.</h2>
-      </div>
-      <div class="header-right">
+      <div class="eyebrow">Framework</div>
+      <div class="header-grid">
+        <h2 class="section-title">How the <em>work</em> actually <em>gets done</em>.</h2>
         <p class="section-lede">A structured approach from initial framing through to execution. Short cycles at the edges, deeper work where alignment is built and decisions stick.</p>
       </div>
     </header>
