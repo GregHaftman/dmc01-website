@@ -768,10 +768,10 @@ body::before {
     <div class="header-grid">
       <div class="header-left">
         <div class="eyebrow">Product</div>
-        <h1 class="section-title">Specialised advisory, <em>shipped as six modules.</em></h1>
+        <h1 class="section-title">The building blocks of a <em> working data business.</em></em></h1>
       </div>
       <div class="header-right">
-        <p class="section-lede">A fixed toolkit. Each module is its own deliverable; each engagement combines the right ones for your situation. Below the toolkit, see the four <em>solutions</em> they combine into.</p>
+        <p class="section-lede">Six modules, each targeting a critical layer. Combined, they create a coherent operating architecture that holds together in the market.</p>
       </div>
     </div>
   </div><!-- /.section-inner header -->
@@ -965,16 +965,34 @@ body::before {
      Webflow's 50kB-per-embed limit. The MODULES data array
      and animation code live in webflow/dmc01-orbital.js.
 
-     LOCAL DEV: the relative path below resolves directly to the
-     repo file via Live Server.
+     The inline loader below picks the right URL automatically
+     based on where the page is being served from:
 
-     IN WEBFLOW: replace the src below with the Cloudflare Pages
-     URL for the same file, e.g.
-       https://<project>.pages.dev/webflow/dmc01-orbital.js
-     Pages auto-deploys on push, so future edits to this file are
-     served from the same URL — no embed change needed.
+       LOCAL DEV  (localhost, 127.0.0.1, file://, *.local)
+         → ../webflow/dmc01-orbital.js   (the repo file, hot)
+
+       EVERYWHERE ELSE  (Webflow staging, live site, anywhere)
+         → https://dmc01-website.ghaftman.workers.dev/dmc01-orbital.js
+            (Cloudflare Worker, auto-deployed from this repo on
+             every push to main)
+
+     This means you can paste this embed into Webflow verbatim —
+     no manual URL swap required. To update the JS itself: edit
+     webflow/dmc01-orbital.js, commit, push. Cloudflare redeploys
+     (~30s); the embed never changes.
      ============================================================ -->
-<script src="../webflow/dmc01-orbital.js" defer></script>
+<script>
+(function(){
+  var host = location.hostname;
+  var isLocal = host === 'localhost' || host === '127.0.0.1' || host === '' || host.endsWith('.local');
+  var s = document.createElement('script');
+  s.defer = true;
+  s.src = isLocal
+    ? '../webflow/dmc01-orbital.js'
+    : 'https://dmc01-website.ghaftman.workers.dev/dmc01-orbital.js';
+  document.head.appendChild(s);
+})();
+</script>
 
 </body>
 </html>
