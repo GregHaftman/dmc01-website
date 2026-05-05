@@ -112,7 +112,7 @@
     z-index: 1;
     width: 100vw;
     margin-left: calc(-50vw + 50%);
-    padding: 56px 64px 80px;
+    padding: 56px clamp(24px, 4vw, 64px) 80px;
     background: var(--neutral-primary);
     overflow: hidden;
     isolation: isolate;
@@ -178,6 +178,24 @@
     line-height: var(--lh-base);
     color: var(--white-72);
     max-width: 640px;
+  }
+  .contact-section .section-lede-alt {
+    margin-top: 10px;
+    font-size: var(--t-base-size);
+    font-weight: var(--w-base);
+    line-height: var(--lh-base);
+    color: var(--white-72);
+    max-width: 640px;
+  }
+  .contact-section .section-lede-alt a {
+    color: var(--brand-blue);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 71, 255, 0.4);
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .contact-section .section-lede-alt a:hover {
+    color: var(--brand-blue-hover);
+    border-bottom-color: var(--brand-blue);
   }
 
   /* ============================================================
@@ -587,6 +605,7 @@
       <div class="eyebrow">Contact</div>
       <h2 class="section-title">Open a <em>brief.</em></h2>
       <p class="section-lede">Tell me about your industry, the datasets, the team, and what you're trying to unlock. I read everything that comes through and reply within one working day.</p>
+      <p class="section-lede-alt">Not in the mood to fill out a form? Email <a href="mailto:hello@dmc01.com">hello@dmc01.com</a> directly.</p>
     </header>
 
     <!-- FORM
@@ -616,18 +635,18 @@
         <div class="form-row">
           <label class="form-field">
             <span class="form-label">First name</span>
-            <input type="text" name="First-Name" data-name="First Name" required autocomplete="given-name" placeholder="Greg"/>
+            <input type="text" name="First-Name" data-name="First Name" required autocomplete="given-name" placeholder="Doc"/>
           </label>
           <label class="form-field">
             <span class="form-label">Last name</span>
-            <input type="text" name="Last-Name" data-name="Last Name" required autocomplete="family-name" placeholder="Haftman"/>
+            <input type="text" name="Last-Name" data-name="Last Name" required autocomplete="family-name" placeholder="Brown"/>
           </label>
         </div>
 
         <div class="form-row">
           <label class="form-field">
             <span class="form-label">Role <span class="form-optional">optional</span></span>
-            <input type="text" name="Role" data-name="Role" autocomplete="organization-title" placeholder="Your title or hat"/>
+            <input type="text" name="Role" data-name="Role" autocomplete="organization-title" placeholder="Founder"/>
           </label>
           <label class="form-field">
             <span class="form-label">Email</span>
