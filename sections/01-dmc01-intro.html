@@ -302,6 +302,11 @@
     letter-spacing: -0.02em;
     color: var(--white);
     max-width: 1100px;
+    /* Extra breathing room above the title — adds to the .intro-main
+       flex gap so the logo sits a touch further above the title +
+       description block (the description follows the title in the
+       flex column so it inherits the shift). */
+    margin-top: clamp(16px, 3vh, 32px);
   }
 
   .intro-description {
@@ -434,7 +439,7 @@
       <h1 class="intro-title">Data Monetisation Concept</h1>
 
       <p class="intro-description">
-        DMC01 <em>compiles strategy</em> the way you compile code — turning data assets into a clear route to market.
+        DMC01 compiles strategy the way you compile code — then <em>orchestrates and executes</em> it, turning data assets into a working route to market, not just another deck on the shelf.
       </p>
     </div>
 
