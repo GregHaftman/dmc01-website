@@ -273,6 +273,129 @@
     color: var(--white);
   }
 
+  /* ============================================================
+     MODULES — multi-select chips (toggle .module-chip-input). The
+     visible checkbox is hidden; selected state is driven by `:has`.
+     A hidden <input name="Modules"> aggregates the picked codes for
+     Webflow's form capture (see init() in the script below).
+     ============================================================ */
+  .modules-fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+  }
+  .modules-fieldset .form-label { margin-bottom: 4px; }
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .module-chip {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--neutral-secondary);
+    border: 1px solid var(--white-15);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: var(--white-72);
+    transition:
+      border-color 0.2s ease,
+      background 0.2s ease,
+      color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+  .module-chip:hover {
+    border-color: var(--white-30);
+    color: var(--white);
+  }
+  .module-chip-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .module-chip::before {
+    content: "";
+    width: 14px; height: 14px;
+    border: 1px solid var(--white-30);
+    border-radius: 3px;
+    flex-shrink: 0;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+  .module-chip:has(.module-chip-input:checked) {
+    border-color: var(--brand-blue);
+    background: var(--blue-faint);
+    color: var(--white);
+    box-shadow: 0 0 0 1px var(--brand-blue), 0 0 18px rgba(0, 71, 255, 0.18);
+  }
+  .module-chip:has(.module-chip-input:checked)::before {
+    background: var(--brand-blue);
+    border-color: var(--brand-blue);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='5 12 10 17 19 8'/%3E%3C/svg%3E");
+    background-size: 11px 11px;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .module-chip:focus-within {
+    border-color: var(--brand-blue);
+    box-shadow: 0 0 0 1px var(--brand-blue);
+  }
+  .module-chip-id {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--brand-blue);
+    font-variant-numeric: tabular-nums;
+  }
+  .module-chip-label {
+    font-size: var(--t-base-size);
+    font-weight: 500;
+  }
+
+  /* Honeypot — off-screen, accessible-name suppressed. Bots that
+     blindly fill every input get caught by Webflow's spam rules; you
+     can also filter on `bot-field` having any value in the
+     dashboard. */
+  .field-of-honor {
+    position: absolute;
+    left: -9999px;
+    width: 1px; height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* reCAPTCHA slot. Webflow injects the iframe inside `.g-recaptcha`
+     once you enable reCAPTCHA in Project Settings → Forms. Until
+     then, the empty pseudo-element acts as a placeholder so the
+     layout doesn't collapse in local preview. */
+  .form-captcha {
+    margin-top: 6px;
+  }
+  .form-captcha .g-recaptcha {
+    min-height: 78px;
+  }
+  .form-captcha .g-recaptcha:empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed var(--white-15);
+    border-radius: var(--radius-sm);
+    background: var(--neutral-secondary);
+    padding: 18px;
+  }
+  .form-captcha .g-recaptcha:empty::before {
+    content: "reCAPTCHA — auto-rendered by Webflow on the live site";
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--white-30);
+    text-align: center;
+  }
+
   /* Webflow's runtime toggles `.w-form-done` / `.w-form-fail` via
      inline `display`. Hide them by default; Webflow's JS flips
      `display: block` on success/fail. We use [hidden] only as a
@@ -440,9 +563,13 @@
   /* ============================================================
      RESPONSIVE
      ============================================================ */
+  @media (max-width: 960px) {
+    .modules-grid { grid-template-columns: repeat(2, 1fr); }
+  }
   @media (max-width: 720px) {
     .contact-section { padding: 48px 24px 64px; }
     .form-row { grid-template-columns: 1fr; }
+    .modules-grid { grid-template-columns: 1fr; }
     .form-footer { flex-direction: column; align-items: stretch; gap: 14px; }
     .form-submit { justify-content: center; }
     .form-success { padding: 40px 24px; }
@@ -459,7 +586,7 @@
     <header class="contact-header">
       <div class="eyebrow">Contact</div>
       <h2 class="section-title">Open a <em>brief.</em></h2>
-      <p class="section-lede">Tell me about the data product, the team, and what you're trying to unlock. I read everything that comes through and reply within one working day.</p>
+      <p class="section-lede">Tell me about your industry, the datasets, the team, and what you're trying to unlock. I read everything that comes through and reply within one working day.</p>
     </header>
 
     <!-- FORM
@@ -477,10 +604,30 @@
             method="post" action=""
             novalidate>
 
+        <!-- Honeypot — invisible to humans, irresistible to dumb bots.
+             Webflow's dashboard lets you filter out submissions where
+             `bot-field` is non-empty. -->
+        <div class="field-of-honor" aria-hidden="true">
+          <label>Don't fill this out:
+            <input type="text" name="bot-field" tabindex="-1" autocomplete="off"/>
+          </label>
+        </div>
+
         <div class="form-row">
           <label class="form-field">
-            <span class="form-label">Name</span>
-            <input type="text" name="Name" data-name="Name" required autocomplete="name" placeholder="Your full name"/>
+            <span class="form-label">First name</span>
+            <input type="text" name="First-Name" data-name="First Name" required autocomplete="given-name" placeholder="Greg"/>
+          </label>
+          <label class="form-field">
+            <span class="form-label">Last name</span>
+            <input type="text" name="Last-Name" data-name="Last Name" required autocomplete="family-name" placeholder="Haftman"/>
+          </label>
+        </div>
+
+        <div class="form-row">
+          <label class="form-field">
+            <span class="form-label">Role <span class="form-optional">optional</span></span>
+            <input type="text" name="Role" data-name="Role" autocomplete="organization-title" placeholder="Your title or hat"/>
           </label>
           <label class="form-field">
             <span class="form-label">Email</span>
@@ -488,31 +635,73 @@
           </label>
         </div>
 
-        <div class="form-row">
-          <label class="form-field">
-            <span class="form-label">Company <span class="form-optional">optional</span></span>
-            <input type="text" name="Company" data-name="Company" autocomplete="organization" placeholder="Where you work"/>
-          </label>
-          <label class="form-field">
-            <span class="form-label">Project context <span class="form-optional">optional</span></span>
-            <select name="Context" data-name="Context">
-              <option value="">Pick the closest fit…</option>
-              <option value="enterprise">Enterprise selling</option>
-              <option value="pipeline">Pipeline growth</option>
-              <option value="investor">Investor readiness</option>
-              <option value="launch">Data product launch &amp; land</option>
-              <option value="marketplace">Marketplace enablement</option>
-              <option value="delivery">Delivery modernisation</option>
-              <option value="other">Something else</option>
-            </select>
-          </label>
-        </div>
+        <!-- Modules — multi-select chips. The visible inputs have no
+             name; the aggregated, comma-joined list is written into
+             the hidden `Modules` field below by the script. -->
+        <fieldset class="form-field modules-fieldset">
+          <legend class="form-label">Modules of interest <span class="form-optional">multi-select</span></legend>
+          <div class="modules-grid" id="modulesGrid">
+            <label class="module-chip">
+              <input type="checkbox" class="module-chip-input" value="01 · Licensing"/>
+              <span class="module-chip-id">01</span>
+              <span class="module-chip-label">Licensing</span>
+            </label>
+            <label class="module-chip">
+              <input type="checkbox" class="module-chip-input" value="02 · Pricing"/>
+              <span class="module-chip-id">02</span>
+              <span class="module-chip-label">Pricing</span>
+            </label>
+            <label class="module-chip">
+              <input type="checkbox" class="module-chip-input" value="03 · Roadmap"/>
+              <span class="module-chip-id">03</span>
+              <span class="module-chip-label">Roadmap</span>
+            </label>
+            <label class="module-chip">
+              <input type="checkbox" class="module-chip-input" value="04 · Enablement"/>
+              <span class="module-chip-id">04</span>
+              <span class="module-chip-label">Enablement</span>
+            </label>
+            <label class="module-chip">
+              <input type="checkbox" class="module-chip-input" value="05 · Packaging"/>
+              <span class="module-chip-id">05</span>
+              <span class="module-chip-label">Packaging</span>
+            </label>
+            <label class="module-chip">
+              <input type="checkbox" class="module-chip-input" value="06 · Distribution"/>
+              <span class="module-chip-id">06</span>
+              <span class="module-chip-label">Distribution</span>
+            </label>
+          </div>
+          <input type="hidden" name="Modules" data-name="Modules" id="modulesValue"/>
+        </fieldset>
+
+        <!-- Project Context — aligned to the four solutions in
+             section 03 (sell, launch, deliver, scrutiny). -->
+        <label class="form-field">
+          <span class="form-label">Project context <span class="form-optional">optional</span></span>
+          <select name="Context" data-name="Context">
+            <option value="">Pick the closest fit…</option>
+            <option value="Sell better">Sell better</option>
+            <option value="Launch and land">Launch and land</option>
+            <option value="Deliver at the right level">Deliver at the right level</option>
+            <option value="Stand up to scrutiny">Stand up to scrutiny</option>
+            <option value="Something else">Something else</option>
+          </select>
+        </label>
 
         <label class="form-field">
           <span class="form-label">Brief description</span>
           <textarea name="Message" data-name="Message" required rows="6"
                     placeholder="A few lines on the data, the team, the timing, and what 'good' looks like — even rough, even early."></textarea>
         </label>
+
+        <!-- reCAPTCHA placeholder. When you enable reCAPTCHA in
+             Webflow Project Settings → Forms, Webflow's runtime auto-
+             injects google's api.js + sets the data-sitekey on this
+             div. Leave the empty `g-recaptcha` div in place. -->
+        <div class="form-captcha">
+          <div class="g-recaptcha" data-sitekey=""></div>
+        </div>
 
         <div class="form-footer">
           <p class="form-meta">Reply within <strong>1 working day</strong></p>
@@ -578,7 +767,22 @@
       return;
     }
 
-    /* (1) Validation feedback after first attempt. */
+    /* (1) Module chips → hidden Modules input.
+       The visible checkboxes have no `name`, so they don't submit on
+       their own. The aggregated, comma-joined value is what Webflow
+       captures under the `Modules` field. */
+    const grid = form.querySelector('#modulesGrid');
+    const modulesHidden = form.querySelector('#modulesValue');
+    if (grid && modulesHidden) {
+      grid.addEventListener('change', function(e) {
+        if (!e.target || !e.target.classList.contains('module-chip-input')) return;
+        const selected = Array.from(grid.querySelectorAll('.module-chip-input:checked'))
+          .map(i => i.value);
+        modulesHidden.value = selected.join(', ');
+      });
+    }
+
+    /* (2) Validation feedback after first attempt. */
     form.addEventListener('submit', function(e) {
       form.classList.add('has-attempted');
       if (!form.checkValidity()) {
@@ -587,7 +791,7 @@
         return;
       }
 
-      /* (2) Dev-mode fallback. If we're outside Webflow's runtime,
+      /* (3) Dev-mode fallback. If we're outside Webflow's runtime,
          simulate a success without actually sending anything. */
       if (!isWebflowRuntime()) {
         e.preventDefault();
