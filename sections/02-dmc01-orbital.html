@@ -176,16 +176,23 @@ body::before {
 }
 
 .section-title {
+  /* margin + text-align reset to neutralise Webflow's site-wide
+     heading defaults (which center H1/H2 and add 20px margins).
+     Without this the title visibly drifts right of the eyebrow when
+     the embed runs on a Webflow page. */
+  margin: 0;
+  text-align: left;
   font-size: var(--t-h1-size);
   font-weight: var(--w-h1);
   line-height: var(--lh-h1);
   letter-spacing: -0.02em;
-  max-width: 1100px;
 }
 
 .section-title em { font-style: normal; color: var(--brand-blue); }
 
 .section-lede {
+  margin: 0;
+  text-align: left;
   font-size: var(--t-lg-size);
   font-weight: var(--w-base);
   line-height: var(--lh-base);
