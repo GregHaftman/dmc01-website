@@ -18,24 +18,30 @@
      DMC01 · Intro hero — "Data Monetisation Concept"
 
      Atmosphere: a one-point perspective road read as a runway at
-     night. Vanishing point behind the title (~22% down from the
-     top). Two pencil-thin lane rails diverge from the VP outward
-     to the bottom corners; their actual polygon shapes are slim
-     (top 0.20 vbu, bottom 2.5 vbu), and a four-layer drop-shadow
-     stack on the SVG surrounds them with substantial fluorescent
-     bloom — bright hot core + tight halo + mid bloom + wide
-     ambient. The result reads as glowing runway lights against a
-     dark sky.
+     night. Vanishing point behind the DMC01 logo at the top centre.
+     Two pencil-thin lane rails diverge from the VP outward to the
+     bottom corners; their actual polygon shapes are slim (top
+     0.20 vbu, bottom 2.5 vbu), and a four-layer drop-shadow stack
+     on the SVG surrounds them with substantial fluorescent bloom.
 
-     Continuous and static. No flicker, no breathing, no animation.
-     The rails just glow steadily. Earlier iterations tried various
-     animated treatments (intermittent flares, fluorescent flicker,
-     space-time distortion); all read as too active. Plain
-     continuous bloom is the look the brief asked for.
+     The bloom breathes — animates over a 7s ease-in-out cycle
+     between a bright peak and a dim trough, so the rails grow
+     brighter and then fade back down continuously. Smoother and
+     slower than earlier flicker / flare experiments; reads as
+     fabric breathing rather than interference.
+
+     Section min-height is 100vh so the intro fills the viewport
+     completely on desktop — the next section (Product / orbital)
+     never peeks above the fold.
+
+     Content stack inside the rails (from top to bottom):
+       1. DMC01 sigil (logo)            — top centre, framed by VP
+       2. "Data Monetisation Concept"   — title
+       3. Sub-heading                   — compiling-strategy line
 
      A very faint brand-blue halo sits at the VP — just a hint of
      light at the horizon, not a backlight that competes with the
-     title.
+     logo or title.
      ============================================================ */
 
   :root {
@@ -138,11 +144,14 @@
            strip rather than straddling the rail
        Previously both were ~10vh and the title sat above the top
        rail entirely. */
-    padding: clamp(80px, 24vh, 240px) 32px clamp(48px, 6vh, 88px);
+    padding: clamp(80px, 18vh, 200px) 32px clamp(48px, 8vh, 120px);
     background: var(--neutral-primary);
     overflow: hidden;
     isolation: isolate;
-    min-height: 88vh;
+    /* 100vh so the intro fills the viewport completely on desktop —
+       the next section (Product / orbital) never peeks above the
+       fold. User has to scroll to reach it. */
+    min-height: 100vh;
     /* Flex column so .section-inner can flex:1 and distribute its
        children (title group at top, closing line at bottom) via
        justify-content: space-between. */
@@ -198,22 +207,53 @@
     width: 100%;
     height: 100%;
     display: block;
-    /* Runway-light bloom. Four stacked drop-shadows in increasing
-       blur radius simulate a real fluorescent tube: a hot bright
-       core, a tight halo, a mid-range bloom, and a wide ambient
-       glow that spills the brand colour into the surrounding dark.
-       Continuous and static — never flickers, never fades. The
-       rails themselves are pencil-thin (~0.2 vbu wide); all the
-       presence comes from this stacked bloom around them.
+    /* Runway-light bloom that breathes. Four stacked drop-shadows
+       (hot core → tight halo → mid bloom → wide ambient) animate
+       between a dim baseline and a bright peak over a 7s ease-in-out
+       cycle, so the rails grow brighter and then fade back down
+       continuously. Smoother and slower than the earlier "flicker"
+       experiments — reads as the fabric breathing, not as
+       interference.
 
-       Stacked drop-shadows are GPU-shader-heavy on large SVGs.
-       If perf becomes an issue on weaker devices, drop the widest
-       110px layer first. */
+       Stacked drop-shadows are GPU-shader-heavy on large SVGs;
+       if perf is an issue on weaker devices, drop the widest 95px
+       layer first. */
+    animation: railBreathe 7s ease-in-out infinite;
+    /* Initial state matches the bright peak so the first paint
+       shows the rails fully glowing, not mid-breath. */
     filter:
-      drop-shadow(0 0 4px   rgba(0, 71, 255, 1.0))
-      drop-shadow(0 0 14px  rgba(0, 71, 255, 0.85))
-      drop-shadow(0 0 36px  rgba(0, 71, 255, 0.55))
-      drop-shadow(0 0 80px  rgba(0, 71, 255, 0.30));
+      drop-shadow(0 0 5px   rgba(0, 71, 255, 1.0))
+      drop-shadow(0 0 16px  rgba(0, 71, 255, 0.90))
+      drop-shadow(0 0 42px  rgba(0, 71, 255, 0.65))
+      drop-shadow(0 0 95px  rgba(0, 71, 255, 0.40));
+  }
+
+  /* Bright (peak) ↔ dim (trough). Both keyframes carry the same
+     four drop-shadow layers, so the browser interpolates each
+     layer's blur radius and alpha smoothly across the cycle.
+     0%/100% = peak (bright), 50% = trough (dim) — symmetric, so
+     the glow rises and fades evenly. */
+  @keyframes railBreathe {
+    0%, 100% {
+      filter:
+        drop-shadow(0 0 5px   rgba(0, 71, 255, 1.0))
+        drop-shadow(0 0 16px  rgba(0, 71, 255, 0.90))
+        drop-shadow(0 0 42px  rgba(0, 71, 255, 0.65))
+        drop-shadow(0 0 95px  rgba(0, 71, 255, 0.40));
+    }
+    50% {
+      filter:
+        drop-shadow(0 0 3px   rgba(0, 71, 255, 0.55))
+        drop-shadow(0 0 10px  rgba(0, 71, 255, 0.45))
+        drop-shadow(0 0 26px  rgba(0, 71, 255, 0.28))
+        drop-shadow(0 0 60px  rgba(0, 71, 255, 0.16));
+    }
+  }
+
+  /* Honour reduced-motion preference — pin the rails at the bright
+     peak. */
+  @media (prefers-reduced-motion: reduce) {
+    .neon-svg { animation: none; }
   }
 
   /* All gradient stops share the brand colour; opacity varies per stop. */
@@ -281,21 +321,17 @@
      reflective bookend now sits at the foot of the social-proof
      block, after the testimonial marquee.) */
 
-  /* ----- LOGO MARK (bottom-right corner) -----
-     Static signature mark hugging the bottom-right corner of the
-     section. Decorative — sits outside .section-inner so it doesn't
-     shift the centred content above. Hidden on narrow viewports
-     (already-tight composition). */
+  /* ----- LOGO MARK (top-centre, in the content stack) -----
+     Sits as the FIRST element of .intro-main, above the title and
+     description. Centred horizontally between the two perspective
+     rails (which converge at the VP just behind it). Decorative
+     signature; size scales with viewport. */
   .intro-mark {
-    position: absolute;
-    bottom: clamp(6px, 1.2vw, 16px);
-    right: clamp(6px, 1.2vw, 16px);
-    width: clamp(64px, 8vw, 104px);
+    width: clamp(96px, 12vw, 160px);
     aspect-ratio: 1;
-    z-index: 3;
+    flex-shrink: 0;
     pointer-events: none;
-    opacity: 0.78;
-    filter: drop-shadow(0 0 14px rgba(0, 71, 255, 0.35));
+    filter: drop-shadow(0 0 18px rgba(0, 71, 255, 0.45));
   }
   .intro-mark svg { width: 100%; height: 100%; display: block; }
   .intro-mark .mark-stroke {
@@ -314,10 +350,11 @@
      RESPONSIVE
      ============================================================ */
   @media (max-width: 720px) {
-    .intro-section { padding: 56px 20px; min-height: 80vh; }
-    .intro-main { gap: 18px; }
-    /* Hide the corner mark on narrow viewports — already-tight composition. */
-    .intro-mark { display: none; }
+    .intro-section { padding: 56px 20px; min-height: 95vh; }
+    .intro-main { gap: 24px; }
+    /* Logo stays visible on mobile (it's now the first content element),
+       but smaller. */
+    .intro-mark { width: 80px; }
   }
 </style>
 </head>
@@ -380,15 +417,24 @@
 
   <div class="section-inner">
 
-    <!-- Title + description grouped in .intro-main so they form a
-         single block at the top of the section. The closing line
-         is a separate child of .section-inner and is pushed to the
-         bottom by the parent's justify-content: space-between. -->
+    <!-- Logo + title + description grouped in .intro-main so they
+         form a single centred stack. The logo is the first element,
+         sitting at the top centre between the rails (with the VP
+         right behind it). Title and description follow underneath
+         in order. -->
     <div class="intro-main">
+      <!-- Signature mark — now top-centre, inside the content stack. -->
+      <div class="intro-mark" aria-hidden="true">
+        <svg viewBox="0 0 595.28 595.28" xmlns="http://www.w3.org/2000/svg">
+          <polyline class="mark-stroke"
+                    points="297.17 265.57 417.4 148.9 177.87 148.9 297.19 479.32 297.17 265.57 177.87 148.9"/>
+        </svg>
+      </div>
+
       <h1 class="intro-title">Data Monetisation Concept</h1>
 
       <p class="intro-description">
-        DMC01 is the <em>orchestration layer</em> for monetising data assets — and charting the optimum route to market.
+        DMC01 <em>compiles strategy</em> the way you compile code — turning data assets into a clear route to market.
       </p>
     </div>
 
@@ -396,15 +442,6 @@
          at the very end of the social-proof block as the final
          reflective beat before the contact form.) -->
 
-  </div>
-
-  <!-- Signature mark, bottom-right. Decorative; positioned outside
-       the .section-inner stack so it doesn't shift the centred content. -->
-  <div class="intro-mark" aria-hidden="true">
-    <svg viewBox="0 0 595.28 595.28" xmlns="http://www.w3.org/2000/svg">
-      <polyline class="mark-stroke"
-                points="297.17 265.57 417.4 148.9 177.87 148.9 297.19 479.32 297.17 265.57 177.87 148.9"/>
-    </svg>
   </div>
 
 </section>
