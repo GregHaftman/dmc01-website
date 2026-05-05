@@ -503,15 +503,33 @@
 (function() {
   'use strict';
 
-  function init() {
-    const nav = document.querySelector('.dmc01-nav');
-    if (!nav) {
-      console.error('[DMC01-nav] Could not find .dmc01-nav.');
-      return;
-    }
+  /* Defensive against duplicates: if the nav embed is rendered more
+     than once on a page (e.g. a Webflow Component placed alongside a
+     direct embed), each .dmc01-nav scopes its own bindings via
+     initOne(nav). A flag on the element prevents double-binding when
+     the script itself is loaded twice. setTheme is module-level so
+     theme toggles in any nav copy stay in sync. */
+
+  function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.querySelectorAll('.nav-theme-option').forEach(function(b) {
+      const active = b.dataset.theme === theme;
+      b.classList.toggle('is-active', active);
+      b.setAttribute('aria-checked', active ? 'true' : 'false');
+    });
+    try { localStorage.setItem('dmc01-theme', theme); } catch (e) {}
+  }
+
+  function initOne(nav) {
+    if (nav._dmc01Init) return;
+    nav._dmc01Init = true;
 
     const menuBtn   = nav.querySelector('.nav-menu-btn');
     const menuPanel = nav.querySelector('.nav-panel');
+    if (!menuBtn || !menuPanel) {
+      console.error('[DMC01-nav] menu button or panel missing.');
+      return;
+    }
 
     /* ---------- VISIBILITY ----------
        The nav appears once the intro section has been mostly scrolled
@@ -559,28 +577,24 @@
       a.addEventListener('click', function() { setOpen(false); });
     });
 
-    /* ---------- THEME TOGGLE ----------
-       The FOUC script in <head> already set the initial theme on
-       <html data-theme="…">. Here we sync the segmented control to
-       it, and wire clicks. localStorage persists the choice across
-       sessions; system preference seeds the first visit. */
-    const themeButtons = nav.querySelectorAll('.nav-theme-option');
-    function applyTheme(theme) {
-      document.documentElement.setAttribute('data-theme', theme);
-      themeButtons.forEach(function(b) {
-        const active = b.dataset.theme === theme;
-        b.classList.toggle('is-active', active);
-        b.setAttribute('aria-checked', active ? 'true' : 'false');
-      });
-      try { localStorage.setItem('dmc01-theme', theme); } catch (e) {}
-    }
-    /* Sync to whatever the FOUC script picked. */
-    applyTheme(document.documentElement.getAttribute('data-theme') || 'dark');
-    themeButtons.forEach(function(b) {
-      b.addEventListener('click', function() { applyTheme(b.dataset.theme); });
+    /* ---------- THEME TOGGLE ---------- */
+    nav.querySelectorAll('.nav-theme-option').forEach(function(b) {
+      b.addEventListener('click', function() { setTheme(b.dataset.theme); });
     });
 
     console.log('[DMC01-nav] Initialised.');
+  }
+
+  function init() {
+    /* Sync the theme buttons in any nav copy to whatever the FOUC
+       script picked on <html data-theme="…">. */
+    setTheme(document.documentElement.getAttribute('data-theme') || 'dark');
+    const navs = document.querySelectorAll('.dmc01-nav');
+    if (!navs.length) {
+      console.error('[DMC01-nav] Could not find .dmc01-nav.');
+      return;
+    }
+    navs.forEach(initOne);
   }
 
   if (document.readyState === 'loading') {
