@@ -349,12 +349,14 @@
   }
   .nav-theme-option {
     flex: 1;
-    background: transparent;
+    /* Subtle inactive pill background — themed so the button shape
+       is visible against the panel even before reading the text.
+       Colors are hard-coded (not via `var(--white-72)`) because
+       Webflow's site CSS was overriding our --white-72 value, which
+       made the inactive "Light" text render too dim in dark mode. */
+    background: rgba(255, 255, 255, 0.06);
     border: 0;
-    /* Bumped from --white-50 → --white-72 so the inactive option
-       (e.g. "Light" when dark mode is active) stays clearly readable
-       in both themes. */
-    color: var(--white-72);
+    color: rgba(255, 255, 255, 0.88);
     font-family: inherit;
     font-size: 0.82rem;
     letter-spacing: 0.18em;
@@ -369,8 +371,20 @@
     gap: 8px;
     transition: background 0.2s ease, color 0.2s ease;
   }
-  .nav-theme-option:hover { color: var(--white); }
-  .nav-theme-option.is-active {
+  [data-theme="light"] .nav-theme-option {
+    background: rgba(7, 7, 8, 0.05);
+    color: rgba(7, 7, 8, 0.85);
+  }
+  .nav-theme-option:hover {
+    background: rgba(255, 255, 255, 0.10);
+    color: #ffffff;
+  }
+  [data-theme="light"] .nav-theme-option:hover {
+    background: rgba(7, 7, 8, 0.08);
+    color: #070708;
+  }
+  .nav-theme-option.is-active,
+  [data-theme="light"] .nav-theme-option.is-active {
     background: var(--brand-blue);
     color: #ffffff; /* always white on blue, both themes */
   }
@@ -576,10 +590,17 @@
       setOpen(!isOpen);
     });
 
-    /* Click outside → close. */
-    document.addEventListener('click', function(e) {
+    /* Click / tap outside → close. We bind both `mousedown` (fires
+       earlier in the event cycle, harder for other handlers to
+       intercept) and `click` (covers keyboard-driven activation), so
+       this stays reliable even when other libraries on the Webflow
+       page swallow click events. */
+    function closeOnOutside(e) {
       if (!nav.contains(e.target)) setOpen(false);
-    });
+    }
+    document.addEventListener('mousedown', closeOnOutside);
+    document.addEventListener('click', closeOnOutside);
+    document.addEventListener('touchstart', closeOnOutside, { passive: true });
     /* Esc → close. */
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') setOpen(false);
