@@ -179,9 +179,12 @@ body::before {
   /* margin + text-align reset to neutralise Webflow's site-wide
      heading defaults (which center H1/H2 and add 20px margins).
      Without this the title visibly drifts right of the eyebrow when
-     the embed runs on a Webflow page. */
+     the embed runs on a Webflow page.
+     Explicit color: var(--white) is themed (white on dark, near-black
+     on light) and overrides Webflow's body color. */
   margin: 0;
   text-align: left;
+  color: var(--white);
   font-size: var(--t-h1-size);
   font-weight: var(--w-h1);
   line-height: var(--lh-h1);
@@ -529,6 +532,11 @@ body::before {
   white-space: nowrap;
   /* Faint dark glow behind the text for legibility against the storm */
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6), 0 0 12px rgba(7, 7, 8, 0.8);
+}
+/* Light mode — the dark glow becomes a heavy halo on a pale
+   background. Drop it to a subtle light-bleed instead. */
+[data-theme="light"] .node-title {
+  text-shadow: 0 1px 4px rgba(255, 255, 255, 0.85), 0 0 10px rgba(255, 255, 255, 0.6);
 }
 
 .node:hover .node-title { color: var(--brand-blue); }

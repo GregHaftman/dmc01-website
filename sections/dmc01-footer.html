@@ -118,6 +118,11 @@
   .footer-logo .mark-fill {
     fill: var(--white);
   }
+  /* Light mode — soften the blue halo since the logo turns
+     near-black against pale chrome. */
+  [data-theme="light"] .footer-logo {
+    filter: drop-shadow(0 0 3px rgba(0, 71, 255, 0.18));
+  }
 
   /* Legal links — small caps, middot dividers. */
   .footer-legal {

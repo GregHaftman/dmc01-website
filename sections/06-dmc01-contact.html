@@ -164,9 +164,12 @@
   .contact-section .section-title {
     /* margin + text-align reset to neutralise Webflow's site-wide
        heading defaults (which center H1/H2 and add 20px margins).
-       Margin-bottom kept intentionally for spacing before the lede. */
+       Margin-bottom kept intentionally for spacing before the lede.
+       Explicit color: var(--white) is themed and overrides Webflow's
+       body color leak. */
     margin: 0 0 20px;
     text-align: left;
+    color: var(--white);
     font-size: var(--t-h1-size);
     font-weight: var(--w-h1);
     line-height: var(--lh-h1);
@@ -720,12 +723,14 @@
                     placeholder="A few lines on the data, the team, the timing, and what 'good' looks like — even rough, even early."></textarea>
         </label>
 
-        <!-- reCAPTCHA placeholder. When you enable reCAPTCHA in
-             Webflow Project Settings → Forms, Webflow's runtime auto-
-             injects google's api.js + sets the data-sitekey on this
-             div. Leave the empty `g-recaptcha` div in place. -->
+        <!-- reCAPTCHA v2 — Webflow auto-injects api.js + the site key
+             only on native form elements. Since this form is a Code
+             Embed, we hard-code the public site key here and load
+             api.js ourselves below. The site key is safe to expose
+             (Google's docs explicitly mark it public); the secret
+             key stays in Webflow Project Settings → reCAPTCHA. -->
         <div class="form-captcha">
-          <div class="g-recaptcha" data-sitekey=""></div>
+          <div class="g-recaptcha" data-sitekey="6LfVKeorAAAAAEv5UcfWfaDD5fN2EeliatYntl0O"></div>
         </div>
 
         <div class="form-footer">
@@ -759,6 +764,20 @@
 
   </div>
 </section>
+
+<script>
+/* Load Google's reCAPTCHA api.js once. Idempotent — checks for an
+   existing script tag first so we don't double-load if Webflow has
+   already injected it for a native form on the same page. */
+(function(){
+  if (document.querySelector('script[src*="recaptcha/api.js"]')) return;
+  var s = document.createElement('script');
+  s.src = 'https://www.google.com/recaptcha/api.js';
+  s.async = true;
+  s.defer = true;
+  document.head.appendChild(s);
+})();
+</script>
 
 <script>
 (function() {

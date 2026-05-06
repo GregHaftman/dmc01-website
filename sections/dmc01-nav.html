@@ -144,6 +144,11 @@
   .nav-logo .mark-fill {
     fill: var(--white);
   }
+  /* Light mode — the logo turns near-black, and the original 8px
+     blue halo reads as a heavy bloom against pale chrome. Soften. */
+  [data-theme="light"] .nav-logo {
+    filter: drop-shadow(0 0 4px rgba(0, 71, 255, 0.20));
+  }
 
   /* ----- ACTIONS (CTA + Menu) ----- */
   .nav-actions {
@@ -158,7 +163,10 @@
     gap: 10px;
     padding: 10px 20px;
     background: var(--brand-blue);
-    color: var(--white);
+    /* Hard-coded #fff — the CTA sits on a brand-blue background in
+       both themes, so the text must always be white (var(--white)
+       would flip to near-black in light mode). */
+    color: #ffffff;
     font-family: inherit;
     font-size: var(--t-base-size);
     font-weight: 600;
@@ -171,6 +179,7 @@
   }
   .nav-cta:hover {
     background: var(--brand-blue-hover);
+    color: #ffffff;
     box-shadow: 0 0 28px rgba(0, 71, 255, 0.45);
     transform: translateY(-1px);
   }
@@ -342,7 +351,10 @@
     flex: 1;
     background: transparent;
     border: 0;
-    color: var(--white-50);
+    /* Bumped from --white-50 → --white-72 so the inactive option
+       (e.g. "Light" when dark mode is active) stays clearly readable
+       in both themes. */
+    color: var(--white-72);
     font-family: inherit;
     font-size: 0.82rem;
     letter-spacing: 0.18em;
@@ -357,7 +369,7 @@
     gap: 8px;
     transition: background 0.2s ease, color 0.2s ease;
   }
-  .nav-theme-option:hover { color: var(--white-72); }
+  .nav-theme-option:hover { color: var(--white); }
   .nav-theme-option.is-active {
     background: var(--brand-blue);
     color: #ffffff; /* always white on blue, both themes */
@@ -429,7 +441,7 @@
       <ul class="nav-panel-list">
         <li><a href="#dmc01-intro" role="menuitem">
           <span class="nav-panel-num">01</span>
-          <span>DMC01</span>
+          <span>Back to the Top</span>
           <svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg>
         </a></li>
         <li><a href="#dmc01-product" role="menuitem">

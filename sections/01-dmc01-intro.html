@@ -347,6 +347,87 @@
     stroke-linejoin: round;
     fill: none;
   }
+  /* Light mode — the mark turns near-black against a pale background,
+     so the heavy blue halo from drop-shadow becomes visually too loud.
+     Soften it. */
+  [data-theme="light"] .intro-mark {
+    filter: drop-shadow(0 0 8px rgba(0, 71, 255, 0.22));
+  }
+
+  /* Defensive: explicit themed color on the intro title so it doesn't
+     fall through to Webflow's body color (whose specificity beats our
+     embed's `body { color: ... }`). Same for lede + description. */
+  .intro-title { color: var(--white); }
+
+  /* ============================================================
+     EASTER EGG — 5 clicks on the .intro-mark logo opens a teaser
+     toast hinting at the Back-to-the-Future inspiration. The user
+     gets the confirmation when they reach the contact form and
+     spot the "Doc / Brown" placeholder names.
+     Position: fixed centre of viewport, z-index above nav (1000).
+     Auto-dismisses after 12s, click ×, click backdrop, or 5 more
+     logo clicks to retrigger.
+     ============================================================ */
+  .intro-easter-egg {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.94);
+    z-index: 1100;
+    width: min(calc(100vw - 32px), 480px);
+    padding: 28px 36px 24px;
+    background: var(--neutral-secondary);
+    border: 1px solid var(--brand-blue);
+    border-radius: 4px;
+    box-shadow:
+      0 0 60px rgba(0, 71, 255, 0.45),
+      0 14px 48px rgba(0, 0, 0, 0.55);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .intro-easter-egg.is-visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: auto;
+  }
+  .intro-easter-egg-eyebrow {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    margin-bottom: 10px;
+  }
+  .intro-easter-egg-title {
+    font-size: var(--t-xl-size, 1.5rem);
+    font-weight: var(--w-h1, 600);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--white);
+    margin: 0 0 14px;
+  }
+  .intro-easter-egg-body {
+    font-size: var(--t-base-size);
+    line-height: 1.55;
+    color: var(--white-72);
+    margin: 0;
+  }
+  .intro-easter-egg-body strong { color: var(--white); font-weight: 600; }
+  .intro-easter-egg-close {
+    position: absolute;
+    top: 8px; right: 10px;
+    width: 32px; height: 32px;
+    background: transparent;
+    border: 0;
+    color: var(--white-50);
+    cursor: pointer;
+    font: inherit;
+    font-size: 1.4rem;
+    line-height: 1;
+    padding: 0;
+    transition: color 0.2s ease;
+  }
+  .intro-easter-egg-close:hover { color: var(--white); }
 
   /* Reduced motion — SMIL animations on the road SVG are paused via
      JS in init(); nothing CSS-driven left to freeze here. */
@@ -447,6 +528,15 @@
          at the very end of the social-proof block as the final
          reflective beat before the contact form.) -->
 
+    <!-- Easter egg toast (hidden by default, revealed after 5 clicks
+         on the .intro-mark logo — see the script below). -->
+    <div class="intro-easter-egg" id="introEasterEgg" role="status" aria-live="polite" hidden>
+      <button type="button" class="intro-easter-egg-close" aria-label="Dismiss">&times;</button>
+      <div class="intro-easter-egg-eyebrow">Nicely spotted</div>
+      <h2 class="intro-easter-egg-title">You've found something.</h2>
+      <p class="intro-easter-egg-body">Curious where DMC01's logo, name, and that retreating road come from? Hold the thought — when you reach <strong>Open a brief</strong> below, the placeholder names will confirm exactly what you're suspecting.</p>
+    </div>
+
   </div>
 
 </section>
@@ -469,6 +559,41 @@
     if (prefersReduced) {
       const svg = root.querySelector('.neon-svg');
       if (svg && typeof svg.pauseAnimations === 'function') svg.pauseAnimations();
+    }
+
+    /* ---------- EASTER EGG ----------
+       5 quick clicks on the .intro-mark logo reveal a toast hinting
+       at the Back-to-the-Future inspiration. Counter resets after a
+       1.5s pause so accidental separated clicks don't trigger. The
+       toast auto-dismisses after 12s; user can also click × or the
+       toast's own backdrop area to close early. */
+    const mark = root.querySelector('.intro-mark');
+    const egg  = document.getElementById('introEasterEgg');
+    if (mark && egg) {
+      egg.removeAttribute('hidden');
+      const closeBtn = egg.querySelector('.intro-easter-egg-close');
+      let clicks = 0;
+      let resetTimer;
+      let dismissTimer;
+      function dismiss() {
+        egg.classList.remove('is-visible');
+        clearTimeout(dismissTimer);
+      }
+      mark.addEventListener('click', function() {
+        clicks++;
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(function() { clicks = 0; }, 1500);
+        if (clicks >= 5) {
+          clicks = 0;
+          egg.classList.add('is-visible');
+          clearTimeout(dismissTimer);
+          dismissTimer = setTimeout(dismiss, 12000);
+        }
+      });
+      if (closeBtn) closeBtn.addEventListener('click', dismiss);
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') dismiss();
+      });
     }
 
     console.log('[DMC01-intro] Initialised.');
