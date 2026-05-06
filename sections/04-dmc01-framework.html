@@ -160,9 +160,12 @@
   }
   .framework-section .section-title {
     /* margin + text-align reset to neutralise Webflow's site-wide
-       heading defaults (which center H1/H2 and add 20px margins). */
+       heading defaults (which center H1/H2 and add 20px margins).
+       Explicit color: var(--white) is themed and overrides Webflow's
+       body color leak. */
     margin: 0;
     text-align: left;
+    color: var(--white);
     font-size: var(--t-h1-size);
     font-weight: var(--w-h1);
     line-height: var(--lh-h1);
@@ -286,7 +289,9 @@
   }
   .step-row.is-visible .step-num {
     background: var(--brand-blue);
-    color: var(--white);
+    /* Hard-coded white instead of var(--white) — the number sits on
+       a brand-blue circle in both themes, so it must always be light. */
+    color: #ffffff;
     box-shadow: 0 0 28px var(--blue-glow);
     transform: scale(1.05);
   }

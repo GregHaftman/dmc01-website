@@ -106,17 +106,18 @@
   .nav-logo svg { width: 100%; height: 100%; display: block; }
   .nav-logo .mark-stroke { stroke: var(--white); stroke-width: 18; stroke-miterlimit: 10; stroke-linecap: round; stroke-linejoin: round; fill: none; }
   .nav-logo .mark-fill { fill: var(--white); }
+  [data-theme="light"] .nav-logo { filter: drop-shadow(0 0 4px rgba(0, 71, 255, 0.20)); }
   .nav-actions { display: flex; align-items: center; gap: 10px; }
   .nav-cta {
     display: inline-flex; align-items: center; gap: 10px;
     padding: 10px 20px;
-    background: var(--brand-blue); color: var(--white);
+    background: var(--brand-blue); color: #ffffff;
     font-family: inherit; font-size: var(--t-base-size); font-weight: 600;
     letter-spacing: 0.08em; text-transform: uppercase;
     text-decoration: none; border: 1px solid var(--brand-blue); border-radius: var(--radius-sm);
     transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
   }
-  .nav-cta:hover { background: var(--brand-blue-hover); box-shadow: 0 0 28px rgba(0,71,255,0.45); transform: translateY(-1px); }
+  .nav-cta:hover { background: var(--brand-blue-hover); color: #ffffff; box-shadow: 0 0 28px rgba(0,71,255,0.45); transform: translateY(-1px); }
   .nav-cta-arrow { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.25s ease; }
   .nav-cta:hover .nav-cta-arrow { transform: translateX(3px); }
   .nav-menu-btn {
@@ -184,14 +185,14 @@
 
   .nav-theme-toggle { display: flex; margin-top: 8px; border: 1px solid var(--white-15); border-radius: var(--radius-sm); padding: 2px; gap: 0; }
   .nav-theme-option {
-    flex: 1; background: transparent; border: 0; color: var(--white-50);
+    flex: 1; background: transparent; border: 0; color: var(--white-72);
     font-family: inherit; font-size: 0.82rem; letter-spacing: 0.18em;
     text-transform: uppercase; font-weight: 600; padding: 8px 10px;
     cursor: pointer; border-radius: var(--radius-sm);
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
     transition: background 0.2s ease, color 0.2s ease;
   }
-  .nav-theme-option:hover { color: var(--white-72); }
+  .nav-theme-option:hover { color: var(--white); }
   .nav-theme-option.is-active { background: var(--brand-blue); color: #ffffff; }
   .nav-theme-icon { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 
@@ -243,7 +244,7 @@
     <div class="nav-panel-section">
       <div class="nav-panel-eyebrow">On this page</div>
       <ul class="nav-panel-list">
-        <li><a href="#dmc01-intro" data-target="intro" role="menuitem"><span class="nav-panel-num">01</span><span>DMC01</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
+        <li><a href="#dmc01-intro" data-target="intro" role="menuitem"><span class="nav-panel-num">01</span><span>Back to the Top</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
         <li><a href="#dmc01-product"   data-target="product"   role="menuitem"><span class="nav-panel-num">02</span><span>Product</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
         <li><a href="#dmc01-solutions" data-target="solutions" role="menuitem"><span class="nav-panel-num">03</span><span>Solutions</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>
         <li><a href="#dmc01-framework" data-target="framework" role="menuitem"><span class="nav-panel-num">04</span><span>Framework</span><svg class="nav-panel-arrow" viewBox="0 0 14 10"><path d="M1 5h12m0 0L9 1m4 4L9 9"/></svg></a></li>

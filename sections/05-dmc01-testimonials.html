@@ -120,9 +120,12 @@
   }
   .testimonials-section .section-title {
     /* margin + text-align reset to neutralise Webflow's site-wide
-       heading defaults (which center H1/H2 and add 20px margins). */
+       heading defaults (which center H1/H2 and add 20px margins).
+       Explicit color: var(--white) is themed and overrides Webflow's
+       body color leak. */
     margin: 0;
     text-align: left;
+    color: var(--white);
     font-size: var(--t-h1-size);
     font-weight: var(--w-h1);
     line-height: var(--lh-h1);
