@@ -335,8 +335,25 @@
     width: clamp(96px, 12vw, 160px);
     aspect-ratio: 1;
     flex-shrink: 0;
-    pointer-events: none;
+    /* `pointer-events: auto` + `cursor: pointer` make the mark click-
+       receptive for the 5-click easter egg below. The pointer cursor
+       hints at hidden interactivity without spoiling what triggers. */
+    pointer-events: auto;
+    cursor: pointer;
     filter: drop-shadow(0 0 18px rgba(0, 71, 255, 0.45));
+    transition: transform 0.2s ease;
+  }
+  /* Click feedback — quick squeeze-and-release so each of the 5
+     clicks gives clear acknowledgement that something is happening.
+     The .is-pulsing class is added by the JS click handler and
+     removed on animationend, allowing rapid retriggering. */
+  @keyframes intro-mark-pulse {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(0.88); }
+    100% { transform: scale(1); }
+  }
+  .intro-mark.is-pulsing {
+    animation: intro-mark-pulse 0.32s ease;
   }
   .intro-mark svg { width: 100%; height: 100%; display: block; }
   .intro-mark .mark-stroke {
@@ -580,6 +597,13 @@
         clearTimeout(dismissTimer);
       }
       mark.addEventListener('click', function() {
+        /* Restart the pulse animation on every click. Removing the
+           class + forcing reflow + re-adding makes the animation
+           re-trigger even on rapid successive clicks. */
+        mark.classList.remove('is-pulsing');
+        void mark.offsetWidth;
+        mark.classList.add('is-pulsing');
+
         clicks++;
         clearTimeout(resetTimer);
         resetTimer = setTimeout(function() { clicks = 0; }, 1500);
@@ -589,6 +613,9 @@
           clearTimeout(dismissTimer);
           dismissTimer = setTimeout(dismiss, 12000);
         }
+      });
+      mark.addEventListener('animationend', function() {
+        mark.classList.remove('is-pulsing');
       });
       if (closeBtn) closeBtn.addEventListener('click', dismiss);
       document.addEventListener('keydown', function(e) {

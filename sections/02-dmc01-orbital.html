@@ -501,6 +501,12 @@ body::before {
   transform: scale(1.1);
   box-shadow: 0 0 40px rgba(0, 71, 255, 0.6);
 }
+/* Light mode — the dark navy origin (#1a1f3a) reads as an ugly
+   grey-black blob on a pale background. Replace with a soft
+   brand-blue tint so the hover halo stays in the brand family. */
+[data-theme="light"] .node:hover .node-circle {
+  background: radial-gradient(circle at 30% 30%, rgba(0, 71, 255, 0.10) 0%, var(--neutral-secondary) 100%);
+}
 
 .node-icon {
   width: 34px;
@@ -604,6 +610,17 @@ body::before {
 .preview-label { font-size: var(--t-eyebrow-size); letter-spacing: 0.25em; text-transform: uppercase; color: var(--white-50); font-weight: 600; }
 .preview-content { flex: 1; display: flex; align-items: center; justify-content: center; }
 .preview-content svg { width: 100%; height: auto; max-height: 280px; }
+/* Light mode — the deliverable SVGs use hard-coded fill="#FFFFFF"
+   for text/shapes (designed for dark mode). Without a dark backdrop
+   underneath them, those white elements bleed into the white
+   preview-block in light mode and become invisible. We give the
+   SVG holder its own dark "screen" surface in light mode only — the
+   surrounding chrome (eyebrow + label) stays themed and readable. */
+[data-theme="light"] .preview-content {
+  background: #0a0a0c;
+  border-radius: 4px;
+  padding: 12px;
+}
 
 .deliverables-list-wrap { display: flex; flex-direction: column; }
 .deliverables-list-wrap .preview-label {
@@ -785,6 +802,11 @@ body::before {
   .stage.unfolded .unfolded-view { grid-template-columns: 1fr; }
   .hero-panel { padding: 24px; min-height: auto; }
   .deliverables-block { grid-template-columns: 1fr; }
+}
+/* Phones — 2 columns (above) is too tight; the right column gets
+   clipped and induces a horizontal scroll. Single column below 700px. */
+@media (max-width: 700px) {
+  .orbital { grid-template-columns: 1fr; }
 }
 </style>
 </head>

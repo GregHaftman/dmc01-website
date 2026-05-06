@@ -185,15 +185,18 @@
 
   .nav-theme-toggle { display: flex; margin-top: 8px; border: 1px solid var(--white-15); border-radius: var(--radius-sm); padding: 2px; gap: 0; }
   .nav-theme-option {
-    flex: 1; background: transparent; border: 0; color: var(--white-72);
+    flex: 1; background: rgba(255, 255, 255, 0.06); border: 0; color: rgba(255, 255, 255, 0.88);
     font-family: inherit; font-size: 0.82rem; letter-spacing: 0.18em;
     text-transform: uppercase; font-weight: 600; padding: 8px 10px;
     cursor: pointer; border-radius: var(--radius-sm);
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
     transition: background 0.2s ease, color 0.2s ease;
   }
-  .nav-theme-option:hover { color: var(--white); }
-  .nav-theme-option.is-active { background: var(--brand-blue); color: #ffffff; }
+  [data-theme="light"] .nav-theme-option { background: rgba(7, 7, 8, 0.05); color: rgba(7, 7, 8, 0.85); }
+  .nav-theme-option:hover { background: rgba(255, 255, 255, 0.10); color: #ffffff; }
+  [data-theme="light"] .nav-theme-option:hover { background: rgba(7, 7, 8, 0.08); color: #070708; }
+  .nav-theme-option.is-active,
+  [data-theme="light"] .nav-theme-option.is-active { background: var(--brand-blue); color: #ffffff; }
   .nav-theme-icon { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 
   @media (max-width: 720px) {
@@ -386,6 +389,25 @@
   });
   document.addEventListener('click', function(e) {
     if (!nav.contains(e.target)) setOpen(false);
+  });
+  /* Iframe click bridge — clicks inside an iframe don't bubble to
+     the parent document, so the parent's "click outside" listener
+     above never sees them. We attach a click listener inside each
+     iframe's contentDocument that closes the menu directly. Without
+     this, in the Live Server preview the menu stays open whenever
+     you click on any section (since every section lives in an
+     iframe). */
+  frames.forEach(function(iframe) {
+    function bindCloseInside() {
+      try {
+        const idoc = iframe.contentDocument;
+        if (!idoc || idoc._dmc01MenuBridge) return;
+        idoc._dmc01MenuBridge = true;
+        idoc.addEventListener('click', function() { setOpen(false); });
+      } catch (e) { /* cross-origin or not yet ready */ }
+    }
+    iframe.addEventListener('load', bindCloseInside);
+    bindCloseInside(); /* in case the iframe is already loaded */
   });
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') setOpen(false);

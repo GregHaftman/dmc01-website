@@ -572,9 +572,22 @@
     .testimonial-card { flex-basis: 280px; height: 240px; padding: 20px 22px; }
     .testimonial-modal-card { padding: 32px 26px 28px; }
     .testimonial-modal-quote { font-size: 1rem; }
-    /* Stack KPI row vertically on narrow viewports — dividers off. */
-    .cred-row { flex-direction: column; align-items: flex-start; gap: 8px; }
-    .cred-row li { padding: 0; }
+    /* Stack KPI row vertically on narrow viewports — dividers off.
+       Each li becomes a full-width flex (block-level) with the icon
+       top-aligned to the first text line, so when long text wraps to
+       two lines (e.g. the "Customer Success / Pre-Sales / …" KPI)
+       the icon stays put at the left and the text starts at the same
+       X as the other KPIs above. Without `display: flex; width: 100%`
+       the LI shrink-wraps to its content and the wrapped text reads
+       as if it were centered. */
+    .cred-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .cred-row li {
+      padding: 0;
+      display: flex;
+      align-items: flex-start;
+      width: 100%;
+    }
+    .cred-row li .cred-icon { margin-top: 4px; }
     .cred-row li:not(:last-child)::after { display: none; }
     .closing-line-wrap { padding: 40px 20px 0; }
     .closing-line-text { font-size: var(--t-lg-size); }

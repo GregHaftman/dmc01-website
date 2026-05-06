@@ -190,7 +190,9 @@
   }
   .contact-section .section-lede-alt {
     margin-top: 10px;
-    font-size: var(--t-base-size);
+    /* Matches the main lede above (--t-lg-size) so the two paragraphs
+       read as a continuous beat rather than primary + footnote. */
+    font-size: var(--t-lg-size);
     font-weight: var(--w-base);
     line-height: var(--lh-base);
     color: var(--white-72);
@@ -464,7 +466,10 @@
     gap: 12px;
     padding: 14px 28px;
     background: var(--brand-blue);
-    color: var(--white);
+    /* Hard-coded white — the button sits on a brand-blue background
+       in both themes, so the text + arrow must always be light
+       (var(--white) would flip to near-black in light mode). */
+    color: #ffffff;
     font-family: inherit;
     font-size: var(--t-base-size);
     font-weight: 700;
@@ -481,6 +486,7 @@
   }
   .form-submit:hover {
     background: var(--brand-blue-hover);
+    color: #ffffff;
     box-shadow: 0 0 28px rgba(0, 71, 255, 0.45);
     transform: translateY(-1px);
   }
