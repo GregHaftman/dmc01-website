@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DMC01 — FAQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script>(function(){try{var t=localStorage.getItem('dmc01-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+
+<style>
+  /* ============================================================
+     DMC01 · FAQ — code embed, light + dark themed.
+
+     17 questions across 4 thematic groups (What & who / Working
+     with me / Pricing & terms / Getting started). Each question
+     is a native <details>/<summary> disclosure — no JS, fully
+     keyboard-accessible. Visual conventions match contact /
+     solutions / framework / pricing.
+
+     All anchors point to `/#dmc01-contact`, `/#dmc01-product`,
+     or `/pricing` so they work whether the page is hit standalone
+     (/faq) or scrolled to from elsewhere.
+     ============================================================ */
+
+  :root {
+    --brand-blue:        var(--accent-primary, #0047FF);
+    --brand-blue-hover:  var(--accent-primary-hover, #3c6ce7);
+    --neutral-primary:   var(--bg-primary, #070708);
+    --neutral-secondary: var(--bg-secondary, #161617);
+    --surface-3:         #1d1e22;
+    --font:              var(--font-body, "Rajdhani", system-ui, sans-serif);
+    --t-h1-size:    var(--h1-size, 4.65rem);
+    --t-h2-size:    var(--h2-size, 2.83rem);
+    --t-base-size:  var(--base-font-size, 1.1rem);
+    --t-lg-size:    var(--text-lg-size, 1.4rem);
+    --t-xl-size:    var(--text-xl-size, 1.5rem);
+    --t-eyebrow-size: var(--eyebrow-size, 1.1rem);
+    --w-h1:    var(--h1-weight, 600);
+    --w-base:  var(--base-font-weight, 400);
+    --w-bold:  var(--base-font-weight-bold, 600);
+    --lh-h1:   var(--h1-line-height, 1.04em);
+    --lh-base: var(--base-line-height, 1.6em);
+    --white:    var(--text-primary, #FFFFFF);
+    --white-72: rgba(255, 255, 255, 0.88);
+    --white-50: rgba(255, 255, 255, 0.62);
+    --white-30: rgba(255, 255, 255, 0.30);
+    --white-15: var(--border-secondary, rgba(255, 255, 255, 0.15));
+    --blue-faint: var(--accent-primary-faint, rgba(0, 71, 255, 0.10));
+    --blue-grid:  var(--brand-grid, rgba(73, 72, 192, 0.04));
+
+    --radius-sm: var(--radius-base, 2px);
+    --radius-md: calc(var(--radius-sm) * 2);
+  }
+
+  [data-theme="light"] {
+    --neutral-primary:   #f5f5f7;
+    --neutral-secondary: #ffffff;
+    --surface-3:         #ebebee;
+    --white:    #070708;
+    --white-72: rgba(7, 7, 8, 0.85);
+    --white-50: rgba(7, 7, 8, 0.62);
+    --white-30: rgba(7, 7, 8, 0.42);
+    --white-15: rgba(7, 7, 8, 0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--neutral-primary);
+    color: var(--white);
+    font-family: var(--font);
+    font-weight: var(--w-base);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ============================================================
+     SECTION FRAME
+     ============================================================ */
+  .faq-section {
+    position: relative;
+    z-index: 1;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    /* Top padding clears the fixed nav (~78px) and gives the
+       eyebrow some visual breathing room before the title. */
+    padding: clamp(112px, 12vh, 160px) clamp(24px, 4vw, 64px) 88px;
+    background: var(--neutral-primary);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .faq-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      linear-gradient(var(--blue-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--blue-grid) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black 40%, transparent 100%);
+  }
+  .faq-section .section-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 920px;
+    margin: 0 auto;
+  }
+
+  /* ============================================================
+     HEADER — eyebrow + title + lede stacked, no header-grid
+     because this page is content-led and reads as a column.
+     ============================================================ */
+  .faq-header {
+    margin-bottom: 64px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--white-15);
+  }
+  .faq-section .eyebrow {
+    font-size: var(--t-eyebrow-size);
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .faq-section .eyebrow::before {
+    content: "";
+    width: 32px; height: 1px;
+    background: var(--brand-blue);
+  }
+  .faq-section .section-title {
+    margin: 0 0 20px;
+    text-align: left;
+    color: var(--white);
+    font-size: var(--t-h1-size);
+    font-weight: var(--w-h1);
+    line-height: var(--lh-h1);
+    letter-spacing: -0.02em;
+  }
+  .faq-section .section-title em {
+    font-style: normal;
+    color: var(--brand-blue);
+  }
+  .faq-section .section-lede {
+    margin: 0;
+    text-align: left;
+    font-size: var(--t-lg-size);
+    font-weight: var(--w-base);
+    line-height: var(--lh-base);
+    color: var(--white-72);
+    max-width: 640px;
+  }
+  .faq-section .section-lede a {
+    color: var(--brand-blue);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 71, 255, 0.4);
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .faq-section .section-lede a:hover {
+    color: var(--brand-blue-hover);
+    border-bottom-color: var(--brand-blue);
+  }
+
+  /* ============================================================
+     FAQ GROUPS — one per thematic bucket. Group eyebrow looks
+     like a small chapter marker; the questions stack below.
+     ============================================================ */
+  .faq-group {
+    margin-bottom: 48px;
+  }
+  .faq-group:last-of-type { margin-bottom: 56px; }
+
+  .faq-group-eyebrow {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    margin: 0 0 16px;
+    padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--white-15);
+  }
+  .faq-group-eyebrow::before {
+    content: "";
+    width: 22px; height: 1px;
+    background: var(--brand-blue);
+    flex-shrink: 0;
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* ============================================================
+     FAQ ITEM — native <details>. Closed: a slim row with the
+     question on the left and a chevron on the right. Open: the
+     answer reveals below a hairline divider, the chevron rotates.
+     ============================================================ */
+  .faq-item {
+    background: var(--neutral-secondary);
+    border: 1px solid var(--white-15);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: border-color 0.25s ease;
+  }
+  .faq-item:hover { border-color: var(--white-30); }
+  .faq-item[open] { border-color: rgba(0, 71, 255, 0.4); }
+
+  .faq-question {
+    list-style: none;
+    cursor: pointer;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    font-size: var(--t-base-size);
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--white);
+    user-select: none;
+  }
+  .faq-question::-webkit-details-marker { display: none; }
+  .faq-question::marker { display: none; }
+  .faq-question:focus-visible {
+    outline: 2px solid var(--brand-blue);
+    outline-offset: -2px;
+  }
+  .faq-question:hover { color: var(--brand-blue); }
+
+  .faq-toggle-icon {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    color: var(--brand-blue);
+    transition: transform 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .faq-toggle-icon svg {
+    width: 100%; height: 100%;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  .faq-item[open] .faq-toggle-icon { transform: rotate(180deg); }
+
+  .faq-answer {
+    padding: 18px 22px 22px;
+    border-top: 1px solid var(--white-15);
+    font-size: var(--t-base-size);
+    line-height: 1.6;
+    color: var(--white-72);
+  }
+  .faq-answer > p { margin: 0; }
+  .faq-answer > p + p { margin-top: 12px; }
+  .faq-answer strong { color: var(--white); font-weight: 600; }
+  .faq-answer em { font-style: normal; color: var(--brand-blue); font-weight: 600; }
+  .faq-answer a {
+    color: var(--brand-blue);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 71, 255, 0.4);
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .faq-answer a:hover {
+    color: var(--brand-blue-hover);
+    border-bottom-color: var(--brand-blue);
+  }
+
+  /* ============================================================
+     FOOTER CTA
+     ============================================================ */
+  .faq-cta {
+    text-align: center;
+    padding: 40px 24px 0;
+    border-top: 1px solid var(--white-15);
+    margin-top: 8px;
+  }
+  .faq-cta-eyebrow {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    margin-bottom: 14px;
+  }
+  .faq-cta-title {
+    font-size: var(--t-h2-size);
+    font-weight: var(--w-h1);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--white);
+    margin: 0 0 22px;
+  }
+  .faq-cta-title em { font-style: normal; color: var(--brand-blue); }
+  .faq-cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 32px;
+    background: var(--brand-blue);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: var(--t-base-size);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    border: 1px solid var(--brand-blue);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .faq-cta-button:hover {
+    background: var(--brand-blue-hover);
+    color: #ffffff;
+    box-shadow: 0 0 28px rgba(0, 71, 255, 0.45);
+    transform: translateY(-1px);
+  }
+  .faq-cta-arrow {
+    width: 16px; height: 16px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round;
+    transition: transform 0.25s ease;
+  }
+  .faq-cta-button:hover .faq-cta-arrow { transform: translateX(4px); }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 720px) {
+    .faq-section { padding: 48px 22px 64px; }
+    .faq-question { padding: 16px 18px; gap: 14px; }
+    .faq-answer { padding: 16px 18px 20px; }
+    .faq-cta-title { font-size: 1.8rem; }
+  }
+</style>
+</head>
+
+<body>
+
+<section class="faq-section" id="dmc01-faq" aria-label="Frequently asked questions">
+  <div class="section-inner">
+
+    <!-- HEADER -->
+    <header class="faq-header">
+      <div class="eyebrow">FAQ</div>
+      <h2 class="section-title">Questions, <em>answered.</em></h2>
+      <p class="section-lede">A short list of what people ask before opening a brief. If yours isn't here, <a href="/#dmc01-contact">send it through</a> and I'll add it.</p>
+    </header>
+
+    <!-- ============================================================
+         GROUP A — WHAT & WHO
+         ============================================================ -->
+    <section class="faq-group">
+      <h3 class="faq-group-eyebrow">What &amp; who</h3>
+      <div class="faq-list">
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>What does DMC01 actually do?</span>
+            <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </summary>
+          <div class="faq-answer">
+            <p>DMC01 helps data businesses turn proprietary datasets into a working revenue line — pricing the data, designing the offer, licensing it properly, and getting it in front of the right buyers. The output is an operating model your team runs with after the engagement, not a strategy deck on a shelf.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>What are "the six modules" you keep referring to?</span>
+            <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </summary>
+          <div class="faq-answer">
+            <p>Six layers any data business has to get right to scale: <strong>Licensing, Pricing, Roadmap, Enablement, Packaging, and Distribution</strong>. Some clients need work on one; others need all six in sequence. Every quote is built from this list — see them in detail <a href="/#dmc01-product">on the home page</a>.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>What's your background?</span>
+            <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </summary>
+          <div class="faq-answer">
+            <p>15+ years in financial data, scaling data businesses to <strong>$7M+ ARR</strong> — across both ends of the size spectrum: senior commercial roles inside an <strong>S&amp;P 500 financial-data company</strong>, and operating roles in <strong>smaller start-ups</strong> where the entire commercial layer was being built from scratch.</p>
+            <p>Selling to the world's largest buy-side and sell-side institutions, then doing the operating work behind the scenes — designing products, running pricing committees, rebuilding licensing frameworks. The six modules are what I learned from doing the work, on both sides of that scale.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>How is this different from a generalist consultancy?</span>
+            <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </summary>
+          <div class="faq-answer">
+            <p>Two things. <strong>First:</strong> sector-specific pattern matching from having done this exact work — not a generalist framework retrofitted to "data businesses". <strong>Second:</strong> it's me on the work every day of the engagement, not a delivery team with periodic partner check-ins. The senior input is the engagement, not a layer added on top.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>Who are typical clients?</span>
+            <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </summary>
+          <div class="faq-answer">
+            <p>Data vendors, fintechs, and institutions with proprietary datasets they want to commercialise — or fix where current ones are leaking value. Most are scaling, somewhere between £5M and £50M revenue, and have hit a layer (pricing, licensing, packaging) where the answer needs senior input the team doesn't have in-house.</p>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         GROUP B — WORKING WITH ME
+         ============================================================ -->
+    <section class="faq-group">
+      <h3 class="faq-group-eyebrow">Working with me</h3>
+      <div class="faq-list">
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>I'm not a financial-data company. Can DMC01 still help?</span>
+            <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </summary>
+          <div class="faq-answer">
+            <p>Yes — and increasingly so. My experience is on the downstream usage of data <em>by</em> financial professionals, but datasets themselves are largely agnostic. What finance consumes is rarely finance-exclusive: weather, transactions, satellite imagery, foot traffic, supply-chain telemetry, sentiment — these get used across twenty industries simultaneously.</p>
+            <p>With the rise of alternative data, the line between "finance data" and "everything else" has effectively dissolved. <strong>Everything is signal</strong>, and anyone with a proprietary dataset can monetise it. The six modules apply directly — open a brief and we'll figure out the shape on the first call.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>We have an internal team. Is it worth bringing you in?</span>
+            <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </summary>
+          <div class="faq-answer">
+            <p>I work alongside teams, not instead of them. The engagement adds senior-level pattern matching from 15+ years of doing this — rare to find in-house unless you've already built and scaled a data business yourself. If your team has all the answers and just needs more hands, I'm not the right fit.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>Are you working full-time on my project?</span>
+            <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </summary>
+          <div class="faq-answer">
+            <p>No. Engagements run as a <strong>weekly retainer</strong> — typically two days a week reserved for your project. The retainer is set up that way to maximise the meeting opportunities we have together — reviews, decisions, working sessions. The book of work itself — how those reserved days are spent — I size and direct based on what the project actually needs.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>How long does a typical engagement run?</span>
+            <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </summary>
+          <div class="faq-answer">
+            <p><strong>Focus</strong> (single module): 6–10 weeks. <strong>Build</strong> (multi-module, the most common shape): 3–5 months. <strong>Transform</strong> (full-stack programme): 6+ months. Hourly is for specific moments where a project would be overkill. Full breakdown on <a href="/pricing">Pricing</a>.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>Do you do hourly or advisory work?</span>
+            <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </summary>
+          <div class="faq-answer">
+            <p>Yes — <strong>£300/hour</strong>, 1-hour minimum, typically 4–10 hours total. Right when you need senior input fast and a project would be overkill: MSA redline, board prep, deal support, a pricing decision that needs a second opinion. Anything bigger and we'd shape a project.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>Can we extend or follow up after a project ends?</span>
+            <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </summary>
+          <div class="faq-answer">
+            <p>Often, yes. Many clients move from <strong>Focus → Build</strong>, or come back six months later for a follow-up workstream. Extensions roll on the same weekly retainer. Hourly is the cleanest way to keep me available afterwards without committing to another full project.</p>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         GROUP C — PRICING & TERMS
+         ============================================================ -->
+    <section class="faq-group">
+      <h3 class="faq-group-eyebrow">Pricing &amp; terms</h3>
+      <div class="faq-list">
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>How do you build a quote?</span>
+            <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </summary>
+          <div class="faq-answer">
+            <p>From three inputs: which <strong>modules</strong> need work, your <strong>maturity</strong> (where you're already strong), and the <strong>day count</strong> the work realistically needs. <a href="/pricing">Pricing</a> shows indicative ranges per tier; the actual figure lands in your inbox within two working days of opening a brief.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>How does invoicing work?</span>
+            <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </summary>
+          <div class="faq-answer">
+            <p>Multi-month engagements bill <strong>monthly, in equal installments, in arrears</strong>. No upfront lump sum. Focus projects (single-module) typically split <strong>50% on kick-off, 50% on delivery</strong>. Hourly is invoiced at month-end.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>Do you take equity, deferred payment, or revenue share?</span>
+            <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </summary>
+          <div class="faq-answer">
+            <p>All engagements start fee-based, billed monthly. <strong>Deferred payment</strong> and <strong>revenue share</strong> aren't part of the model.</p>
+            <p><strong>Equity</strong> is a different conversation: open to it, but never on day one. If during a project a much larger opportunity surfaces and I read it as genuinely strong, I'd rather extend on equity than on more cash. That comes from my own read on the upside as the work unfolds — not from a structure proposed up front.</p>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         GROUP D — GETTING STARTED
+         ============================================================ -->
+    <section class="faq-group">
+      <h3 class="faq-group-eyebrow">Getting started</h3>
+      <div class="faq-list">
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>How do I open a brief?</span>
+            <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </summary>
+          <div class="faq-answer">
+            <p>Through <a href="/#dmc01-contact">the form on the home page</a>. A few lines on your industry, the data, the team, and what you're trying to unlock. I read everything that comes through — no automation in between.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>How quickly do you respond?</span>
+            <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </summary>
+          <div class="faq-answer">
+            <p>Within one working day, often the same day. If you've sent a brief and not heard back in 48 hours, something's wrong — email <strong>hello@dmc01.com</strong> directly.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>What if I'm not sure what I need yet?</span>
+            <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+          </summary>
+          <div class="faq-answer">
+            <p>Open a brief anyway. Half the value of the first call is figuring out whether you need a 6-week Focus, a 4-month Build, or just two hours of advisory. If we agree the fit isn't right, I'll point you at someone who is.</p>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- FOOTER CTA -->
+    <div class="faq-cta">
+      <div class="faq-cta-eyebrow">Still curious?</div>
+      <h3 class="faq-cta-title">Tell me what's on your mind. <em>I'll reply.</em></h3>
+      <a class="faq-cta-button" href="/#dmc01-contact">
+        <span>Open a brief</span>
+        <svg class="faq-cta-arrow" viewBox="0 0 24 24" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+</body>
+</html>
