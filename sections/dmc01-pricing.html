@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DMC01 — Pricing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script>(function(){try{var t=localStorage.getItem('dmc01-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+
+<style>
+  /* ============================================================
+     DMC01 · Pricing page — code embed, light + dark themed.
+
+     "Built around the work, not the hour." — three project tiers
+     (Focus / Build / Transform), an hourly card for ad-hoc moments,
+     plus a "How it works" panel that pairs the quote-shape questions
+     with the invoicing terms.
+
+     Visual conventions match contact / solutions / framework — same
+     eyebrow + hairline pattern, same brand-blue accent strip on
+     cards, same panel corner brackets. Tier cards lead with a
+     line-icon + a strong price block to break up the verbal density.
+
+     All anchors point to `/#dmc01-contact` (root + section hash) so
+     they work whether the page is hit standalone (/pricing) or
+     scrolled to from the home page.
+     ============================================================ */
+
+  :root {
+    --brand-blue:        var(--accent-primary, #0047FF);
+    --brand-blue-hover:  var(--accent-primary-hover, #3c6ce7);
+    --neutral-primary:   var(--bg-primary, #070708);
+    --neutral-secondary: var(--bg-secondary, #161617);
+    --surface-3:         #1d1e22;
+    --font:              var(--font-body, "Rajdhani", system-ui, sans-serif);
+    --t-h1-size:    var(--h1-size, 4.65rem);
+    --t-h2-size:    var(--h2-size, 2.83rem);
+    --t-base-size:  var(--base-font-size, 1.1rem);
+    --t-lg-size:    var(--text-lg-size, 1.4rem);
+    --t-xl-size:    var(--text-xl-size, 1.5rem);
+    --t-eyebrow-size: var(--eyebrow-size, 1.1rem);
+    --w-h1:    var(--h1-weight, 600);
+    --w-base:  var(--base-font-weight, 400);
+    --w-bold:  var(--base-font-weight-bold, 600);
+    --lh-h1:   var(--h1-line-height, 1.04em);
+    --lh-base: var(--base-line-height, 1.6em);
+    --white:    var(--text-primary, #FFFFFF);
+    --white-72: rgba(255, 255, 255, 0.88);
+    --white-50: rgba(255, 255, 255, 0.62);
+    --white-30: rgba(255, 255, 255, 0.30);
+    --white-15: var(--border-secondary, rgba(255, 255, 255, 0.15));
+    --blue-glow:  var(--accent-primary-glow, rgba(0, 71, 255, 0.55));
+    --blue-faint: var(--accent-primary-faint, rgba(0, 71, 255, 0.10));
+    --blue-grid:  var(--brand-grid, rgba(73, 72, 192, 0.04));
+
+    --radius-sm: var(--radius-base, 2px);
+    --radius-md: calc(var(--radius-sm) * 2);
+  }
+
+  [data-theme="light"] {
+    --neutral-primary:   #f5f5f7;
+    --neutral-secondary: #ffffff;
+    --surface-3:         #ebebee;
+    --white:    #070708;
+    --white-72: rgba(7, 7, 8, 0.85);
+    --white-50: rgba(7, 7, 8, 0.62);
+    --white-30: rgba(7, 7, 8, 0.42);
+    --white-15: rgba(7, 7, 8, 0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--neutral-primary);
+    color: var(--white);
+    font-family: var(--font);
+    font-weight: var(--w-base);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ============================================================
+     SECTION FRAME
+     ============================================================ */
+  .pricing-section {
+    position: relative;
+    z-index: 1;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    padding: 56px clamp(24px, 4vw, 64px) 88px;
+    background: var(--neutral-primary);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .pricing-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      linear-gradient(var(--blue-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--blue-grid) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black 40%, transparent 100%);
+  }
+  .pricing-section .section-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* ============================================================
+     HEADER
+     ============================================================ */
+  .pricing-header {
+    margin-bottom: 64px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--white-15);
+  }
+  .pricing-section .eyebrow {
+    font-size: var(--t-eyebrow-size);
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .pricing-section .eyebrow::before {
+    content: "";
+    width: 32px; height: 1px;
+    background: var(--brand-blue);
+  }
+  .pricing-header .header-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: clamp(40px, 6vw, 96px);
+    align-items: start;
+  }
+  .pricing-section .section-title {
+    margin: 0;
+    text-align: left;
+    color: var(--white);
+    font-size: var(--t-h1-size);
+    font-weight: var(--w-h1);
+    line-height: var(--lh-h1);
+    letter-spacing: -0.02em;
+  }
+  .pricing-section .section-title em {
+    font-style: normal;
+    color: var(--brand-blue);
+  }
+  .pricing-section .section-lede {
+    margin: 0;
+    text-align: left;
+    font-size: var(--t-lg-size);
+    font-weight: var(--w-base);
+    line-height: var(--lh-base);
+    color: var(--white-72);
+    max-width: 520px;
+  }
+
+  /* ============================================================
+     TIER CARDS — three side-by-side. Lead with a brand-blue line
+     icon, then a clearly-anchored price block, then the descriptive
+     copy. Middle card is the featured shape (most common engagement).
+     ============================================================ */
+  .tiers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+  .tier-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 36px 30px 32px;
+    background: var(--neutral-secondary);
+    border: 1px solid var(--white-15);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  }
+  .tier-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--brand-blue);
+    opacity: 0.55;
+    transition: opacity 0.25s ease, height 0.25s ease;
+  }
+  .tier-card:hover {
+    border-color: var(--brand-blue);
+    box-shadow: 0 0 32px rgba(0, 71, 255, 0.18);
+    transform: translateY(-3px);
+  }
+  .tier-card:hover::before { opacity: 1; }
+  .tier-card.is-featured {
+    border-color: rgba(0, 71, 255, 0.55);
+    box-shadow: 0 0 36px rgba(0, 71, 255, 0.16);
+  }
+  .tier-card.is-featured::before { opacity: 1; height: 3px; }
+
+  .tier-featured-badge {
+    position: absolute;
+    top: 16px; right: 16px;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    padding: 4px 10px;
+    border: 1px solid var(--brand-blue);
+    background: var(--blue-faint);
+    border-radius: var(--radius-sm);
+  }
+
+  /* Top row of the card: icon disc on the left, ID + name stacked
+     to its right. The disc gives each tier a glanceable visual mark
+     before any text is read. */
+  .tier-top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .tier-icon {
+    width: 48px; height: 48px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--blue-faint);
+    border: 1px solid rgba(0, 71, 255, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brand-blue);
+  }
+  .tier-icon svg {
+    width: 22px; height: 22px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.6;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  .tier-heading { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  /* Headline of the card — "01 · Focus" sits at the top of the
+     hierarchy. The descriptive tagline below is the sub-text. */
+  .tier-id {
+    font-size: 1.65rem;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    color: var(--white);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+    margin: 0;
+  }
+  .tier-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--white-72);
+    margin: 0;
+  }
+
+  /* Price block — visually weighted; the price itself is the largest
+     unit on the whole card so the eye lands there first. Duration +
+     module count sit underneath as a single tight chip row. */
+  .tier-price-block {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 18px 0 20px;
+    border-top: 1px solid var(--white-15);
+    border-bottom: 1px solid var(--white-15);
+  }
+  .tier-price {
+    font-size: 2.4rem;
+    font-weight: var(--w-h1);
+    color: var(--white);
+    letter-spacing: -0.015em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.05;
+  }
+  .tier-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .tier-chip {
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--white-72);
+    padding: 4px 10px;
+    background: rgba(127, 127, 127, 0.08);
+    border: 1px solid var(--white-15);
+    border-radius: var(--radius-sm);
+  }
+  [data-theme="light"] .tier-chip { background: rgba(7, 7, 8, 0.04); }
+  .tier-disclaimer {
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    color: var(--white-50);
+    margin-top: 4px;
+    line-height: 1.45;
+  }
+
+  .tier-body {
+    font-size: var(--t-base-size);
+    line-height: 1.55;
+    color: var(--white-72);
+    margin: 0;
+  }
+  .tier-body strong { color: var(--white); font-weight: 600; }
+
+  .tier-fit {
+    font-size: 0.98rem;
+    line-height: 1.5;
+    color: var(--white-72);
+    font-style: italic;
+    padding: 12px 0 0 14px;
+    border-left: 2px solid var(--brand-blue);
+    border-top: 0;
+    margin: auto 0 0;
+  }
+  .tier-fit::before {
+    content: "Right for";
+    display: block;
+    font-size: 0.66rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--white-72);
+    font-style: normal;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  /* ============================================================
+     HOURLY CARD — slim, full-width.
+     ============================================================ */
+  .hourly-card {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: 24px;
+    align-items: center;
+    padding: 22px 28px;
+    background: var(--neutral-secondary);
+    border: 1px solid var(--white-15);
+    border-left: 3px solid var(--brand-blue);
+    border-radius: var(--radius-md);
+    margin-bottom: 64px;
+    transition: border-color 0.25s ease;
+  }
+  .hourly-card:hover { border-color: var(--brand-blue); }
+  .hourly-icon {
+    width: 40px; height: 40px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--blue-faint);
+    border: 1px solid rgba(0, 71, 255, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brand-blue);
+  }
+  .hourly-icon svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .hourly-headline { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .hourly-id {
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+  }
+  .hourly-price {
+    font-size: 1.65rem;
+    font-weight: var(--w-h1);
+    color: var(--white);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.05;
+    letter-spacing: -0.005em;
+  }
+  .hourly-body {
+    font-size: var(--t-base-size);
+    line-height: 1.55;
+    color: var(--white-72);
+    margin: 0;
+  }
+  .hourly-body strong { color: var(--white); font-weight: 600; }
+
+  /* ============================================================
+     HOW IT WORKS — single section, two visual rows:
+       (1) "How a quote is shaped" → 3-column mini-grid with icons,
+           each column carrying one of the three quote-shape inputs.
+       (2) "How invoicing works" → 2 chips with terms.
+     This replaces the two text-heavy stacked panels with a single
+     unified, scannable block.
+     ============================================================ */
+  /* Now a native <details> element. Padding is split between the
+     always-visible <summary> and the toggleable .howit-content
+     block, so the closed state is a low-key strip and the open
+     state expands to a full panel. Corner brackets removed in this
+     iteration so the disclosure reads as restrained vs. the tier
+     cards above. */
+  .howit-section {
+    position: relative;
+    padding: 0;
+    background: var(--neutral-secondary);
+    border: 1px solid var(--white-15);
+    border-radius: var(--radius-md);
+    margin-bottom: 64px;
+    overflow: hidden;
+    transition: border-color 0.25s ease;
+  }
+  .howit-section:hover { border-color: var(--white-30); }
+  .howit-section[open] { border-color: rgba(0, 71, 255, 0.4); }
+
+  .howit-summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 22px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    user-select: none;
+  }
+  .howit-summary::-webkit-details-marker { display: none; }
+  .howit-summary::marker { display: none; }
+  .howit-summary:focus-visible {
+    outline: 2px solid var(--brand-blue);
+    outline-offset: -2px;
+  }
+
+  .howit-toggle-icon {
+    width: 22px; height: 22px;
+    flex-shrink: 0;
+    color: var(--brand-blue);
+    transition: transform 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .howit-toggle-icon svg {
+    width: 100%; height: 100%;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+  .howit-section[open] .howit-toggle-icon { transform: rotate(180deg); }
+
+  .howit-content {
+    padding: 26px 32px 32px;
+    border-top: 1px solid var(--white-15);
+  }
+
+  .howit-eyebrow {
+    font-size: var(--t-eyebrow-size);
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .howit-eyebrow::before {
+    content: "";
+    width: 24px; height: 1px;
+    background: var(--brand-blue);
+    flex-shrink: 0;
+  }
+  /* Intro line under the eyebrow — names what the panel is about
+     ("the three pillars") so the reader has a frame before the cells. */
+  .howit-intro {
+    font-size: 1rem;
+    line-height: 1.55;
+    color: var(--white-72);
+    margin: 0 0 28px;
+    max-width: 600px;
+  }
+  /* Smaller eyebrow for the invoicing sub-section, sitting between
+     the cadence statement and the invoicing chips. */
+  .howit-sub-eyebrow {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    margin: 0 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .howit-sub-eyebrow::before {
+    content: "";
+    width: 18px; height: 1px;
+    background: var(--brand-blue);
+    flex-shrink: 0;
+  }
+
+  .howit-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 28px;
+  }
+  .howit-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .howit-cell-top { display: flex; align-items: center; gap: 12px; }
+  .howit-cell-icon {
+    width: 36px; height: 36px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--blue-faint);
+    border: 1px solid rgba(0, 71, 255, 0.30);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brand-blue);
+  }
+  .howit-cell-icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .howit-cell-num {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    font-variant-numeric: tabular-nums;
+  }
+  .howit-cell-label {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.2;
+  }
+  .howit-cell-sub {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--white-72);
+    margin: 0;
+  }
+
+  .howit-cadence {
+    font-size: var(--t-base-size);
+    line-height: 1.55;
+    color: var(--white-72);
+    padding: 18px 0;
+    margin: 0 0 22px;
+    border-top: 1px solid var(--white-15);
+    border-bottom: 1px solid var(--white-15);
+  }
+  .howit-cadence strong { color: var(--white); font-weight: 600; }
+
+  .howit-invoicing {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .howit-invoice-cell {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--neutral-primary);
+    border: 1px solid var(--white-15);
+    border-radius: var(--radius-sm);
+  }
+  [data-theme="light"] .howit-invoice-cell { background: var(--surface-3); }
+  .howit-invoice-icon {
+    width: 28px; height: 28px;
+    flex-shrink: 0;
+    color: var(--brand-blue);
+  }
+  .howit-invoice-icon svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .howit-invoice-text {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--white-72);
+  }
+  .howit-invoice-text strong { color: var(--white); font-weight: 600; display: block; margin-bottom: 2px; font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; }
+
+  .howit-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    text-decoration: none;
+    transition: gap 0.25s ease, color 0.25s ease;
+  }
+  .howit-cta:hover { color: var(--brand-blue-hover); gap: 14px; }
+  .howit-cta svg {
+    width: 14px; height: 14px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  /* ============================================================
+     FOOTER CTA
+     ============================================================ */
+  .pricing-cta {
+    text-align: center;
+    padding: 16px 24px 0;
+  }
+  .pricing-cta-title {
+    font-size: var(--t-h2-size);
+    font-weight: var(--w-h1);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--white);
+    margin: 0 0 22px;
+  }
+  .pricing-cta-title em { font-style: normal; color: var(--brand-blue); }
+  .pricing-cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 32px;
+    background: var(--brand-blue);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: var(--t-base-size);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    border: 1px solid var(--brand-blue);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .pricing-cta-button:hover {
+    background: var(--brand-blue-hover);
+    color: #ffffff;
+    box-shadow: 0 0 28px rgba(0, 71, 255, 0.45);
+    transform: translateY(-1px);
+  }
+  .pricing-cta-arrow {
+    width: 16px; height: 16px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round;
+    transition: transform 0.25s ease;
+  }
+  .pricing-cta-button:hover .pricing-cta-arrow { transform: translateX(4px); }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 960px) {
+    .tiers-grid { grid-template-columns: 1fr; }
+    .howit-grid { grid-template-columns: 1fr; gap: 20px; }
+  }
+  @media (max-width: 800px) {
+    .pricing-header .header-grid { grid-template-columns: 1fr; gap: 18px; }
+  }
+  @media (max-width: 720px) {
+    .pricing-section { padding: 48px 22px 64px; }
+    .hourly-card { grid-template-columns: auto 1fr; gap: 16px; padding: 22px 22px; }
+    .hourly-card .hourly-body { grid-column: 1 / -1; }
+    .tier-card { padding: 30px 22px 26px; }
+    .howit-summary { padding: 18px 22px; }
+    .howit-content { padding: 22px 22px 26px; }
+    .howit-invoicing { grid-template-columns: 1fr; }
+    .pricing-cta-title { font-size: 1.8rem; }
+  }
+</style>
+</head>
+
+<body>
+
+<section class="pricing-section" id="dmc01-pricing" aria-label="Pricing — what working with DMC01 typically costs">
+  <div class="section-inner">
+
+    <!-- HEADER -->
+    <header class="pricing-header">
+      <div class="eyebrow">Pricing</div>
+      <div class="header-grid">
+        <h2 class="section-title">Built around the work, <em>not the hour.</em></h2>
+        <p class="section-lede">Most engagements are project-led. The quote you get is shaped by three things: which modules you need help with, where you are already strong, and the cadence the work needs. The below numbers are indicative.</p>
+      </div>
+    </header>
+
+    <!-- THREE PROJECT TIERS -->
+    <div class="tiers-grid">
+
+      <article class="tier-card">
+        <div class="tier-top">
+          <span class="tier-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </span>
+          <div class="tier-heading">
+            <h3 class="tier-id">01 · Focus</h3>
+            <p class="tier-name">One module, fixed properly.</p>
+          </div>
+        </div>
+        <div class="tier-price-block">
+          <div class="tier-price">£25k–£45k</div>
+          <div class="tier-chips">
+            <span class="tier-chip">6–10 weeks</span>
+            <span class="tier-chip">1 module</span>
+          </div>
+          <div class="tier-disclaimer">Indicative. Tailored quote within 2 working days.</div>
+        </div>
+        <p class="tier-body">You know which layer is breaking — pricing, licensing, packaging, distribution — and you want it fixed properly. We go deep on one module, work directly with your team, and you walk away with the framework and the deliverables that your team can run with after.</p>
+        <p class="tier-fit">"We need to fix our [pricing / licensing / …] and stop selling at suboptimal points."</p>
+      </article>
+
+      <article class="tier-card">
+        <div class="tier-top">
+          <span class="tier-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><polyline points="12 2 22 7 12 12 2 7 12 2"/><polyline points="2 12 12 17 22 12"/><polyline points="2 17 12 22 22 17"/></svg>
+          </span>
+          <div class="tier-heading">
+            <h3 class="tier-id">02 · Build</h3>
+            <p class="tier-name">Multi-module, end to end.</p>
+          </div>
+        </div>
+        <div class="tier-price-block">
+          <div class="tier-price">£50k–£95k</div>
+          <div class="tier-chips">
+            <span class="tier-chip">3–5 months</span>
+            <span class="tier-chip">2–4 modules</span>
+          </div>
+          <div class="tier-disclaimer">Indicative. Tailored quote within 2 working days.</div>
+        </div>
+        <p class="tier-body">You are standing up a commercial layer, repositioning, relaunching — or refactoring previous frameworks where operational debt is blocking new work from landing. Multiple modules in sequence, shipping live changes. Enough room to do real work, finite enough to land it.</p>
+        <p class="tier-fit">"We are going to market with this in Q3 and the operating piece is not there yet."</p>
+      </article>
+
+      <article class="tier-card">
+        <div class="tier-top">
+          <span class="tier-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 14.85-6.85L21 8"/><polyline points="21 3 21 8 16 8"/><path d="M21 12a9 9 0 0 1-14.85 6.85L3 16"/><polyline points="3 21 3 16 8 16"/></svg>
+          </span>
+          <div class="tier-heading">
+            <h3 class="tier-id">03 · Transform</h3>
+            <p class="tier-name">A new operating model.</p>
+          </div>
+        </div>
+        <div class="tier-price-block">
+          <div class="tier-price">£100k–£180k+</div>
+          <div class="tier-chips">
+            <span class="tier-chip">6+ months</span>
+            <span class="tier-chip">5–6 modules</span>
+          </div>
+          <div class="tier-disclaimer">Indicative. Tailored quote within 2 working days.</div>
+        </div>
+        <p class="tier-body">You are building or rebuilding how the data business runs end-to-end. All six modules, leadership-aligned, governance and quarterly reviews built in. Typical when investor readiness, a major repositioning, or an organisational reset is on the table.</p>
+        <p class="tier-fit">"The business model itself needs to change before we scale."</p>
+      </article>
+
+    </div>
+
+    <!-- HOURLY CARD -->
+    <article class="hourly-card">
+      <span class="hourly-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </span>
+      <div class="hourly-headline">
+        <div class="hourly-id">Hourly</div>
+        <div class="hourly-price">£300 / hour</div>
+      </div>
+      <p class="hourly-body">For specific moments — MSA redline, deal support, pricing call, board prep — when you need senior input fast and a project is overkill.
+    </article>
+
+    <!-- HOW IT WORKS — collapsed by default behind a click target.
+         Native <details>/<summary> = no JS, fully accessible. The
+         summary stays a low-key strip; the content reveals on click. -->
+    <details class="howit-section" aria-label="How a quote is shaped and how invoicing works">
+      <summary class="howit-summary">
+        <h3 class="howit-eyebrow">How it works</h3>
+        <span class="howit-toggle-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </span>
+      </summary>
+
+      <div class="howit-content">
+      <p class="howit-intro">The three pillars below are what go into building every quote — and right after them, how invoicing then follows.</p>
+
+      <div class="howit-grid">
+
+        <div class="howit-cell">
+          <div class="howit-cell-top">
+            <span class="howit-cell-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+            </span>
+            <div>
+              <div class="howit-cell-num">01 · Modules</div>
+              <div class="howit-cell-label">What needs work</div>
+            </div>
+          </div>
+          <p class="howit-cell-sub">One focused workstream, or several modules in flight together.</p>
+        </div>
+
+        <div class="howit-cell">
+          <div class="howit-cell-top">
+            <span class="howit-cell-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            </span>
+            <div>
+              <div class="howit-cell-num">02 · Maturity</div>
+              <div class="howit-cell-label">Where you start</div>
+            </div>
+          </div>
+          <p class="howit-cell-sub">A clean sheet, a partial framework already in place, or refining what works.</p>
+        </div>
+
+        <div class="howit-cell">
+          <div class="howit-cell-top">
+            <span class="howit-cell-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </span>
+            <div>
+              <div class="howit-cell-num">03 · Day count</div>
+              <div class="howit-cell-label">What it'll take</div>
+            </div>
+          </div>
+          <p class="howit-cell-sub">How many days the work realistically needs to land properly.</p>
+        </div>
+
+      </div>
+
+      <p class="howit-cadence">Most engagements run as <strong>a weekly retainer</strong> — typically two days a week reserved for your project, and related meetings. The calendar follows from the day count, not the other way round.</p>
+
+      <h4 class="howit-sub-eyebrow">Invoicing</h4>
+      <div class="howit-invoicing">
+        <div class="howit-invoice-cell">
+          <span class="howit-invoice-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </span>
+          <div class="howit-invoice-text"><strong>Multi-month</strong>Billed monthly in equal installments, in arrears. No upfront lump sum.</div>
+        </div>
+        <div class="howit-invoice-cell">
+          <span class="howit-invoice-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="2" x2="12" y2="22"/></svg>
+          </span>
+          <div class="howit-invoice-text"><strong>Focus projects</strong>Typically split 50% on kick-off, 50% on delivery.</div>
+        </div>
+      </div>
+
+      <a class="howit-cta" href="/#dmc01-contact">Open a brief
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+      </div>
+    </details>
+
+    <!-- FOOTER CTA -->
+    <div class="pricing-cta">
+      <h3 class="pricing-cta-title">Got a project in mind? <em>Let's shape it.</em></h3>
+      <a class="pricing-cta-button" href="/#dmc01-contact">
+        <span>Open a brief</span>
+        <svg class="pricing-cta-arrow" viewBox="0 0 24 24" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+</body>
+</html>
