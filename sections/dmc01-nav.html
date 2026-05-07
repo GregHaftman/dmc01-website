@@ -107,8 +107,9 @@
     padding: 14px clamp(20px, 3vw, 40px);
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 24px;
+    /* Layout: brand at left, nav-actions pushed to the far right
+       via `margin-left: auto` on .nav-actions (set further down). */
   }
 
   /* ----- BRAND (logo + wordmark) ----- */
@@ -150,11 +151,13 @@
     filter: drop-shadow(0 0 4px rgba(0, 71, 255, 0.20));
   }
 
-  /* ----- ACTIONS (CTA + Menu) ----- */
+  /* ----- ACTIONS (CTA + Menu) — pushed to the far right via auto
+     left-margin so the brand sits at the far left. ----- */
   .nav-actions {
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-left: auto;
   }
 
   .nav-cta {

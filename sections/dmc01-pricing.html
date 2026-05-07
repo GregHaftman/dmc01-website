@@ -90,7 +90,9 @@
     z-index: 1;
     width: 100vw;
     margin-left: calc(-50vw + 50%);
-    padding: 56px clamp(24px, 4vw, 64px) 88px;
+    /* Top padding clears the fixed nav (~78px) and gives the
+       eyebrow some visual breathing room before the title. */
+    padding: clamp(112px, 12vh, 160px) clamp(24px, 4vw, 64px) 88px;
     background: var(--neutral-primary);
     overflow: hidden;
     isolation: isolate;
