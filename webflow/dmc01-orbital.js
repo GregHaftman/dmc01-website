@@ -120,6 +120,51 @@ const MODULES = [
   }
 ];
 
+/* ============ MODULE SLUG ROUTING (deep-link via URL fragment) ============
+   Maps URL slugs → module IDs so marketing materials can link directly
+   to a module's expanded panel.
+
+   Pattern: dmc01.com/#m/<slug>
+   Examples: /#m/packaging  → opens module 05
+             /#m/pricing    → opens module 02
+             /#m/licensing  → opens module 01
+
+   The hash is kept in sync as the user opens/closes panels via the
+   in-page controls (setActiveModule / dismissUnfolded), using
+   replaceState so we don't pollute browser history.
+   ====================================================================== */
+const SLUG_TO_ID = {
+  licensing:    '01',
+  pricing:      '02',
+  roadmap:      '03',
+  enablement:   '04',
+  packaging:    '05',
+  distribution: '06'
+};
+const ID_TO_SLUG = Object.fromEntries(
+  Object.entries(SLUG_TO_ID).map(([k, v]) => [v, k])
+);
+
+function parseModuleHash() {
+  const m = location.hash.match(/^#m\/([a-z]+)$/i);
+  return m ? SLUG_TO_ID[m[1].toLowerCase()] : null;
+}
+
+function setModuleHash(id) {
+  const slug = ID_TO_SLUG[id];
+  if (!slug) return;
+  const newHash = `#m/${slug}`;
+  if (location.hash !== newHash) {
+    history.replaceState(null, '', newHash);
+  }
+}
+
+function clearModuleHash() {
+  if (parseModuleHash()) {
+    history.replaceState(null, '', location.pathname + location.search);
+  }
+}
+
 /* ==========================================================
    ORBITAL CONFIGURATION — single ellipse, six modules at 60°
 
@@ -500,6 +545,7 @@ function setActiveModule(id) {
   renderHero(mod);
   renderRail(id);
   if (!stage.classList.contains('unfolded')) stage.classList.add('unfolded');
+  setModuleHash(id);
   const stageTop = stage.getBoundingClientRect().top + window.scrollY - 80;
   if (window.scrollY > stageTop + 200) {
     window.scrollTo({ top: stageTop, behavior: 'smooth' });
@@ -508,6 +554,7 @@ function setActiveModule(id) {
 
 function dismissUnfolded() {
   stage.classList.remove('unfolded');
+  clearModuleHash();
 }
 
 resetBtn.addEventListener('click', dismissUnfolded);
@@ -539,6 +586,33 @@ document.addEventListener('dmc01:openModule', (e) => {
   const stageTop = stage.getBoundingClientRect().top + window.scrollY - 80;
   window.scrollTo({ top: stageTop, behavior: 'smooth' });
 });
+
+/* Hash routing: open a module on initial load if URL has #m/<slug>,
+   and respond to browser back/forward + manual hash edits. The hash
+   is updated via replaceState from setActiveModule/dismissUnfolded
+   (no hashchange fired by replaceState), so this listener only fires
+   on real user navigation — no risk of a loop. */
+window.addEventListener('hashchange', () => {
+  const id = parseModuleHash();
+  if (id) {
+    setActiveModule(id);
+    const stageTop = stage.getBoundingClientRect().top + window.scrollY - 80;
+    window.scrollTo({ top: stageTop, behavior: 'smooth' });
+  } else if (stage.classList.contains('unfolded')) {
+    dismissUnfolded();
+  }
+});
+
+const initialModuleId = parseModuleHash();
+if (initialModuleId) {
+  /* Defer slightly so orbital node positions settle (rAF tick) before
+     we expand the panel — avoids a visible "jump" on first paint. */
+  setTimeout(() => {
+    setActiveModule(initialModuleId);
+    const stageTop = stage.getBoundingClientRect().top + window.scrollY - 80;
+    window.scrollTo({ top: stageTop, behavior: 'smooth' });
+  }, 150);
+}
 
     console.log('[DMC01-orbital] Initialised.');
   }
