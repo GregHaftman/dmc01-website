@@ -173,7 +173,7 @@ code .
 
 Install the **Live Server** VS Code extension. Right-click any HTML file → "Open with Live Server".
 
-For a full-site scroll preview of the home page, open [`sections/fullsite-preview.html`](sections/fullsite-preview.html) — it loads all six home sections as same-origin iframes, auto-sizes them to their content, and bridges cross-section events. Local-only; the live site uses Webflow Code Embeds.
+For a full-site scroll preview of the home page, open [`sections/fullsite-preview.html`](sections/fullsite-preview.html) — it loads all six home sections as same-origin iframes, auto-sizes them to their content, and bridges cross-section events. Local-only and git-ignored (it isn't in the repo); the live site uses Webflow Code Embeds.
 
 ---
 

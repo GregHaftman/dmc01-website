@@ -32,3 +32,9 @@ npm-debug.log
 *.bak
 *.backup
 *.orig
+
+# Local-only full-site preview (Live Server) — never committed
+sections/fullsite-preview.html
+
+# Claude Code project instructions — local only, never committed
+CLAUDE.md

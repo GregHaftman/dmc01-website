@@ -6,7 +6,7 @@
 <title>DMC01 — FAQ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 
 <script>(function(){try{var t=localStorage.getItem('dmc01-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 
@@ -14,7 +14,7 @@
   /* ============================================================
      DMC01 · FAQ — code embed, light + dark themed.
 
-     17 questions across 4 thematic groups (What & who / Working
+     16 questions across 4 thematic groups (What & who / Working
      with me / Pricing & terms / Getting started). Each question
      is a native <details>/<summary> disclosure — no JS, fully
      keyboard-accessible. Visual conventions match contact /
@@ -25,328 +25,288 @@
      (/faq) or scrolled to from elsewhere.
      ============================================================ */
 
+  /* Visual language: dmc01-ui-kit tokens. Questions are kit cards
+     (accent on the border when open, never a fill); the closing CTA
+     is the page's one filled Brand Blue button. */
+
+  /* @dmc01-tokens:start */
   :root {
-    --brand-blue:        var(--accent-primary, #0047FF);
-    --brand-blue-hover:  var(--accent-primary-hover, #3c6ce7);
-    --neutral-primary:   var(--bg-primary, #070708);
-    --neutral-secondary: var(--bg-secondary, #161617);
-    --surface-3:         #1d1e22;
-    --font:              var(--font-body, "Rajdhani", system-ui, sans-serif);
-    --t-h1-size:    var(--h1-size, 4.65rem);
-    --t-h2-size:    var(--h2-size, 2.83rem);
-    --t-base-size:  var(--base-font-size, 1.1rem);
-    --t-lg-size:    var(--text-lg-size, 1.4rem);
-    --t-xl-size:    var(--text-xl-size, 1.5rem);
-    --t-eyebrow-size: var(--eyebrow-size, 1.1rem);
-    --w-h1:    var(--h1-weight, 600);
-    --w-base:  var(--base-font-weight, 400);
-    --w-bold:  var(--base-font-weight-bold, 600);
-    --lh-h1:   var(--h1-line-height, 1.04em);
-    --lh-base: var(--base-line-height, 1.6em);
-    --white:    var(--text-primary, #FFFFFF);
-    --white-72: rgba(255, 255, 255, 0.88);
-    --white-50: rgba(255, 255, 255, 0.62);
-    --white-30: rgba(255, 255, 255, 0.30);
-    --white-15: var(--border-secondary, rgba(255, 255, 255, 0.15));
-    --blue-faint: var(--accent-primary-faint, rgba(0, 71, 255, 0.10));
-    --blue-grid:  var(--brand-grid, rgba(73, 72, 192, 0.04));
+    /* surfaces — kit */
+    --bg:          #0c0d11;
+    --panel:       #15171d;
+    --panel-2:     #1d2027;
+    --panel-3:     #232730;
 
-    --radius-sm: var(--radius-base, 2px);
-    --radius-md: calc(var(--radius-sm) * 2);
+    /* text — kit, plus --body (web) */
+    --ink:         #f3f5f8;
+    --body:        rgba(243, 245, 248, 0.80);
+    --muted:       rgba(243, 245, 248, 0.52);
+    --faint:       rgba(243, 245, 248, 0.34);
+
+    /* accents — kit (dark-surface variants) */
+    --accent:       #4c8dff;
+    --accent-hover: #6ba1ff;
+    --accent-soft:  rgba(76, 141, 255, 0.14);
+    --purple:       #9b6bdc;
+
+    /* Brand Blue as a fill — web */
+    --brand-blue:       #0047FF;
+    --brand-blue-hover: #1f5eff;
+    --on-brand:         #ffffff;
+
+    /* lines, radii, shadow — kit */
+    --line:        rgba(255, 255, 255, 0.08);
+    --line-strong: rgba(255, 255, 255, 0.14);
+    --radius-sm:   6px;
+    --radius:      8px;
+    --radius-lg:   12px;
+    --shadow:      0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.25);
+
+    /* type — kit families; Webflow's responsive heading scale where it exists */
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-head: "Rajdhani", -apple-system, sans-serif;
+    --fs-h1:     var(--h1-size, 4.65rem);
+    --fs-h2:     var(--h2-size, 2.83rem);
+    --fs-lede:   1.1875rem;
+    --fs-body:   1.0625rem;
+    --fs-small:  0.9375rem;
+    --fs-xs:     0.8125rem;
+    --fs-eyebrow: 0.9375rem;
+
+    --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   }
-
   [data-theme="light"] {
-    --neutral-primary:   #f5f5f7;
-    --neutral-secondary: #ffffff;
-    --surface-3:         #ebebee;
-    --white:    #070708;
-    --white-72: rgba(7, 7, 8, 0.85);
-    --white-50: rgba(7, 7, 8, 0.62);
-    --white-30: rgba(7, 7, 8, 0.42);
-    --white-15: rgba(7, 7, 8, 0.10);
+    --bg:          #f5f6f8;
+    --panel:       #ffffff;
+    --panel-2:     #eef0f3;
+    --panel-3:     #e6e9ee;
+
+    --ink:         #0c0d11;
+    --body:        rgba(12, 13, 17, 0.80);
+    --muted:       rgba(12, 13, 17, 0.60);
+    --faint:       rgba(12, 13, 17, 0.40);
+
+    --accent:       #0047FF;
+    --accent-hover: #0039cc;
+    --accent-soft:  rgba(0, 71, 255, 0.09);
+    --purple:       #6633CC;
+
+    --line:        rgba(12, 13, 17, 0.09);
+    --line-strong: rgba(12, 13, 17, 0.16);
+    --shadow:      0 1px 2px rgba(12, 13, 17, 0.06), 0 4px 16px rgba(12, 13, 17, 0.06);
   }
+  /* @dmc01-tokens:end */
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: var(--neutral-primary);
-    color: var(--white);
-    font-family: var(--font);
-    font-weight: var(--w-base);
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* ============================================================
-     SECTION FRAME
-     ============================================================ */
   .faq-section {
+    --sec-grid: rgba(255, 255, 255, 0.025);
     position: relative;
     z-index: 1;
     width: 100vw;
     margin-left: calc(-50vw + 50%);
-    /* Top padding clears the fixed nav (~78px) and gives the
-       eyebrow some visual breathing room before the title. */
+    /* Top padding clears the fixed nav. */
     padding: clamp(112px, 12vh, 160px) clamp(24px, 4vw, 64px) 88px;
-    background: var(--neutral-primary);
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
     overflow: hidden;
     isolation: isolate;
   }
+  [data-theme="light"] .faq-section { --sec-grid: rgba(12, 13, 17, 0.035); }
   .faq-section::before {
     content: "";
     position: absolute;
     inset: 0;
-    pointer-events: none;
     z-index: 0;
+    pointer-events: none;
     background-image:
-      linear-gradient(var(--blue-grid) 1px, transparent 1px),
-      linear-gradient(90deg, var(--blue-grid) 1px, transparent 1px);
+      linear-gradient(var(--sec-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--sec-grid) 1px, transparent 1px);
     background-size: 60px 60px;
-    mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black 40%, transparent 100%);
-    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black 40%, transparent 100%);
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, black 30%, transparent 90%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, black 30%, transparent 90%);
   }
-  .faq-section .section-inner {
-    position: relative;
-    z-index: 2;
-    max-width: 920px;
-    margin: 0 auto;
-  }
+  .faq-section .section-inner { position: relative; z-index: 2; max-width: 880px; margin: 0 auto; }
 
-  /* ============================================================
-     HEADER — eyebrow + title + lede stacked, no header-grid
-     because this page is content-led and reads as a column.
-     ============================================================ */
-  .faq-header {
-    margin-bottom: 64px;
-    padding-bottom: 28px;
-    border-bottom: 1px solid var(--white-15);
-  }
+  /* ----- HEADER ----- */
+  .faq-section .faq-header { margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--line); }
   .faq-section .eyebrow {
-    font-size: var(--t-eyebrow-size);
-    font-weight: 600;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--brand-blue);
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .faq-section .eyebrow::before {
-    content: "";
-    width: 32px; height: 1px;
-    background: var(--brand-blue);
-  }
-  .faq-section .section-title {
-    margin: 0 0 20px;
-    text-align: left;
-    color: var(--white);
-    font-size: var(--t-h1-size);
-    font-weight: var(--w-h1);
-    line-height: var(--lh-h1);
-    letter-spacing: -0.02em;
-  }
-  .faq-section .section-title em {
-    font-style: normal;
-    color: var(--brand-blue);
-  }
-  .faq-section .section-lede {
-    margin: 0;
-    text-align: left;
-    font-size: var(--t-lg-size);
-    font-weight: var(--w-base);
-    line-height: var(--lh-base);
-    color: var(--white-72);
-    max-width: 640px;
-  }
-  .faq-section .section-lede a {
-    color: var(--brand-blue);
-    text-decoration: none;
-    border-bottom: 1px solid rgba(0, 71, 255, 0.4);
-    transition: color 0.2s ease, border-color 0.2s ease;
-  }
-  .faq-section .section-lede a:hover {
-    color: var(--brand-blue-hover);
-    border-bottom-color: var(--brand-blue);
-  }
-
-  /* ============================================================
-     FAQ GROUPS — one per thematic bucket. Group eyebrow looks
-     like a small chapter marker; the questions stack below.
-     ============================================================ */
-  .faq-group {
-    margin-bottom: 48px;
-  }
-  .faq-group:last-of-type { margin-bottom: 56px; }
-
-  .faq-group-eyebrow {
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--brand-blue);
-    margin: 0 0 16px;
-    padding-bottom: 10px;
     display: flex;
     align-items: center;
     gap: 12px;
-    border-bottom: 1px solid var(--white-15);
+    margin-bottom: 16px;
+    font-family: var(--font-head);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
   }
-  .faq-group-eyebrow::before {
-    content: "";
-    width: 22px; height: 1px;
-    background: var(--brand-blue);
-    flex-shrink: 0;
+  .faq-section .eyebrow::before { content: ""; width: 28px; height: 1px; background: currentColor; }
+  .faq-section .section-title {
+    margin: 0 0 20px;
+    text-align: left;
+    font-family: var(--font-head);
+    font-size: var(--fs-h1);
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    color: var(--ink);
   }
+  .faq-section .section-title em,
+  .faq-section .faq-cta-title em { font-style: normal; color: var(--accent); }
+  .faq-section .section-lede { max-width: 36em; margin: 0; text-align: left; font-size: var(--fs-lede); line-height: 1.65; color: var(--body); }
+  .faq-section .section-lede a,
+  .faq-section .faq-answer a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .faq-section .section-lede a:hover,
+  .faq-section .faq-answer a:hover { color: var(--accent-hover); border-bottom-color: var(--accent-hover); }
 
-  .faq-list {
+  /* ----- GROUPS ----- */
+  .faq-section .faq-group { margin-bottom: 44px; }
+  .faq-section .faq-group:last-of-type { margin-bottom: 56px; }
+  .faq-section .faq-group-eyebrow {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 14px;
+    font-family: var(--font-head);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
+  .faq-section .faq-group-eyebrow::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .faq-section .faq-list { display: flex; flex-direction: column; gap: 8px; }
 
-  /* ============================================================
-     FAQ ITEM — native <details>. Closed: a slim row with the
-     question on the left and a chevron on the right. Open: the
-     answer reveals below a hairline divider, the chevron rotates.
-     ============================================================ */
-  .faq-item {
-    background: var(--neutral-secondary);
-    border: 1px solid var(--white-15);
-    border-radius: var(--radius-md);
+  /* ----- ITEM — native <details> as a kit card ----- */
+  .faq-section .faq-item {
     overflow: hidden;
-    transition: border-color 0.25s ease;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    transition: border-color 0.15s ease, background-color 0.15s ease;
   }
-  .faq-item:hover { border-color: var(--white-30); }
-  .faq-item[open] { border-color: rgba(0, 71, 255, 0.4); }
-
-  .faq-question {
-    list-style: none;
-    cursor: pointer;
-    padding: 18px 22px;
+  .faq-section .faq-item:hover { border-color: var(--line-strong); }
+  .faq-section .faq-item[open] { border-color: color-mix(in srgb, var(--accent) 42%, transparent); }
+  .faq-section .faq-question {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 18px;
-    font-size: var(--t-base-size);
-    font-weight: 600;
-    line-height: 1.35;
-    color: var(--white);
+    padding: 17px 20px;
+    list-style: none;
+    cursor: pointer;
     user-select: none;
+    font-size: var(--fs-body);
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--ink);
+    transition: color 0.15s ease;
   }
-  .faq-question::-webkit-details-marker { display: none; }
-  .faq-question::marker { display: none; }
-  .faq-question:focus-visible {
-    outline: 2px solid var(--brand-blue);
-    outline-offset: -2px;
-  }
-  .faq-question:hover { color: var(--brand-blue); }
-
-  .faq-toggle-icon {
-    width: 18px; height: 18px;
-    flex-shrink: 0;
-    color: var(--brand-blue);
-    transition: transform 0.3s ease;
+  .faq-section .faq-question::-webkit-details-marker { display: none; }
+  .faq-section .faq-question::marker { content: ""; }
+  .faq-section .faq-question:hover { color: var(--accent); }
+  .faq-section .faq-question:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--accent-soft); color: var(--accent); }
+  .faq-section .faq-toggle-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    color: var(--muted);
+    transition: transform 0.2s var(--ease), color 0.15s ease;
   }
-  .faq-toggle-icon svg {
-    width: 100%; height: 100%;
-    stroke: currentColor; fill: none;
+  .faq-section .faq-item[open] .faq-toggle-icon { transform: rotate(180deg); color: var(--accent); }
+  .faq-section .faq-toggle-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+    fill: none;
     stroke-width: 1.8;
-    stroke-linecap: round; stroke-linejoin: round;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
-  .faq-item[open] .faq-toggle-icon { transform: rotate(180deg); }
+  .faq-section .faq-answer {
+    padding: 16px 20px 20px;
+    border-top: 1px solid var(--line);
+    font-size: var(--fs-body);
+    line-height: 1.7;
+    color: var(--body);
+  }
+  .faq-section .faq-answer > p { margin: 0; }
+  .faq-section .faq-answer > p + p { margin-top: 12px; }
+  .faq-section .faq-answer strong { color: var(--ink); font-weight: 600; }
+  .faq-section .faq-answer em { font-style: normal; font-weight: 600; color: var(--ink); }
 
-  .faq-answer {
-    padding: 18px 22px 22px;
-    border-top: 1px solid var(--white-15);
-    font-size: var(--t-base-size);
-    line-height: 1.6;
-    color: var(--white-72);
-  }
-  .faq-answer > p { margin: 0; }
-  .faq-answer > p + p { margin-top: 12px; }
-  .faq-answer strong { color: var(--white); font-weight: 600; }
-  .faq-answer em { font-style: normal; color: var(--brand-blue); font-weight: 600; }
-  .faq-answer a {
-    color: var(--brand-blue);
-    text-decoration: none;
-    border-bottom: 1px solid rgba(0, 71, 255, 0.4);
-    transition: color 0.2s ease, border-color 0.2s ease;
-  }
-  .faq-answer a:hover {
-    color: var(--brand-blue-hover);
-    border-bottom-color: var(--brand-blue);
-  }
-
-  /* ============================================================
-     FOOTER CTA
-     ============================================================ */
-  .faq-cta {
-    text-align: center;
-    padding: 40px 24px 0;
-    border-top: 1px solid var(--white-15);
-    margin-top: 8px;
-  }
-  .faq-cta-eyebrow {
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.3em;
+  /* ----- CLOSING CTA ----- */
+  .faq-section .faq-cta { margin-top: 8px; padding: 40px 24px 0; text-align: center; border-top: 1px solid var(--line); }
+  .faq-section .faq-cta-eyebrow {
+    margin-bottom: 12px;
+    font-family: var(--font-head);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--brand-blue);
-    margin-bottom: 14px;
+    color: var(--accent);
   }
-  .faq-cta-title {
-    font-size: var(--t-h2-size);
-    font-weight: var(--w-h1);
-    line-height: 1.1;
-    letter-spacing: -0.01em;
-    color: var(--white);
+  .faq-section .faq-cta-title {
     margin: 0 0 22px;
+    font-family: var(--font-head);
+    font-size: var(--fs-h2);
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--ink);
   }
-  .faq-cta-title em { font-style: normal; color: var(--brand-blue); }
-  .faq-cta-button {
+  .faq-section .faq-cta-button {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    padding: 16px 32px;
+    gap: 10px;
+    padding: 12px 22px;
     background: var(--brand-blue);
-    color: #ffffff;
-    font-family: inherit;
-    font-size: var(--t-base-size);
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    color: var(--on-brand);
     border: 1px solid var(--brand-blue);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    font-weight: 600;
+    line-height: 1.2;
     text-decoration: none;
-    transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
   }
-  .faq-cta-button:hover {
-    background: var(--brand-blue-hover);
-    color: #ffffff;
-    box-shadow: 0 0 28px rgba(0, 71, 255, 0.45);
-    transform: translateY(-1px);
-  }
-  .faq-cta-arrow {
-    width: 16px; height: 16px;
-    stroke: currentColor; fill: none;
+  .faq-section .faq-cta-button:hover { background: var(--brand-blue-hover); border-color: var(--brand-blue-hover); color: var(--on-brand); }
+  .faq-section .faq-cta-button:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+  .faq-section .faq-cta-arrow {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
     stroke-width: 1.8;
-    stroke-linecap: round; stroke-linejoin: round;
-    transition: transform 0.25s ease;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.15s ease;
   }
-  .faq-cta-button:hover .faq-cta-arrow { transform: translateX(4px); }
+  .faq-section .faq-cta-button:hover .faq-cta-arrow { transform: translateX(3px); }
 
-  /* ============================================================
-     RESPONSIVE
-     ============================================================ */
   @media (max-width: 720px) {
-    .faq-section { padding: 48px 22px 64px; }
-    .faq-question { padding: 16px 18px; gap: 14px; }
-    .faq-answer { padding: 16px 18px 20px; }
-    .faq-cta-title { font-size: 1.8rem; }
+    .faq-section { padding: clamp(96px, 11vh, 130px) 20px 64px; }
+    .faq-section .faq-question { padding: 15px 16px; gap: 14px; }
+    .faq-section .faq-answer { padding: 14px 16px 18px; }
   }
 </style>
 </head>
@@ -458,7 +418,7 @@
             <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
           </summary>
           <div class="faq-answer">
-            <p>No. Engagements run as a <strong>weekly retainer</strong> — typically two days a week reserved for your project. The retainer is set up that way to maximise the meeting opportunities we have together — reviews, decisions, working sessions. The book of work itself — how those reserved days are spent — I size and direct based on what the project actually needs.</p>
+            <p>Not exclusively, but not only two days a week either. Engagements run as a <strong>weekly retainer</strong>, with two days a week held open for our time together: reviews, decisions, working sessions. They set the rhythm of the engagement, not the limits of the work, which I size and direct around what the project actually needs.</p>
           </div>
         </details>
 
@@ -468,19 +428,10 @@
             <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
           </summary>
           <div class="faq-answer">
-            <p><strong>Focus</strong> (single module): 6–10 weeks. <strong>Build</strong> (multi-module, the most common shape): 3–5 months. <strong>Transform</strong> (full-stack programme): 6+ months. Hourly is for specific moments where a project would be overkill. Full breakdown on <a href="/pricing">Pricing</a>.</p>
+            <p><strong>Focus</strong> (single module): 6–10 weeks. <strong>Build</strong> (multi-module, the most common shape): 3–5 months. <strong>Transform</strong> (full-stack programme): 6+ months. Full breakdown on <a href="/pricing">Pricing</a>.</p>
           </div>
         </details>
 
-        <details class="faq-item">
-          <summary class="faq-question">
-            <span>Do you do hourly or advisory work?</span>
-            <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
-          </summary>
-          <div class="faq-answer">
-            <p>Yes — <strong>£300/hour</strong>, 1-hour minimum, typically 4–10 hours total. Right when you need senior input fast and a project would be overkill: MSA redline, board prep, deal support, a pricing decision that needs a second opinion. Anything bigger and we'd shape a project.</p>
-          </div>
-        </details>
 
         <details class="faq-item">
           <summary class="faq-question">
@@ -488,7 +439,7 @@
             <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
           </summary>
           <div class="faq-answer">
-            <p>Often, yes. Many clients move from <strong>Focus → Build</strong>, or come back six months later for a follow-up workstream. Extensions roll on the same weekly retainer. Hourly is the cleanest way to keep me available afterwards without committing to another full project.</p>
+            <p>Often, yes. Many clients move from <strong>Focus → Build</strong>, or come back six months later for a follow-up workstream. Extensions roll on the same weekly retainer.</p>
           </div>
         </details>
 
@@ -508,7 +459,7 @@
             <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
           </summary>
           <div class="faq-answer">
-            <p>From three inputs: which <strong>modules</strong> need work, your <strong>maturity</strong> (where you're already strong), and the <strong>day count</strong> the work realistically needs. <a href="/pricing">Pricing</a> shows indicative ranges per tier; the actual figure lands in your inbox within two working days of opening a brief.</p>
+            <p>From three inputs: which <strong>modules</strong> need work, your <strong>maturity</strong> (where you're already strong), and the <strong>effort</strong> the work realistically needs. <a href="/pricing">Pricing</a> shows indicative ranges per tier; the actual figure lands in your inbox within two working days of opening a brief.</p>
           </div>
         </details>
 
@@ -518,7 +469,7 @@
             <span class="faq-toggle-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
           </summary>
           <div class="faq-answer">
-            <p>Multi-month engagements bill <strong>monthly, in equal installments, in arrears</strong>. No upfront lump sum. Focus projects (single-module) typically split <strong>50% on kick-off, 50% on delivery</strong>. Hourly is invoiced at month-end.</p>
+            <p>Multi-month engagements bill <strong>monthly, in equal installments, in arrears</strong>. No upfront lump sum. Focus projects (single-module) typically split <strong>50% on kick-off, 50% on delivery</strong>.</p>
           </div>
         </details>
 

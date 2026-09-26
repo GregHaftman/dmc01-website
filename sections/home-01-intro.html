@@ -6,7 +6,7 @@
 <title>DMC01 — Data Monetisation Concept</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 
 <!-- FOUC-prevention: read theme from localStorage (or system pref) and
      set data-theme on <html> BEFORE first paint. The nav's toggle later
@@ -15,392 +15,309 @@
 
 <style>
   /* ============================================================
-     DMC01 · Intro hero — "Data Monetisation Concept"
+     DMC01 · Intro hero — animated logo lockup
 
-     Atmosphere: a one-point perspective road read as a runway at
-     night. Vanishing point behind the DMC01 logo at the top centre.
-     Two pencil-thin lane rails diverge from the VP outward to the
-     bottom corners; their actual polygon shapes are slim (top
-     0.20 vbu, bottom 2.5 vbu), and a four-layer drop-shadow stack
-     on the SVG surrounds them with substantial fluorescent bloom.
+     Ported from the Claude Design project "DMC01 Logo Animated"
+     (hero variant only; the nav / light / loader cells in that file
+     were design-review demos).
 
-     The bloom breathes — animates over a 7s ease-in-out cycle
-     between a bright peak and a dim trough, so the rails grow
-     brighter and then fade back down continuously. Smoother and
-     slower than earlier flicker / flare experiments; reads as
-     fabric breathing rather than interference.
+     Layers, back to front:
+       1. Faint 60px grid
+       2. Drifting fog  — SVG fractal noise, masked to the centre
+       3. Logo lockup   — mark + DMC01 wordmark, revealed by a
+                          diagonal band of light, then a periodic
+                          sheen; tilts gently toward the pointer
+       4. Tagline       — "Data Monetisation Concept" + description,
+                          bottom-right corner
+       5. Catchphrase   — "// strategy compiled like code", top-left,
+                          typed in once the logo reveal finishes
 
-     Section min-height is 100vh so the intro fills the viewport
-     completely on desktop — the next section (Product / orbital)
-     never peeks above the fold.
-
-     Content stack inside the rails (from top to bottom):
-       1. DMC01 sigil (logo)            — top centre, framed by VP
-       2. "Data Monetisation Concept"   — title
-       3. Sub-heading                   — compiling-strategy line
-
-     A very faint brand-blue halo sits at the VP — just a hint of
-     light at the horizon, not a backlight that competes with the
-     logo or title.
+     All continuous loops (fog, tilt, sheen) pause while the
+     hero is off-screen or the tab is hidden.
      ============================================================ */
 
+  /* @dmc01-tokens:start */
   :root {
-    /* All variables below reference Webflow's alias block (head-alias-block.css).
-       Fallbacks apply in dev preview when the alias block isn't loaded.
-       Keep fallbacks in sync with brand-tokens.css.
-       To change a value globally: edit Webflow → Variables, not this file. */
+    /* surfaces — kit */
+    --bg:          #0c0d11;
+    --panel:       #15171d;
+    --panel-2:     #1d2027;
+    --panel-3:     #232730;
 
-    /* Brand */
-    --brand-blue:        var(--accent-primary, #0047FF);
-    --brand-blue-hover:  var(--accent-primary-hover, #3c6ce7);
+    /* text — kit, plus --body (web) */
+    --ink:         #f3f5f8;
+    --body:        rgba(243, 245, 248, 0.80);
+    --muted:       rgba(243, 245, 248, 0.52);
+    --faint:       rgba(243, 245, 248, 0.34);
 
-    /* Surfaces */
-    --neutral-primary:   var(--bg-primary, #070708);
-    --neutral-secondary: var(--bg-secondary, #161617);
-    --surface-3:         #1d1e22;
+    /* accents — kit (dark-surface variants) */
+    --accent:       #4c8dff;
+    --accent-hover: #6ba1ff;
+    --accent-soft:  rgba(76, 141, 255, 0.14);
+    --purple:       #9b6bdc;
 
-    /* Typography — fonts */
-    --font:              var(--font-body, "Rajdhani", system-ui, sans-serif);
+    /* Brand Blue as a fill — web */
+    --brand-blue:       #0047FF;
+    --brand-blue-hover: #1f5eff;
+    --on-brand:         #ffffff;
 
-    /* Typography — sizes (responsive via Webflow per-breakpoint values) */
-    --t-h1-size:      var(--h1-size, 4.65rem);
-    --t-h2-size:      var(--h2-size, 2.83rem);
-    --t-base-size:    var(--base-font-size, 1.1rem);
-    --t-lg-size:      var(--text-lg-size, 1.4rem);
-    --t-xl-size:      var(--text-xl-size, 1.5rem);
-    --t-eyebrow-size: var(--eyebrow-size, 1.1rem);
+    /* lines, radii, shadow — kit */
+    --line:        rgba(255, 255, 255, 0.08);
+    --line-strong: rgba(255, 255, 255, 0.14);
+    --radius-sm:   6px;
+    --radius:      8px;
+    --radius-lg:   12px;
+    --shadow:      0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.25);
 
-    /* Typography — weights & line heights */
-    --w-h1:    var(--h1-weight, 600);
-    --w-base:  var(--base-font-weight, 400);
-    --w-bold:  var(--base-font-weight-bold, 600);
-    --lh-h1:   var(--h1-line-height, 1.04em);
-    --lh-base: var(--base-line-height, 1.6em);
+    /* type — kit families; Webflow's responsive heading scale where it exists */
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-head: "Rajdhani", -apple-system, sans-serif;
+    --fs-h1:     var(--h1-size, 4.65rem);
+    --fs-h2:     var(--h2-size, 2.83rem);
+    --fs-lede:   1.1875rem;
+    --fs-body:   1.0625rem;
+    --fs-small:  0.9375rem;
+    --fs-xs:     0.8125rem;
+    --fs-eyebrow: 0.9375rem;
 
-    /* Text */
-    --white:    var(--text-primary, #FFFFFF);
-    --white-72: rgba(255, 255, 255, 0.88);
-    --white-70: rgba(255, 255, 255, 0.86);
-    --white-50: rgba(255, 255, 255, 0.62);
-    --white-30: rgba(255, 255, 255, 0.30);
-    --white-15: var(--border-secondary, rgba(255, 255, 255, 0.15));
-
-    /* Brand-blue derived alphas */
-    --blue-glow:  var(--accent-primary-glow, rgba(0, 71, 255, 0.55));
-    --blue-faint: var(--accent-primary-faint, rgba(0, 71, 255, 0.10));
+    --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   }
-
-  /* ============================================================
-     LIGHT THEME OVERRIDES
-     `data-theme="light"` on <html> flips surfaces, text and
-     borders to a light palette; brand blue + glows stay (they
-     read on both backgrounds). SVG illustrations keep their dark
-     "device-screen" look on purpose. The nav's toggle sets this
-     attribute; localStorage persists it; the inline FOUC script
-     in <head> applies it before first paint.
-     ============================================================ */
   [data-theme="light"] {
-    --neutral-primary:   #f5f5f7;
-    --neutral-secondary: #ffffff;
-    --surface-3:         #ebebee;
-    --white:    #070708;
-    --white-72: rgba(7, 7, 8, 0.85);
-    --white-70: rgba(7, 7, 8, 0.83);
-    --white-50: rgba(7, 7, 8, 0.68);
-    --white-30: rgba(7, 7, 8, 0.42);
-    --white-15: rgba(7, 7, 8, 0.10);
+    --bg:          #f5f6f8;
+    --panel:       #ffffff;
+    --panel-2:     #eef0f3;
+    --panel-3:     #e6e9ee;
+
+    --ink:         #0c0d11;
+    --body:        rgba(12, 13, 17, 0.80);
+    --muted:       rgba(12, 13, 17, 0.60);
+    --faint:       rgba(12, 13, 17, 0.40);
+
+    --accent:       #0047FF;
+    --accent-hover: #0039cc;
+    --accent-soft:  rgba(0, 71, 255, 0.09);
+    --purple:       #6633CC;
+
+    --line:        rgba(12, 13, 17, 0.09);
+    --line-strong: rgba(12, 13, 17, 0.16);
+    --shadow:      0 1px 2px rgba(12, 13, 17, 0.06), 0 4px 16px rgba(12, 13, 17, 0.06);
   }
-  /* Vignette fades to the page colour, so it needs to flip too. */
-  [data-theme="light"] .intro-section::after {
-    background: radial-gradient(ellipse 80% 60% at 50% 50%, transparent 30%, rgba(245, 245, 247, 0.55) 100%);
-  }
+  /* @dmc01-tokens:end */
+
+  /* Hero-only: the faint grid and the section's bottom hairline. */
+  .intro-section { --intro-grid: rgba(255, 255, 255, 0.025); }
+  [data-theme="light"] .intro-section { --intro-grid: rgba(12, 13, 17, 0.035); }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: var(--neutral-primary);
-    color: var(--white);
-    font-family: var(--font);
-    font-weight: var(--w-base);
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   /* ============================================================
      SECTION FRAME
+     100vh so the hero fills the viewport on desktop — the next
+     section never peeks above the fold. Flex column: the logo
+     stage takes the free space, the tagline sits at the bottom
+     right. Flex (not absolute) so the two can never overlap on
+     short or narrow screens.
      ============================================================ */
   .intro-section {
     position: relative;
     width: 100vw;
     margin-left: calc(-50vw + 50%);
-    /* Asymmetric padding so the two content blocks land in the
-       right slots relative to the road rails (which sit at y≈22%
-       and y≈78% of the section height):
-         - top padding ~24vh pushes the title group BELOW the top
-           rail, so the rail frames the title rather than cutting
-           through it
-         - bottom padding ~6vh pulls the closing line DOWN past the
-           bottom rail, so "Why this matters" sits in the bottom
-           strip rather than straddling the rail
-       Previously both were ~10vh and the title sat above the top
-       rail entirely. */
-    padding: clamp(120px, 26vh, 280px) 32px clamp(48px, 8vh, 120px);
-    background: var(--neutral-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(96px, 12vh, 140px) clamp(24px, 4vw, 64px) clamp(28px, 5vh, 56px);
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(var(--intro-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--intro-grid) 1px, transparent 1px);
+    background-size: 60px 60px;
+    border-bottom: 1px solid var(--line);
     overflow: hidden;
     isolation: isolate;
-    /* 100vh so the intro fills the viewport completely on desktop —
-       the next section (Product / orbital) never peeks above the
-       fold. User has to scroll to reach it. */
-    min-height: 100vh;
-    /* Flex column so .section-inner can flex:1 and distribute its
-       children (title group at top, closing line at bottom) via
-       justify-content: space-between. */
-    display: flex;
-    flex-direction: column;
+    color: var(--ink);
+    font-family: var(--font-body);
   }
 
-  /* Soft vignette — pulls focus to the centred content */
-  .intro-section::after {
-    content: "";
+  /* ----- Fog: white fractal noise, masked to a central ellipse ----- */
+  .intro-section .intro-fog {
     position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1;
-    background: radial-gradient(ellipse 80% 60% at 50% 50%, transparent 30%, rgba(7, 7, 8, 0.55) 100%);
-  }
-
-  /* ----- RUNWAY-LIGHT ROAD BACKGROUND -----
-     One-point perspective road reading as a runway at night.
-     Vanishing point at (50, 22) in viewBox coords (50% across,
-     22% down — behind the title). Two pencil-thin lane-rail
-     polygons diverge from the VP outward to the bottom corners
-     (-13.25..-10.75, 100) and (110.75..113.25, 100); they're
-     deliberately slim (top 0.20 vbu, bottom 2.5 vbu) so almost all
-     the visual presence comes from the four-layer drop-shadow
-     bloom on .neon-svg, not from the rail polygons themselves —
-     the rails read as bright glowing strips, not solid bars.
-
-     A introRail linear gradient fills the rails, ramping up
-     steeply from invisible at the VP to fully saturated by 60%
-     of the way down. A very subtle brand-blue radial halo sits
-     at the VP — just enough to suggest light at the horizon.
-
-     Continuous and static — no animation. Earlier iterations
-     animated the glow (intermittent flares, fluorescent flicker,
-     space-time distortion of a wireframe floor); all of them read
-     as too active. Continuous bloom is the brief. */
-  .neon-bg {
-    position: absolute;
-    inset: 0;
+    inset: -20%;
     pointer-events: none;
     z-index: 0;
-    /* Radial mask softens just the FAR corners — kept gentle on
-       purpose so it doesn't suppress the rail glow at the foreground.
-       Earlier iterations had this much tighter (90% / 50% black stop)
-       which made the glow look weak even with aggressive drop-shadows
-       because the mask was eating the bloom. */
-    mask-image: radial-gradient(ellipse 130% 130% at 50% 55%, black 80%, transparent 100%);
-    -webkit-mask-image: radial-gradient(ellipse 130% 130% at 50% 55%, black 80%, transparent 100%);
+    opacity: 0.07;
+    -webkit-mask: radial-gradient(ellipse 45% 40% at 50% 50%, #000 20%, transparent 75%);
+            mask: radial-gradient(ellipse 45% 40% at 50% 50%, #000 20%, transparent 75%);
   }
-
-  .neon-svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-    /* Runway-light bloom that breathes. Four stacked drop-shadows
-       (hot core → tight halo → mid bloom → wide ambient) animate
-       between a dim baseline and a bright peak over a 7s ease-in-out
-       cycle, so the rails grow brighter and then fade back down
-       continuously. Smoother and slower than the earlier "flicker"
-       experiments — reads as the fabric breathing, not as
-       interference.
-
-       Stacked drop-shadows are GPU-shader-heavy on large SVGs;
-       if perf is an issue on weaker devices, drop the widest 95px
-       layer first. */
-    animation: railBreathe 7s ease-in-out infinite;
-    /* Initial state matches the bright peak so the first paint
-       shows the rails fully glowing, not mid-breath. */
-    filter:
-      drop-shadow(0 0 5px   rgba(0, 71, 255, 1.0))
-      drop-shadow(0 0 16px  rgba(0, 71, 255, 0.90))
-      drop-shadow(0 0 42px  rgba(0, 71, 255, 0.65))
-      drop-shadow(0 0 95px  rgba(0, 71, 255, 0.40));
-  }
-
-  /* Bright (peak) ↔ dim (trough). Both keyframes carry the same
-     four drop-shadow layers, so the browser interpolates each
-     layer's blur radius and alpha smoothly across the cycle.
-     0%/100% = peak (bright), 50% = trough (dim) — symmetric, so
-     the glow rises and fades evenly. */
-  @keyframes railBreathe {
-    0%, 100% {
-      filter:
-        drop-shadow(0 0 5px   rgba(0, 71, 255, 1.0))
-        drop-shadow(0 0 16px  rgba(0, 71, 255, 0.90))
-        drop-shadow(0 0 42px  rgba(0, 71, 255, 0.65))
-        drop-shadow(0 0 95px  rgba(0, 71, 255, 0.40));
-    }
-    50% {
-      filter:
-        drop-shadow(0 0 3px   rgba(0, 71, 255, 0.55))
-        drop-shadow(0 0 10px  rgba(0, 71, 255, 0.45))
-        drop-shadow(0 0 26px  rgba(0, 71, 255, 0.28))
-        drop-shadow(0 0 60px  rgba(0, 71, 255, 0.16));
-    }
-  }
-
-  /* Honour reduced-motion preference — pin the rails at the bright
-     peak. */
-  @media (prefers-reduced-motion: reduce) {
-    .neon-svg { animation: none; }
-  }
-
-  /* All gradient stops share the brand colour; opacity varies per stop. */
-  .neon-svg stop { stop-color: var(--brand-blue); }
+  .intro-section .intro-fog svg { width: 100%; height: 100%; display: block; }
+  /* Fog is generated white; invert it to dark smoke on the light theme. */
+  [data-theme="light"] .intro-section .intro-fog { filter: invert(1); }
 
   /* ============================================================
-     CONTENT
+     LOGO STAGE
      ============================================================ */
-  .section-inner {
+  .intro-section .intro-stage {
     position: relative;
-    z-index: 2;
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
-    text-align: center;
-    /* Fill remaining vertical space inside .intro-section so the
-       space-between distribution actually has room to push the
-       closing line to the bottom. Without flex:1 the section-inner
-       would collapse to its content height and both children would
-       sit stacked at the top. */
+    z-index: 1;
     flex: 1;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
   }
 
-  /* Title + description grouped — sits in the upper half of the
-     section, framed by the top road rail.
-     Larger gap pushes the description down past the rails' narrow
-     tip near the VP, so the rails don't visually cross the
-     description text. */
-  .intro-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: clamp(40px, 6vh, 72px);
-    width: 100%;
-    max-width: 1100px;
+  /* Lockup viewBox is 452 × 386 — cap width by viewport height too,
+     so the logo + tagline always fit in 100vh. */
+  .intro-section .intro-tilt {
+    width: min(460px, 80%, 52vh);
+    will-change: transform;
   }
 
-  .intro-title {
-    font-size: clamp(3rem, 8vw, var(--t-h1-size));
-    font-weight: var(--w-h1);
-    line-height: var(--lh-h1);
-    letter-spacing: -0.02em;
-    color: var(--white);
-    max-width: 1100px;
-    /* Extra breathing room above the title — adds to the .intro-main
-       flex gap so the logo sits a touch further above the title +
-       description block (the description follows the title in the
-       flex column so it inherits the shift). */
-    margin-top: clamp(16px, 3vh, 32px);
-  }
-
-  .intro-description {
-    font-size: var(--t-xl-size);
-    font-weight: var(--w-base);
-    line-height: 1.55;
-    color: var(--white-72);
-    max-width: 640px;
-  }
-  .intro-description em {
-    font-style: normal;
-    color: var(--brand-blue);
-    font-weight: var(--w-bold);
-  }
-
-  /* (.closing-line styles moved to 05-dmc01-testimonials.html — the
-     reflective bookend now sits at the foot of the social-proof
-     block, after the testimonial marquee.) */
-
-  /* ----- LOGO MARK (top-centre, in the content stack) -----
-     Sits as the FIRST element of .intro-main, above the title and
-     description. Centred horizontally between the two perspective
-     rails (which converge at the VP just behind it). Decorative
-     signature; size scales with viewport. */
-  .intro-mark {
-    width: clamp(96px, 12vw, 160px);
-    aspect-ratio: 1;
-    flex-shrink: 0;
-    /* `pointer-events: auto` + `cursor: pointer` make the mark click-
-       receptive for the 5-click easter egg below. The pointer cursor
-       hints at hidden interactivity without spoiling what triggers. */
-    pointer-events: auto;
+  /* .intro-mark is the click target for the easter egg. The pulse
+     lives here (not on .intro-tilt) so it doesn't fight the tilt
+     transform that JS writes every frame. */
+  .intro-section .intro-mark {
     cursor: pointer;
-    filter: drop-shadow(0 0 18px rgba(0, 71, 255, 0.45));
-    transition: transform 0.2s ease;
+    -webkit-user-select: none;
+    user-select: none;
   }
-  /* Click feedback — quick squeeze-and-release so each of the 5
-     clicks gives clear acknowledgement that something is happening.
-     The .is-pulsing class is added by the JS click handler and
-     removed on animationend, allowing rapid retriggering. */
+  .intro-section .intro-mark svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
   @keyframes intro-mark-pulse {
     0%   { transform: scale(1); }
-    40%  { transform: scale(0.88); }
+    40%  { transform: scale(0.94); }
     100% { transform: scale(1); }
   }
-  .intro-mark.is-pulsing {
-    animation: intro-mark-pulse 0.32s ease;
-  }
-  .intro-mark svg { width: 100%; height: 100%; display: block; }
-  .intro-mark .mark-stroke {
-    stroke: var(--white);
-    stroke-width: 18;
-    stroke-miterlimit: 10;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    fill: none;
-  }
-  /* Light mode — the mark turns near-black against a pale background,
-     so the heavy blue halo from drop-shadow becomes visually too loud.
-     Soften it. */
-  [data-theme="light"] .intro-mark {
-    filter: drop-shadow(0 0 8px rgba(0, 71, 255, 0.22));
-  }
-
-  /* Defensive: explicit themed color on the intro title so it doesn't
-     fall through to Webflow's body color (whose specificity beats our
-     embed's `body { color: ... }`). Same for lede + description. */
-  .intro-title { color: var(--white); }
+  .intro-section .intro-mark.is-pulsing { animation: intro-mark-pulse 0.32s ease; }
 
   /* ============================================================
-     EASTER EGG — 5 clicks on the .intro-mark logo opens a teaser
-     toast hinting at the Back-to-the-Future inspiration. The user
-     gets the confirmation when they reach the contact form and
-     spot the "Doc / Brown" placeholder names.
-     Position: fixed centre of viewport, z-index above nav (1000).
-     Auto-dismisses after 12s, click ×, click backdrop, or 5 more
-     logo clicks to retrigger.
+     CATCHPHRASE — top-left, the diagonal partner of the tagline.
+     Written as a code comment and typed in once (JS); the caret
+     blinks three times and stops. Without JS the phrase just shows.
+     ============================================================ */
+  .intro-section .intro-code {
+    position: absolute;
+    top: clamp(28px, 5vh, 56px);
+    left: clamp(24px, 4vw, 64px);
+    z-index: 2;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    font-family: var(--font-head);
+    font-size: clamp(1.05rem, 1.4vw, 1.3rem);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--muted);
+  }
+  .intro-section .intro-code-slashes { color: var(--accent); margin-right: 0.45em; }
+  .intro-section .intro-code-caret {
+    display: inline-block;
+    width: 2px;
+    height: 1.05em;
+    margin-left: 3px;
+    background: var(--accent);
+    opacity: 0;
+  }
+  .intro-section .intro-code.is-typing .intro-code-caret { opacity: 1; }
+  .intro-section .intro-code.is-done .intro-code-caret { animation: introCaret 0.5s steps(1) 6 forwards; }
+  @keyframes introCaret { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 0; } }
+  .intro-section .intro-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  /* ============================================================
+     TAGLINE — bottom-right corner
+     Webflow's heading defaults leak into embeds: reset margin and
+     text-align explicitly.
+     ============================================================ */
+  .intro-section .intro-tagline {
+    position: relative;
+    z-index: 2;
+    align-self: flex-end;
+    max-width: 100%;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+  }
+  .intro-section .intro-title {
+    margin: 0;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    white-space: nowrap;
+    font-family: var(--font-head);
+    font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  /* Thin rule before the title — same device as the design's eyebrows. */
+  .intro-section .intro-title::before {
+    content: "";
+    flex-shrink: 0;
+    width: 32px;
+    height: 1px;
+    background: var(--muted);
+  }
+  .intro-section .intro-description {
+    margin: 0;
+    max-width: 460px;
+    text-align: right;
+    font-size: var(--fs-lede);
+    font-weight: 400;
+    line-height: 1.45;
+    color: var(--body);
+    text-wrap: pretty;
+  }
+  .intro-section .intro-description em {
+    font-style: normal;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* ============================================================
+     EASTER EGG — 5 clicks on the logo opens a teaser toast hinting
+     at the Back-to-the-Future inspiration. The user gets the
+     confirmation when they reach the contact form and spot the
+     "Doc / Brown" placeholder names.
      ============================================================ */
   .intro-easter-egg {
     position: fixed;
-    top: 50%; left: 50%;
+    /* --vv-* only exist in the local fullsite preview (iframes). */
+    top: calc(var(--vv-top, 0px) + var(--vv-h, 100vh) / 2); left: 50%;
     transform: translate(-50%, -50%) scale(0.94);
     z-index: 1100;
     width: min(calc(100vw - 32px), 480px);
     padding: 28px 36px 24px;
-    background: var(--neutral-secondary);
-    border: 1px solid var(--brand-blue);
-    border-radius: 4px;
-    box-shadow:
-      0 0 60px rgba(0, 71, 255, 0.45),
-      0 14px 48px rgba(0, 0, 0, 0.55);
+    background: var(--panel);
+    border: 1px solid color-mix(in srgb, var(--accent) 42%, transparent);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow), 0 18px 48px rgba(0, 0, 0, 0.35);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.4s ease, transform 0.4s ease;
+    text-align: left;
   }
   .intro-easter-egg.is-visible {
     opacity: 1;
@@ -408,35 +325,38 @@
     pointer-events: auto;
   }
   .intro-easter-egg-eyebrow {
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.3em;
+    font-family: var(--font-head);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--brand-blue);
+    color: var(--accent);
     margin-bottom: 10px;
   }
   .intro-easter-egg-title {
-    font-size: var(--t-xl-size, 1.5rem);
-    font-weight: var(--w-h1, 600);
+    font-family: var(--font-head);
+    font-size: 1.5rem;
+    font-weight: 600;
     line-height: 1.15;
     letter-spacing: -0.01em;
-    color: var(--white);
+    color: var(--ink);
     margin: 0 0 14px;
+    text-align: left;
   }
   .intro-easter-egg-body {
-    font-size: var(--t-base-size);
+    font-size: var(--fs-body);
     line-height: 1.55;
-    color: var(--white-72);
+    color: var(--body);
     margin: 0;
   }
-  .intro-easter-egg-body strong { color: var(--white); font-weight: 600; }
+  .intro-easter-egg-body strong { color: var(--ink); font-weight: 600; }
   .intro-easter-egg-close {
     position: absolute;
     top: 8px; right: 10px;
     width: 32px; height: 32px;
     background: transparent;
     border: 0;
-    color: var(--white-50);
+    color: var(--muted);
     cursor: pointer;
     font: inherit;
     font-size: 1.4rem;
@@ -444,20 +364,19 @@
     padding: 0;
     transition: color 0.2s ease;
   }
-  .intro-easter-egg-close:hover { color: var(--white); }
-
-  /* Reduced motion — SMIL animations on the road SVG are paused via
-     JS in init(); nothing CSS-driven left to freeze here. */
+  .intro-easter-egg-close:hover { color: var(--ink); }
 
   /* ============================================================
      RESPONSIVE
      ============================================================ */
   @media (max-width: 720px) {
-    .intro-section { padding: 56px 20px; min-height: 95vh; }
-    .intro-main { gap: 24px; }
-    /* Logo stays visible on mobile (it's now the first content element),
-       but smaller. */
-    .intro-mark { width: 80px; }
+    .intro-section { min-height: 95vh; padding: 88px 20px 32px; }
+    .intro-section .intro-tilt { width: min(80%, 44vh); }
+    /* Scale with the viewport so the title stays on one line down to 320px. */
+    .intro-section .intro-title { font-size: min(1.6rem, 6.4vw); gap: 10px; }
+    .intro-section .intro-title::before { width: 24px; }
+    .intro-section .intro-description { font-size: var(--fs-body); }
+    .intro-section .intro-code { top: 28px; left: 20px; font-size: 1rem; }
   }
 </style>
 </head>
@@ -466,94 +385,44 @@
 
 <section class="intro-section" id="dmc01-intro" aria-label="DMC01 — Data Monetisation Concept">
 
-  <!-- Two perspective lane rails as runway lights. Vanishing point
-       at (50, 22) — behind the title. Pencil-thin polygons + a
-       four-layer drop-shadow bloom on the SVG = bright continuous
-       fluorescent glow. No animation. -->
-  <div class="neon-bg" aria-hidden="true">
-    <svg class="neon-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+  <div class="intro-fog" id="dmc01-intro-fog" aria-hidden="true">
+    <svg preserveAspectRatio="none" viewBox="0 0 1000 1000">
       <defs>
-        <!-- Lane-rail gradient. Ramps up steeply from invisible at
-             the horizon (y=22) to fully saturated brand-blue across
-             most of the rail's length. Steep on purpose: this is a
-             runway light, not a fading line — bright and present
-             from the foreground all the way back to almost the VP. -->
-        <linearGradient id="introRail" gradientUnits="userSpaceOnUse"
-                        x1="50" y1="22" x2="50" y2="100">
-          <stop offset="0%"   stop-opacity="0"/>
-          <stop offset="10%"  stop-opacity="0.40"/>
-          <stop offset="30%"  stop-opacity="0.80"/>
-          <stop offset="60%"  stop-opacity="1"/>
-          <stop offset="100%" stop-opacity="1"/>
-        </linearGradient>
-
-        <!-- Very subtle brand-blue halo at the VP. Suggests a faint
-             light at the horizon, not a backlight that competes with
-             the title text. -->
-        <radialGradient id="introHorizon" cx="50" cy="22" r="18" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stop-opacity="0.10"/>
-          <stop offset="60%"  stop-opacity="0.03"/>
-          <stop offset="100%" stop-opacity="0"/>
-        </radialGradient>
+        <filter id="dmc01-intro-fogf" x="0" y="0" width="100%" height="100%">
+          <feTurbulence id="dmc01-intro-fogt" type="fractalNoise" baseFrequency=".0035 .006" numOctaves="4" seed="7"></feTurbulence>
+          <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.6 -.45"></feColorMatrix>
+        </filter>
       </defs>
-
-      <!-- Faint horizon glow behind the title -->
-      <rect x="0" y="0" width="100" height="100" fill="url(#introHorizon)"/>
-
-      <!-- Two perspective lane rails as runway lights. Both polygons
-           are slim (top 0.20 vbu, bottom 2.5 vbu) so the actual rail
-           shapes are pencil-thin; the four-layer drop-shadow stack
-           on .neon-svg is what gives them substantial fluorescent
-           bloom around the slim cores. Continuous static glow — no
-           animation. -->
-
-      <!-- Left lane rail: VP (50, 22) → bottom-left, centred on x=-12.
-           Top 0.20 vbu, bottom 2.5 vbu. -->
-      <polygon fill="url(#introRail)"
-               points="49.9,22 50.1,22 -10.75,100 -13.25,100"/>
-
-      <!-- Right lane rail: mirror, centred on x=112. -->
-      <polygon fill="url(#introRail)"
-               points="49.9,22 50.1,22 113.25,100 110.75,100"/>
+      <rect width="1000" height="1000" filter="url(#dmc01-intro-fogf)"></rect>
     </svg>
   </div>
 
-  <div class="section-inner">
+  <p class="intro-code">
+    <span class="intro-sr">Strategy compiled like code</span>
+    <span class="intro-code-slashes" aria-hidden="true">//</span><span class="intro-code-text" aria-hidden="true">strategy compiled like code</span><span class="intro-code-caret" aria-hidden="true"></span>
+  </p>
 
-    <!-- Logo + title + description grouped in .intro-main so they
-         form a single centred stack. The logo is the first element,
-         sitting at the top centre between the rails (with the VP
-         right behind it). Title and description follow underneath
-         in order. -->
-    <div class="intro-main">
-      <!-- Signature mark — now top-centre, inside the content stack. -->
-      <div class="intro-mark" aria-hidden="true">
-        <svg viewBox="0 0 595.28 595.28" xmlns="http://www.w3.org/2000/svg">
-          <polyline class="mark-stroke"
-                    points="297.17 265.57 417.4 148.9 177.87 148.9 297.19 479.32 297.17 265.57 177.87 148.9"/>
-        </svg>
-      </div>
-
-      <h1 class="intro-title">Data Monetisation Concept</h1>
-
-      <p class="intro-description">
-        DMC01 <em>makes it work</em> by aligning what you sell, how you deliver it and how your clients use it.
-      </p>
+  <div class="intro-stage">
+    <div class="intro-tilt" id="dmc01-intro-tilt">
+      <!-- Lockup SVG is built by the script below. -->
+      <div class="intro-mark" id="dmc01-intro-logo" role="img" aria-label="DMC01"></div>
     </div>
+  </div>
 
-    <!-- (Closing-line moved to the testimonials section — it now sits
-         at the very end of the social-proof block as the final
-         reflective beat before the contact form.) -->
+  <div class="intro-tagline">
+    <h1 class="intro-title">Data Monetisation Concept</h1>
+    <p class="intro-description">
+      DMC01 <em>makes it work</em> by aligning what you sell, how you deliver it and how your clients use it.
+    </p>
+  </div>
 
-    <!-- Easter egg toast (hidden by default, revealed after 5 clicks
-         on the .intro-mark logo — see the script below). -->
-    <div class="intro-easter-egg" id="introEasterEgg" role="status" aria-live="polite" hidden>
-      <button type="button" class="intro-easter-egg-close" aria-label="Dismiss">&times;</button>
-      <div class="intro-easter-egg-eyebrow">Nicely spotted</div>
-      <h2 class="intro-easter-egg-title">You've found something.</h2>
-      <p class="intro-easter-egg-body">Curious where DMC01's logo, name, and that retreating road come from? Hold the thought — when you reach <strong>Open a brief</strong> below, the placeholder names will confirm exactly what you're suspecting.</p>
-    </div>
-
+  <!-- Easter egg toast (hidden by default, revealed after 5 clicks
+       on the logo — see the script below). -->
+  <div class="intro-easter-egg" id="introEasterEgg" role="status" aria-live="polite" hidden>
+    <button type="button" class="intro-easter-egg-close" aria-label="Dismiss">&times;</button>
+    <div class="intro-easter-egg-eyebrow">Nicely spotted</div>
+    <h2 class="intro-easter-egg-title">You've found something.</h2>
+    <p class="intro-easter-egg-body">Curious where DMC01's logo, and name come from? Hold the thought — when you reach <strong>Open a brief</strong> below, the placeholder names will confirm exactly what you're suspecting.</p>
   </div>
 
 </section>
@@ -562,47 +431,187 @@
 (function() {
   'use strict';
 
+  /* ---------- LOGO GEOMETRY ----------
+     Exact geometry from 20251007_LOGO-DMC01-09.svg: the mark is one
+     polyline (no right edge); "DMC" is full ink, "01" at 45%. */
+  var STROKE = 11;
+  var MARK = 'M190.71 265.57 L310.95 148.9 L71.42 148.9 L190.74 479.32 L190.71 265.57 L71.42 148.9';
+  var DMC = [
+    'M224.66,375.19v-94.88c0-2.21,1.11-3.31,3.32-3.31h38.99c8.21,0,14.6,2.24,19.18,6.71,4.58,4.47,6.87,10.81,6.87,19.02v50.04c0,8.21-2.29,14.55-6.87,19.02-4.58,4.47-10.97,6.71-19.18,6.71h-38.99c-2.21,0-3.32-1.1-3.32-3.31ZM246.45,361.14h17.21c3.37,0,5.76-.71,7.18-2.13,1.42-1.42,2.13-3.81,2.13-7.18v-48.15c0-3.37-.71-5.76-2.13-7.18-1.42-1.42-3.82-2.13-7.18-2.13h-17.21c-1.16,0-1.74.58-1.74,1.74v63.31c0,1.16.58,1.74,1.74,1.74Z',
+    'M379.37,276.99h23.37c2.21,0,3.31,1.1,3.31,3.31v94.88c0,2.21-1.11,3.31-3.31,3.31h-12.95c-2.21,0-3.32-1.1-3.32-3.31v-74.83h-.63l-16.1,52.89c-.63,2.11-1.95,3.16-3.95,3.16h-13.26c-2,0-3.32-1.05-3.95-3.16l-16.42-53.04h-.63v74.99c0,1.26-.21,2.13-.63,2.6-.42.47-1.32.71-2.68.71h-12.95c-2.21,0-3.32-1.1-3.32-3.31v-94.88c0-2.21,1.11-3.31,3.32-3.31h23.52c1.47,0,2.47.74,3,2.21l16.73,55.73h.95l16.89-55.73c.32-1.47,1.32-2.21,3-2.21Z',
+    'M468.25,378.5h-17.21c-8.31,0-14.74-2.21-19.26-6.63-4.53-4.42-6.79-10.79-6.79-19.1v-50.04c0-8.31,2.26-14.68,6.79-19.1,4.52-4.42,10.95-6.63,19.26-6.63h17.21c8.21,0,14.6,2.24,19.18,6.71,4.58,4.47,6.87,10.81,6.87,19.02v7.42c0,2.31-1.16,3.47-3.47,3.47h-13.26c-2.21,0-3.32-1.16-3.32-3.47v-6.47c0-3.37-.71-5.76-2.13-7.18s-3.82-2.13-7.19-2.13h-10.73c-3.26,0-5.6.71-7.02,2.13s-2.13,3.82-2.13,7.18v48.15c0,3.37.71,5.76,2.13,7.18,1.42,1.42,3.76,2.13,7.02,2.13h10.73c3.37,0,5.76-.71,7.19-2.13,1.42-1.42,2.13-3.81,2.13-7.18v-6.47c0-2.31,1.1-3.47,3.32-3.47h13.26c2.31,0,3.47,1.16,3.47,3.47v7.42c0,8.21-2.29,14.55-6.87,19.02-4.58,4.47-10.97,6.71-19.18,6.71Z'
+  ];
+  var ONE = [
+    'M264.18,502.66h-15.79c-8.32,0-14.74-2.21-19.26-6.63-4.53-4.42-6.79-10.79-6.79-19.1v-50.04c0-8.31,2.26-14.68,6.79-19.1,4.52-4.42,10.94-6.63,19.26-6.63h15.79c8.21,0,14.58,2.24,19.1,6.71,4.52,4.47,6.79,10.81,6.79,19.02v50.04c0,8.21-2.26,14.55-6.79,19.02-4.53,4.47-10.89,6.71-19.1,6.71ZM251.71,485.29h9.32c3.37,0,5.73-.71,7.1-2.13,1.37-1.42,2.05-3.81,2.05-7.18v-48.15c0-3.37-.68-5.76-2.05-7.18-1.37-1.42-3.74-2.13-7.1-2.13h-9.32c-3.37,0-5.74.71-7.1,2.13-1.37,1.42-2.05,3.82-2.05,7.18v48.15c0,3.37.68,5.76,2.05,7.18,1.37,1.42,3.73,2.13,7.1,2.13Z',
+    'M302.22,429.41v-12.95c0-1.79.79-3.16,2.37-4.1l14.37-9c2.42-1.47,4.47-2.21,6.16-2.21h12.63c2.21,0,3.31,1.1,3.31,3.31v94.88c0,1.26-.24,2.13-.71,2.6-.47.47-1.29.71-2.45.71h-13.58c-2.21,0-3.31-1.1-3.31-3.31v-76.88l-15.47,8.84c-2.21.95-3.31.32-3.31-1.9Z'
+  ];
+
+  var REVEAL_EASE = 'cubic-bezier(0.45,0,0.15,1)';
+  var SHEEN_EVERY = 11000;
+  var SHEEN_DUR   = 2400;
+
+  /* Build the lockup SVG. Two masks: the reveal mask (a hard-edged
+     diagonal band that sweeps in on load) and the sheen mask (a thin
+     diagonal band). As in the Claude Design original, the sheen is a
+     crisp full-ink copy of the lockup seen only through that band,
+     over a base that softens slightly while it passes. No glow. */
+  function build(host) {
+    var vx = 56, vy = 132, vw = 452, vh = 386;
+    var id = 'dmc01-intro-l', X0 = vx - 1.5 * vw, cx = vx + vw / 2, cy = vy + vh / 2;
+    var art =
+      '<path d="' + MARK + '" fill="none" stroke="var(--ink)" stroke-width="' + STROKE + '" stroke-linejoin="miter" stroke-miterlimit="10"></path>' +
+      '<g fill="var(--ink)">' + DMC.map(function(d) { return '<path d="' + d + '"></path>'; }).join('') + '</g>' +
+      '<g fill="var(--ink)" fill-opacity=".45">' + ONE.map(function(d) { return '<path d="' + d + '"></path>'; }).join('') + '</g>';
+    function grad(gid, stops) {
+      return '<linearGradient id="' + gid + '" gradientUnits="userSpaceOnUse" x1="' + X0 + '" y1="0" x2="' + (X0 + 3 * vw) + '" y2="0">' +
+        stops.map(function(s) { return '<stop offset="' + s[0] + '" stop-color="' + s[1] + '"></stop>'; }).join('') +
+        '</linearGradient>';
+    }
+    function mask(mid, cls, gid, tx) {
+      return '<mask id="' + mid + '" maskUnits="userSpaceOnUse" x="' + (vx - vw) + '" y="' + (vy - vh) + '" width="' + (vw * 3) + '" height="' + (vh * 3) + '">' +
+        '<g transform="rotate(18 ' + cx + ' ' + cy + ')">' +
+        '<rect class="' + cls + '" x="' + X0 + '" y="' + (vy - vh) + '" width="' + (3 * vw) + '" height="' + (3 * vh) + '" fill="url(#' + gid + ')" transform="translate(' + tx + ' 0)"></rect>' +
+        '</g></mask>';
+    }
+    host.innerHTML =
+      '<svg viewBox="' + vx + ' ' + vy + ' ' + vw + ' ' + vh + '" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+      '<defs>' +
+      grad(id + 'r', [[0, '#fff'], [.44, '#fff'], [.56, '#000'], [1, '#000']]) +
+      grad(id + 's', [[0, '#000'], [.45, '#000'], [.5, '#fff'], [.55, '#000'], [1, '#000']]) +
+      mask(id + 'm', 'rv', id + 'r', vw * 1.4) +
+      mask(id + 'n', 'sh', id + 's', -vw * .6) +
+      '</defs>' +
+      '<g class="lockup" mask="url(#' + id + 'm)"><g class="base">' + art + '</g>' +
+      '<g mask="url(#' + id + 'n)">' + art + '</g></g>' +
+      '</svg>';
+    var svg = host.querySelector('svg');
+    svg._vw = vw;
+    return svg;
+  }
+
+  function reveal(svg) {
+    var vw = svg._vw, d = 3200;
+    svg.querySelector('.rv').animate(
+      [{ transform: 'translate(' + (-vw * .4) + 'px,0)' }, { transform: 'translate(' + (vw * 1.4) + 'px,0)' }],
+      { duration: d, easing: REVEAL_EASE, fill: 'backwards' });
+    svg.querySelector('.lockup').animate(
+      [{ filter: 'blur(3px)', opacity: .6 }, { filter: 'blur(0)', opacity: 1 }],
+      { duration: d * .8, easing: 'ease-out', fill: 'backwards' });
+    return d;
+  }
+
+  /* Sheen: the lockup softens a touch (never below SHEEN_DIM, so it
+     never disappears), a band of full-ink light passes left to right,
+     then it settles. The Design original dimmed to 0.4. */
+  var SHEEN_DIM = 0.7;
+  function sheen(svg) {
+    var vw = svg._vw;
+    svg.querySelector('.base').animate(
+      [{ opacity: 1 }, { opacity: SHEEN_DIM, offset: .2 }, { opacity: SHEEN_DIM, offset: .75 }, { opacity: 1 }],
+      { duration: SHEEN_DUR, easing: 'ease-in-out' });
+    svg.querySelector('.sh').animate(
+      [{ transform: 'translate(' + (-vw * .6) + 'px,0)' }, { transform: 'translate(' + (vw * 1.6) + 'px,0)' }],
+      { duration: SHEEN_DUR, easing: 'cubic-bezier(0.5,0,0.3,1)' });
+  }
+
   function init() {
-    const root = document.querySelector('.intro-section');
+    var root = document.getElementById('dmc01-intro');
     if (!root) {
-      console.error('[DMC01-intro] Could not find .intro-section.');
+      console.error('[DMC01-intro] Could not find #dmc01-intro.');
       return;
     }
+    var logo  = document.getElementById('dmc01-intro-logo');
+    var tilt  = document.getElementById('dmc01-intro-tilt');
+    var fog   = document.getElementById('dmc01-intro-fog');
+    var turb  = document.getElementById('dmc01-intro-fogt');
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    /* prefers-reduced-motion: the gradient sweep runs on SMIL, which
-       needs an explicit pause (CSS animations are honoured by the UA). */
-    const prefersReduced = window.matchMedia
-      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) {
-      const svg = root.querySelector('.neon-svg');
-      if (svg && typeof svg.pauseAnimations === 'function') svg.pauseAnimations();
+    var svg = build(logo);
+
+    if (!reduce) {
+      /* Only animate while the hero is on-screen and the tab is
+         visible — the fog turbulence and tilt run every frame. */
+      var onScreen = true, looping = false;
+      function active() { return onScreen && !document.hidden; }
+
+      var d = reveal(svg);
+      setTimeout(function() {
+        setInterval(function() { if (active()) sheen(svg); }, SHEEN_EVERY);
+      }, d + 600);
+
+      /* Catchphrase: typed in once the reveal has landed. */
+      var code = root.querySelector('.intro-code'), codeText = code && code.querySelector('.intro-code-text');
+      if (codeText) {
+        var phrase = codeText.textContent, n = 0;
+        codeText.textContent = '';
+        setTimeout(function type() {
+          code.classList.add('is-typing');
+          codeText.textContent = phrase.slice(0, ++n);
+          if (n < phrase.length) setTimeout(type, 34 + Math.random() * 40);
+          else { code.classList.remove('is-typing'); code.classList.add('is-done'); }
+        }, d - 400);
+      }
+
+      var fogDrift = fog.animate(
+        [{ transform: 'translate(-3%,-1%) scale(1.05)' }, { transform: 'translate(3%,1.5%) scale(1)' }],
+        { duration: 38000, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
+
+      /* Pointer tilt — follows the pointer inside the hero, idles on
+         a slow Lissajous drift otherwise. */
+      var tx = 0, ty = 0, x = 0, y = 0, pointer = false;
+      root.addEventListener('pointermove', function(e) {
+        var r = root.getBoundingClientRect();
+        tx = ((e.clientX - r.left) / r.width - .5) * 2;
+        ty = ((e.clientY - r.top) / r.height - .5) * 2;
+        pointer = true;
+      });
+      root.addEventListener('pointerleave', function() { pointer = false; });
+
+      function frame(now) {
+        if (!active()) { looping = false; return; }
+        var s = now / 1000;
+        turb.setAttribute('baseFrequency',
+          (.0035 + Math.sin(s * .07) * .0004).toFixed(5) + ' ' + (.006 + Math.cos(s * .05) * .0006).toFixed(5));
+        var gx = pointer ? tx : Math.sin(s * .45) * .55, gy = pointer ? ty : Math.sin(s * .33 + 1) * .45;
+        x += (gx - x) * .05; y += (gy - y) * .05;
+        tilt.style.transform = 'perspective(1400px) rotateY(' + (x * 7) + 'deg) rotateX(' + (-y * 5) + 'deg) translateZ(0)';
+        requestAnimationFrame(frame);
+      }
+      function resume() {
+        if (active()) fogDrift.play(); else fogDrift.pause();
+        if (active() && !looping) { looping = true; requestAnimationFrame(frame); }
+      }
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function(entries) {
+          onScreen = entries[0].isIntersecting;
+          resume();
+        }).observe(root);
+      }
+      document.addEventListener('visibilitychange', resume);
+      resume();
     }
 
     /* ---------- EASTER EGG ----------
-       5 quick clicks on the .intro-mark logo reveal a toast hinting
-       at the Back-to-the-Future inspiration. Counter resets after a
-       1.5s pause so accidental separated clicks don't trigger. The
-       toast auto-dismisses after 12s; user can also click × or the
-       toast's own backdrop area to close early. */
-    const mark = root.querySelector('.intro-mark');
-    const egg  = document.getElementById('introEasterEgg');
-    if (mark && egg) {
+       5 quick clicks on the logo reveal a toast hinting at the
+       Back-to-the-Future inspiration. Counter resets after a 1.5s
+       pause so accidental separated clicks don't trigger. The toast
+       auto-dismisses after 12s; × or Escape closes it early. */
+    var egg = document.getElementById('introEasterEgg');
+    if (egg) {
       egg.removeAttribute('hidden');
-      const closeBtn = egg.querySelector('.intro-easter-egg-close');
-      let clicks = 0;
-      let resetTimer;
-      let dismissTimer;
+      var closeBtn = egg.querySelector('.intro-easter-egg-close');
+      var clicks = 0, resetTimer, dismissTimer;
       function dismiss() {
         egg.classList.remove('is-visible');
         clearTimeout(dismissTimer);
       }
-      mark.addEventListener('click', function() {
-        /* Restart the pulse animation on every click. Removing the
-           class + forcing reflow + re-adding makes the animation
-           re-trigger even on rapid successive clicks. */
-        mark.classList.remove('is-pulsing');
-        void mark.offsetWidth;
-        mark.classList.add('is-pulsing');
+      /* Rapid clicks count as double/triple clicks — don't let them
+         select the tagline text. */
+      logo.addEventListener('mousedown', function(e) { if (e.detail > 1) e.preventDefault(); });
+      logo.addEventListener('click', function() {
+        logo.classList.remove('is-pulsing');
+        void logo.offsetWidth;
+        logo.classList.add('is-pulsing');
 
         clicks++;
         clearTimeout(resetTimer);
@@ -614,8 +623,8 @@
           dismissTimer = setTimeout(dismiss, 12000);
         }
       });
-      mark.addEventListener('animationend', function() {
-        mark.classList.remove('is-pulsing');
+      logo.addEventListener('animationend', function(e) {
+        if (e.animationName === 'intro-mark-pulse') logo.classList.remove('is-pulsing');
       });
       if (closeBtn) closeBtn.addEventListener('click', dismiss);
       document.addEventListener('keydown', function(e) {
