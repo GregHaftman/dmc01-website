@@ -128,6 +128,20 @@
     transform: translateY(0);
     pointer-events: auto;
   }
+  /* Reading progress — a hairline along the bottom edge of the bar,
+     filled by JS (--np, 0 → 1) as the page scrolls. */
+  .dmc01-nav .nav-progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background: var(--accent);
+    transform-origin: left center;
+    transform: scaleX(var(--np, 0));
+    pointer-events: none;
+  }
+
   /* A section popup is open (set by the Product / Testimonials embeds):
      step aside so the nav never sits over the top of the popup. */
   html.dmc01-overlay-open .dmc01-nav {
@@ -394,6 +408,7 @@
 <body>
 
 <header class="dmc01-nav" id="dmc01Nav" role="banner">
+  <span class="nav-progress" aria-hidden="true"></span>
   <div class="nav-inner">
 
     <a class="nav-brand" href="/" aria-label="DMC01 — home">
@@ -621,6 +636,17 @@
     }
     syncVisibility();
     window.addEventListener('scroll', syncVisibility, { passive: true });
+
+    /* Reading progress for the hairline under the bar. */
+    let npQueued = false;
+    function syncProgress() {
+      npQueued = false;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      nav.style.setProperty('--np', max > 0 ? Math.min(1, window.scrollY / max).toFixed(4) : 0);
+    }
+    window.addEventListener('scroll', () => { if (!npQueued) { npQueued = true; requestAnimationFrame(syncProgress); } }, { passive: true });
+    window.addEventListener('resize', syncProgress, { passive: true });
+    syncProgress();
     window.addEventListener('resize', syncVisibility, { passive: true });
 
     /* ---------- MENU TOGGLE ---------- */
