@@ -91,6 +91,10 @@
     --line-strong: rgba(12, 13, 17, 0.16);
     --shadow:      0 1px 2px rgba(12, 13, 17, 0.06), 0 4px 16px rgba(12, 13, 17, 0.06);
   }
+  /* Phones: a calmer heading scale (Webflow's mobile H1 is ~46px). */
+  @media (max-width: 480px) {
+    :root { --fs-h1: 2.35rem; --fs-h2: 1.6rem; }
+  }
   /* @dmc01-tokens:end */
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -481,6 +485,21 @@
   }
   .testimonials-section .closing-line-text em { font-style: normal; font-weight: 600; color: var(--accent); }
 
+  /* Touch screens: a plain native swipe, card by card. No auto-scroll
+     (the script skips it) and no edge-fade mask — Safari stops painting
+     a masked scroller mid-swipe, which made the cards vanish. */
+  @media (hover: none) and (pointer: coarse) {
+    .testimonials-section .testimonials-marquee {
+      -webkit-mask-image: none;
+      mask-image: none;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: 20px;
+      padding-inline: 20px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .testimonials-section .testimonial-card { scroll-snap-align: start; }
+  }
+
   /* ============================================================
      RESPONSIVE
      ============================================================ */
@@ -494,7 +513,8 @@
     .testimonials-section { padding: 56px 0 64px; }
     .testimonials-section .section-inner { padding: 0 20px; }
     .testimonials-section .testimonial-card { flex-basis: 280px; height: 250px; padding: 20px; }
-    .testimonials-section .testimonial-modal-card { padding: 32px 24px 26px; }
+    .testimonials-section .testimonial-modal-card { padding: 32px 24px 26px; max-height: calc(var(--vv-h, 100dvh) - 32px); }
+    .testimonials-section .testimonial-modal { height: var(--vv-h, 100dvh); }
     /* KPIs stack; each li is full-width flex so a wrapped line keeps
        its icon at the left. */
     .testimonials-section .cred-row { flex-direction: column; align-items: flex-start; gap: 10px; }
@@ -731,10 +751,15 @@
               .replace(/"/g, '&quot;');
     }
 
+    /* Touch screens get a plain native swipe (see CSS): one set of
+       cards, no auto-advance, no loop — writing scrollLeft while iOS
+       is still gliding from a swipe made the cards disappear. */
+    const isTouch = window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
     const frag = document.createDocumentFragment();
     TESTIMONIALS.forEach(function(t) { frag.appendChild(buildCard(t)); });
-    /* Duplicate set for seamless loop. */
-    TESTIMONIALS.forEach(function(t) { frag.appendChild(buildCard(t)); });
+    /* Duplicate set for seamless loop (pointer devices only). */
+    if (!isTouch) TESTIMONIALS.forEach(function(t) { frag.appendChild(buildCard(t)); });
     track.appendChild(frag);
 
     /* ============ MODAL — click any card to read the full quote ============ */
@@ -820,7 +845,7 @@
       }
       requestAnimationFrame(tick);
     }
-    requestAnimationFrame(tick);
+    if (!isTouch) requestAnimationFrame(tick);
 
     marquee.addEventListener('mouseenter', function() { isHovering = true; });
     marquee.addEventListener('mouseleave', function() { isHovering = false; });

@@ -92,6 +92,10 @@
   --line-strong: rgba(12, 13, 17, 0.16);
   --shadow:      0 1px 2px rgba(12, 13, 17, 0.06), 0 4px 16px rgba(12, 13, 17, 0.06);
 }
+/* Phones: a calmer heading scale (Webflow's mobile H1 is ~46px). */
+@media (max-width: 480px) {
+  :root { --fs-h1: 2.35rem; --fs-h2: 1.6rem; }
+}
 /* @dmc01-tokens:end */
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -737,8 +741,38 @@ body {
 @media (max-width: 760px) {
   #dmc01-product .flux { display: none; }
   #dmc01-product .fx-list { display: flex; }
-  #dmc01-product .fx-modal { padding: 12px; }
-  #dmc01-product .fx-modal-card { padding: 24px 20px 18px; max-height: calc(var(--vv-h, 100vh) * 0.92); }
+  #dmc01-product .fx-list-item { align-items: center; }
+  /* Phone popup: sized to the visible viewport (dvh follows Safari's
+     bars), all four edges in view, and a close button that stays
+     pinned at the top of the card while its content scrolls. */
+  #dmc01-product .fx-modal { padding: 16px 12px; height: var(--vv-h, 100dvh); }
+  #dmc01-product .fx-modal-card {
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px 18px;
+    max-height: calc(var(--vv-h, 100dvh) - 32px);
+  }
+  #dmc01-product .fx-modal-close {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    align-self: flex-end;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    margin: 12px -8px -24px 0;
+    padding: 0;
+    font-size: 1.3rem;
+    background: var(--panel-2);
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+  }
+  #dmc01-product .fx-modal-head { padding-right: 44px; margin-top: 4px; }
+  #dmc01-product .fx-modal-head .hero-icon { display: none; }
+  #dmc01-product .curiosity-popup { height: var(--vv-h, 100dvh); }
+  #dmc01-product .curiosity-card { max-height: calc(var(--vv-h, 100dvh) - 32px); }
   #dmc01-product .fx-modal-title { font-size: 1.7rem; }
   #dmc01-product .deliverables-block { grid-template-columns: 1fr; }
   #dmc01-product .curiosity-card { padding: 28px 22px; }
