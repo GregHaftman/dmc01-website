@@ -107,6 +107,10 @@
     --line-strong: rgba(12, 13, 17, 0.16);
     --shadow:      0 1px 2px rgba(12, 13, 17, 0.06), 0 4px 16px rgba(12, 13, 17, 0.06);
   }
+  /* Phones: a calmer heading scale (Webflow's mobile H1 is ~46px). */
+  @media (max-width: 480px) {
+    :root { --fs-h1: 2.35rem; --fs-h2: 1.6rem; }
+  }
   /* @dmc01-tokens:end */
 
   /* Hero-only: the faint grid and the section's bottom hairline. */
@@ -247,7 +251,10 @@
     white-space: nowrap;
   }
 
-  /* Scroll handoff targets (JS writes --hp, 0 → 1). */
+  /* Scroll handoff targets. Desktop: JS writes --hp (0 → 1) and these
+     rules do the rest. Phones / touch: JS writes transform + opacity
+     inline instead (overriding these), which Safari animates far more
+     smoothly than a CSS variable feeding calc(). */
   .intro-section .intro-stage {
     transform: translateY(calc(var(--hp, 0) * -56px)) scale(calc(1 - var(--hp, 0) * 0.22));
     opacity: calc(1 - var(--hp, 0) * 0.9);
@@ -387,8 +394,11 @@
      RESPONSIVE
      ============================================================ */
   @media (max-width: 720px) {
-    .intro-section { min-height: 95vh; padding: 88px 20px 32px; }
-    .intro-section .intro-tilt { width: min(80%, 44vh); }
+    /* svh = the viewport with Safari's bars showing, so catchphrase,
+       logo and tagline all fit on first load. */
+    .intro-section { min-height: 95vh; min-height: 100svh; padding: 64px 20px 28px; }
+    .intro-section .intro-tilt { width: min(72%, 34vh); width: min(72%, 34svh); }
+    .intro-section .intro-tagline { gap: 8px; }
     /* Scale with the viewport so the title stays on one line down to 320px. */
     .intro-section .intro-title { font-size: min(1.6rem, 6.4vw); gap: 10px; }
     .intro-section .intro-title::before { width: 24px; }
@@ -561,7 +571,12 @@
          live page that's the page scroll; in the local fullsite preview
          the hero is an iframe, so the preview passes its scroll in as
          --vv-top and a `dmc01:viewport` event. */
+      /* Phones / touch screens: lighter fog (no per-frame noise) and
+         compositor-only handoff writes. Desktop paths are unchanged. */
+      var lightFog = window.matchMedia && window.matchMedia('(max-width: 720px), (hover: none) and (pointer: coarse)').matches;
       var hpQueued = false;
+      var stageEl = root.querySelector('.intro-stage');
+      var cornerEls = [root.querySelector('.intro-tagline'), root.querySelector('.intro-code')].filter(Boolean);
       function scrolled() {
         var v = window.frameElement && document.documentElement.style.getPropertyValue('--vv-top');
         return v ? parseFloat(v) : Math.max(0, -root.getBoundingClientRect().top);
@@ -570,7 +585,14 @@
         hpQueued = false;
         var y = scrolled();
         var hp = Math.min(1, y / (root.offsetHeight * 0.6));
-        root.style.setProperty('--hp', hp.toFixed(3));
+        if (!lightFog) { root.style.setProperty('--hp', hp.toFixed(3)); return; }
+        /* Phones / touch: direct transform/opacity writes (compositor-only)
+           rather than a CSS variable, which made Safari restyle the whole
+           hero on every frame of the scroll. */
+        stageEl.style.transform = 'translate3d(0,' + (hp * -56).toFixed(1) + 'px,0) scale(' + (1 - hp * 0.22).toFixed(4) + ')';
+        stageEl.style.opacity = (1 - hp * 0.9).toFixed(3);
+        var co = Math.max(0, 1 - hp * 1.4).toFixed(3), cy = 'translate3d(0,' + (hp * -16).toFixed(1) + 'px,0)';
+        cornerEls.forEach(function(el) { el.style.opacity = co; el.style.transform = cy; });
       }
       function queueHandoff() { if (!hpQueued) { hpQueued = true; requestAnimationFrame(handoff); } }
       window.addEventListener('scroll', queueHandoff, { passive: true });
@@ -590,6 +612,9 @@
         }, d - 400);
       }
 
+      /* On phones / touch screens the fog keeps drifting but stops
+         re-generating its noise every frame — that repaint is what made
+         the scroll handoff stutter on iPhone. Desktop unchanged. */
       var fogDrift = fog.animate(
         [{ transform: 'translate(-3%,-1%) scale(1.05)' }, { transform: 'translate(3%,1.5%) scale(1)' }],
         { duration: 38000, direction: 'alternate', iterations: Infinity, easing: 'ease-in-out' });
@@ -608,7 +633,7 @@
       function frame(now) {
         if (!active()) { looping = false; return; }
         var s = now / 1000;
-        turb.setAttribute('baseFrequency',
+        if (!lightFog) turb.setAttribute('baseFrequency',
           (.0035 + Math.sin(s * .07) * .0004).toFixed(5) + ' ' + (.006 + Math.cos(s * .05) * .0006).toFixed(5));
         var gx = pointer ? tx : Math.sin(s * .45) * .55, gy = pointer ? ty : Math.sin(s * .33 + 1) * .45;
         x += (gx - x) * .05; y += (gy - y) * .05;
