@@ -31,7 +31,6 @@
                           bottom-right corner
        5. Catchphrase   — "// strategy compiled like code", top-left,
                           typed in once the logo reveal finishes
-       6. Scroll cue    — bottom-left, until the first scroll
 
      Scroll handoff: as the hero scrolls away, the logo shrinks, lifts
      and fades, and the corner copy fades with it — so the logo hands
@@ -248,50 +247,6 @@
     white-space: nowrap;
   }
 
-  /* ============================================================
-     SCROLL CUE — bottom-left: "Scroll" + a hairline with a bead of
-     light running down it. Goes away for good at the first scroll.
-     ============================================================ */
-  .intro-section .intro-cue {
-    position: absolute;
-    left: clamp(24px, 4vw, 64px);
-    bottom: clamp(28px, 5vh, 56px);
-    z-index: 2;
-    display: flex;
-    align-items: flex-end;
-    gap: 12px;
-    font-family: var(--font-head);
-    font-size: var(--fs-xs);
-    font-weight: 600;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: var(--muted);
-    opacity: 0;
-    transition: opacity 0.6s ease;
-    pointer-events: none;
-  }
-  .intro-section .intro-cue.is-shown { opacity: 1; }
-  .intro-section .intro-cue.is-gone { opacity: 0; transition-duration: 0.3s; }
-  .intro-section .intro-cue-line {
-    position: relative;
-    width: 1px;
-    height: 44px;
-    overflow: hidden;
-    background: var(--line-strong);
-  }
-  .intro-section .intro-cue-line::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: -14px;
-    width: 1px;
-    height: 14px;
-    background: var(--accent);
-    animation: introCue 1.8s cubic-bezier(0.45, 0, 0.2, 1) infinite;
-  }
-  .intro-section .intro-cue.is-gone .intro-cue-line::after { animation: none; }
-  @keyframes introCue { 0% { transform: translateY(0); } 70%, 100% { transform: translateY(58px); } }
-
   /* Scroll handoff targets (JS writes --hp, 0 → 1). */
   .intro-section .intro-stage {
     transform: translateY(calc(var(--hp, 0) * -56px)) scale(calc(1 - var(--hp, 0) * 0.22));
@@ -439,7 +394,6 @@
     .intro-section .intro-title::before { width: 24px; }
     .intro-section .intro-description { font-size: var(--fs-body); }
     .intro-section .intro-code { top: 28px; left: 20px; font-size: 1rem; }
-    .intro-section .intro-cue { display: none; }
   }
 </style>
 </head>
@@ -464,8 +418,6 @@
     <span class="intro-sr">Strategy compiled like code</span>
     <span class="intro-code-slashes" aria-hidden="true">//</span><span class="intro-code-text" aria-hidden="true">strategy compiled like code</span><span class="intro-code-caret" aria-hidden="true"></span>
   </p>
-
-  <div class="intro-cue" aria-hidden="true"><span class="intro-cue-line"></span>Scroll</div>
 
   <div class="intro-stage">
     <div class="intro-tilt" id="dmc01-intro-tilt">
@@ -604,13 +556,11 @@
         setInterval(function() { if (active()) sheen(svg); }, SHEEN_EVERY);
       }, d + 600);
 
-      /* ---------- SCROLL HANDOFF + CUE ----------
+      /* ---------- SCROLL HANDOFF ----------
          --hp goes 0 → 1 over the first 60% of the hero's height. On the
          live page that's the page scroll; in the local fullsite preview
          the hero is an iframe, so the preview passes its scroll in as
          --vv-top and a `dmc01:viewport` event. */
-      var cue = root.querySelector('.intro-cue');
-      setTimeout(function() { if (cue && !cue.classList.contains('is-gone')) cue.classList.add('is-shown'); }, d + 900);
       var hpQueued = false;
       function scrolled() {
         var v = window.frameElement && document.documentElement.style.getPropertyValue('--vv-top');
@@ -621,7 +571,6 @@
         var y = scrolled();
         var hp = Math.min(1, y / (root.offsetHeight * 0.6));
         root.style.setProperty('--hp', hp.toFixed(3));
-        if (y > 24 && cue) cue.classList.add('is-gone');
       }
       function queueHandoff() { if (!hpQueued) { hpQueued = true; requestAnimationFrame(handoff); } }
       window.addEventListener('scroll', queueHandoff, { passive: true });
