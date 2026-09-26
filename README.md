@@ -38,7 +38,6 @@ dmc01-website/
 │   │                                  # https://dmc01-website.ghaftman.workers.dev/<filename>
 │   ├── head-alias-block.css           # Pasted into Webflow Project → Custom Code → <head>
 │   ├── dmc01-product.js               # Flux Dial JS + module data for the Product section (~47 kB)
-│   ├── dmc01-orbital.js               # Legacy orbital JS — delete once the new Product embed is live
 │   ├── logo-lockup.svg                # Brand-asset master (mark + DMC01 wordmark)
 │   └── portrait.svg                   # Bio portrait — loaded by the testimonials section
 │
