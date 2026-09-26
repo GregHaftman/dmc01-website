@@ -6,7 +6,7 @@
 <title>DMC01 — Open a brief</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 
 <script>(function(){try{var t=localStorage.getItem('dmc01-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 
@@ -36,576 +36,425 @@
      deploy to verify wiring.
      ============================================================ */
 
+  /* Visual language: dmc01-ui-kit tokens. Fields and module chips
+     follow the kit's inputs/checkbox (state = border + tint, never a
+     solid block); the submit is the page's one filled Brand Blue
+     button. Errors use Brand Purple — the palette has no red. */
+
+  /* @dmc01-tokens:start */
   :root {
-    --brand-blue:        var(--accent-primary, #0047FF);
-    --brand-blue-hover:  var(--accent-primary-hover, #3c6ce7);
-    --neutral-primary:   var(--bg-primary, #070708);
-    --neutral-secondary: var(--bg-secondary, #161617);
-    --surface-3:         #1d1e22;
-    --font:              var(--font-body, "Rajdhani", system-ui, sans-serif);
-    --t-h1-size:    var(--h1-size, 4.65rem);
-    --t-h2-size:    var(--h2-size, 2.83rem);
-    --t-base-size:  var(--base-font-size, 1.1rem);
-    --t-lg-size:    var(--text-lg-size, 1.4rem);
-    --t-xl-size:    var(--text-xl-size, 1.5rem);
-    --t-eyebrow-size: var(--eyebrow-size, 1.1rem);
-    --w-h1:    var(--h1-weight, 600);
-    --w-base:  var(--base-font-weight, 400);
-    --w-bold:  var(--base-font-weight-bold, 600);
-    --lh-h1:   var(--h1-line-height, 1.04em);
-    --lh-base: var(--base-line-height, 1.6em);
-    --white:    var(--text-primary, #FFFFFF);
-    --white-72: rgba(255, 255, 255, 0.88);
-    --white-50: rgba(255, 255, 255, 0.62);
-    --white-30: rgba(255, 255, 255, 0.30);
-    --white-15: var(--border-secondary, rgba(255, 255, 255, 0.15));
-    --blue-glow:  var(--accent-primary-glow, rgba(0, 71, 255, 0.55));
-    --blue-faint: var(--accent-primary-faint, rgba(0, 71, 255, 0.10));
-    --blue-grid:  var(--brand-grid, rgba(73, 72, 192, 0.04));
-    --error: #E13838;
+    /* surfaces — kit */
+    --bg:          #0c0d11;
+    --panel:       #15171d;
+    --panel-2:     #1d2027;
+    --panel-3:     #232730;
 
-    /* Border radius — see head-alias-block.css. */
-    --radius-sm: var(--radius-base, 2px);
-    --radius-md: calc(var(--radius-sm) * 2);
+    /* text — kit, plus --body (web) */
+    --ink:         #f3f5f8;
+    --body:        rgba(243, 245, 248, 0.80);
+    --muted:       rgba(243, 245, 248, 0.52);
+    --faint:       rgba(243, 245, 248, 0.34);
+
+    /* accents — kit (dark-surface variants) */
+    --accent:       #4c8dff;
+    --accent-hover: #6ba1ff;
+    --accent-soft:  rgba(76, 141, 255, 0.14);
+    --purple:       #9b6bdc;
+
+    /* Brand Blue as a fill — web */
+    --brand-blue:       #0047FF;
+    --brand-blue-hover: #1f5eff;
+    --on-brand:         #ffffff;
+
+    /* lines, radii, shadow — kit */
+    --line:        rgba(255, 255, 255, 0.08);
+    --line-strong: rgba(255, 255, 255, 0.14);
+    --radius-sm:   6px;
+    --radius:      8px;
+    --radius-lg:   12px;
+    --shadow:      0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.25);
+
+    /* type — kit families; Webflow's responsive heading scale where it exists */
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-head: "Rajdhani", -apple-system, sans-serif;
+    --fs-h1:     var(--h1-size, 4.65rem);
+    --fs-h2:     var(--h2-size, 2.83rem);
+    --fs-lede:   1.1875rem;
+    --fs-body:   1.0625rem;
+    --fs-small:  0.9375rem;
+    --fs-xs:     0.8125rem;
+    --fs-eyebrow: 0.9375rem;
+
+    --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   }
-
-  /* Light theme — see 01-dmc01-intro.html for the rationale. */
   [data-theme="light"] {
-    --neutral-primary:   #f5f5f7;
-    --neutral-secondary: #ffffff;
-    --surface-3:         #ebebee;
-    --white:    #070708;
-    --white-72: rgba(7, 7, 8, 0.85);
-    --white-70: rgba(7, 7, 8, 0.83);
-    --white-50: rgba(7, 7, 8, 0.68);
-    --white-30: rgba(7, 7, 8, 0.42);
-    --white-15: rgba(7, 7, 8, 0.10);
+    --bg:          #f5f6f8;
+    --panel:       #ffffff;
+    --panel-2:     #eef0f3;
+    --panel-3:     #e6e9ee;
+
+    --ink:         #0c0d11;
+    --body:        rgba(12, 13, 17, 0.80);
+    --muted:       rgba(12, 13, 17, 0.60);
+    --faint:       rgba(12, 13, 17, 0.40);
+
+    --accent:       #0047FF;
+    --accent-hover: #0039cc;
+    --accent-soft:  rgba(0, 71, 255, 0.09);
+    --purple:       #6633CC;
+
+    --line:        rgba(12, 13, 17, 0.09);
+    --line-strong: rgba(12, 13, 17, 0.16);
+    --shadow:      0 1px 2px rgba(12, 13, 17, 0.06), 0 4px 16px rgba(12, 13, 17, 0.06);
   }
-  /* Form inputs need a darker focused background on light theme so
-     focus state still pops. */
-  [data-theme="light"] .form-field input:focus,
-  [data-theme="light"] .form-field select:focus,
-  [data-theme="light"] .form-field textarea:focus {
-    background: var(--surface-3);
-  }
-  /* Success block gradient — flip to subtle blue tint on white. */
-  [data-theme="light"] .form-success {
-    background: linear-gradient(180deg, var(--neutral-secondary) 0%, rgba(0, 71, 255, 0.06) 100%);
-  }
+  /* @dmc01-tokens:end */
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: var(--neutral-primary);
-    color: var(--white);
-    font-family: var(--font);
-    font-weight: var(--w-base);
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* ============================================================
-     SECTION FRAME
-     ============================================================ */
   .contact-section {
+    --sec-grid: rgba(255, 255, 255, 0.025);
     position: relative;
     z-index: 1;
     width: 100vw;
     margin-left: calc(-50vw + 50%);
-    padding: 56px clamp(24px, 4vw, 64px) 80px;
-    background: var(--neutral-primary);
+    padding: clamp(64px, 9vh, 104px) clamp(24px, 4vw, 64px) 88px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
     overflow: hidden;
     isolation: isolate;
   }
+  [data-theme="light"] .contact-section { --sec-grid: rgba(12, 13, 17, 0.035); }
   .contact-section::before {
     content: "";
     position: absolute;
     inset: 0;
-    pointer-events: none;
     z-index: 0;
+    pointer-events: none;
     background-image:
-      linear-gradient(var(--blue-grid) 1px, transparent 1px),
-      linear-gradient(90deg, var(--blue-grid) 1px, transparent 1px);
+      linear-gradient(var(--sec-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--sec-grid) 1px, transparent 1px);
     background-size: 60px 60px;
     mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black 40%, transparent 100%);
     -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black 40%, transparent 100%);
   }
-  .contact-section .section-inner {
-    position: relative;
-    z-index: 2;
-    max-width: 880px;
-    margin: 0 auto;
-  }
+  .contact-section .section-inner { position: relative; z-index: 2; max-width: 720px; margin: 0 auto; }
 
-  /* ============================================================
-     HEADER
-     ============================================================ */
-  .contact-header {
-    margin-bottom: 48px;
-    padding-bottom: 28px;
-    border-bottom: 1px solid var(--white-15);
-  }
+  /* ----- HEADER ----- */
+  .contact-section .contact-header { margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid var(--line); }
   .contact-section .eyebrow {
-    font-size: var(--t-eyebrow-size);
-    font-weight: 600;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--brand-blue);
-    margin-bottom: 14px;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
+    margin-bottom: 16px;
+    font-family: var(--font-head);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
   }
-  .contact-section .eyebrow::before {
-    content: "";
-    width: 32px; height: 1px;
-    background: var(--brand-blue);
-  }
+  .contact-section .eyebrow::before { content: ""; width: 28px; height: 1px; background: currentColor; }
   .contact-section .section-title {
-    /* margin + text-align reset to neutralise Webflow's site-wide
-       heading defaults (which center H1/H2 and add 20px margins).
-       Margin-bottom kept intentionally for spacing before the lede.
-       Explicit color: var(--white) is themed and overrides Webflow's
-       body color leak. */
     margin: 0 0 20px;
     text-align: left;
-    color: var(--white);
-    font-size: var(--t-h1-size);
-    font-weight: var(--w-h1);
-    line-height: var(--lh-h1);
-    letter-spacing: -0.02em;
+    font-family: var(--font-head);
+    font-size: var(--fs-h1);
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    color: var(--ink);
   }
-  .contact-section .section-title em {
-    font-style: normal;
-    color: var(--brand-blue);
-  }
-  .contact-section .section-lede {
+  .contact-section .section-title em { font-style: normal; color: var(--accent); }
+  .contact-section .section-lede,
+  .contact-section .section-lede-alt {
+    max-width: 36em;
     margin: 0;
     text-align: left;
-    font-size: var(--t-lg-size);
-    font-weight: var(--w-base);
-    line-height: var(--lh-base);
-    color: var(--white-72);
-    max-width: 640px;
+    font-size: var(--fs-lede);
+    line-height: 1.65;
+    color: var(--body);
   }
-  .contact-section .section-lede-alt {
-    margin-top: 10px;
-    /* Matches the main lede above (--t-lg-size) so the two paragraphs
-       read as a continuous beat rather than primary + footnote. */
-    font-size: var(--t-lg-size);
-    font-weight: var(--w-base);
-    line-height: var(--lh-base);
-    color: var(--white-72);
-    max-width: 640px;
-  }
+  .contact-section .section-lede-alt { margin-top: 10px; }
   .contact-section .section-lede-alt a {
-    color: var(--brand-blue);
+    color: var(--accent);
     text-decoration: none;
-    border-bottom: 1px solid rgba(0, 71, 255, 0.4);
-    transition: border-color 0.2s ease, color 0.2s ease;
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    transition: color 0.15s ease, border-color 0.15s ease;
   }
-  .contact-section .section-lede-alt a:hover {
-    color: var(--brand-blue-hover);
-    border-bottom-color: var(--brand-blue);
-  }
+  .contact-section .section-lede-alt a:hover { color: var(--accent-hover); border-bottom-color: var(--accent-hover); }
 
   /* ============================================================
-     FORM
+     FORM — kit fields
      ============================================================ */
-  .contact-form {
-    display: grid;
-    gap: 22px;
-  }
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-  }
-  .form-field {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    min-width: 0;
-  }
-  .form-label {
+  .contact-section .contact-form { display: grid; gap: 22px; }
+  .contact-section .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .contact-section .form-field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .contact-section .form-label {
     display: flex;
     align-items: baseline;
     gap: 8px;
-    font-size: var(--t-eyebrow-size);
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--white-72);
-  }
-  .form-optional {
-    letter-spacing: 0;
-    text-transform: lowercase;
-    color: var(--white-30);
+    font-size: var(--fs-small);
     font-weight: 500;
-    font-size: 0.75rem;
+    color: var(--ink);
   }
+  .contact-section .form-optional { font-size: var(--fs-xs); font-weight: 400; color: var(--muted); }
 
-  .form-field input,
-  .form-field select,
-  .form-field textarea {
+  .contact-section .form-field input,
+  .contact-section .form-field textarea {
     width: 100%;
-    background: var(--neutral-secondary);
-    border: 1px solid var(--white-15);
-    color: var(--white);
-    padding: 12px 14px;
-    font-family: inherit;
-    font-size: var(--t-base-size);
-    font-weight: 500;
-    line-height: 1.4;
-    border-radius: var(--radius-sm);
-    transition:
-      border-color 0.2s ease,
-      background 0.2s ease,
-      box-shadow 0.2s ease;
+    padding: 11px 14px;
+    background: var(--panel);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    line-height: 1.45;
+    transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
   }
-  .form-field textarea {
-    resize: vertical;
-    min-height: 140px;
-  }
-  .form-field input::placeholder,
-  .form-field textarea::placeholder {
-    color: var(--white-30);
-  }
-  .form-field input:focus,
-  .form-field select:focus,
-  .form-field textarea:focus {
+  .contact-section .form-field input:hover,
+  .contact-section .form-field textarea:hover { border-color: color-mix(in srgb, var(--accent) 42%, transparent); }
+  .contact-section .form-field textarea { resize: vertical; min-height: 140px; }
+  .contact-section .form-field input::placeholder,
+  .contact-section .form-field textarea::placeholder { color: var(--faint); }
+  .contact-section .form-field input:focus,
+  .contact-section .form-field textarea:focus {
     outline: none;
-    border-color: var(--brand-blue);
-    background: var(--surface-3);
-    box-shadow: 0 0 0 1px var(--brand-blue), 0 0 24px rgba(0, 71, 255, 0.18);
+    border-color: var(--accent);
+    background: var(--panel-2);
+    box-shadow: 0 0 0 3px var(--accent-soft);
   }
-  /* Native validation styling — only after the user has submitted at
-     least once (handled by the .has-attempted class on the form). */
-  .contact-form.has-attempted .form-field input:invalid,
-  .contact-form.has-attempted .form-field textarea:invalid {
-    border-color: var(--error);
-  }
+  /* Validation shows only after a first submit attempt (.has-attempted). */
+  .contact-section .contact-form.has-attempted .form-field input:invalid,
+  .contact-section .contact-form.has-attempted .form-field textarea:invalid { border-color: var(--purple); }
 
-  /* Custom select chevron — `appearance: none` plus a background SVG. */
-  .form-field select {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    padding-right: 38px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230047FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 14px 14px;
-  }
-  .form-field select option {
-    background: var(--neutral-secondary);
-    color: var(--white);
-  }
-
-  /* ============================================================
-     MODULES — multi-select chips (toggle .module-chip-input). The
-     visible checkbox is hidden; selected state is driven by `:has`.
-     A hidden <input name="Modules"> aggregates the picked codes for
-     Webflow's form capture (see init() in the script below).
-     ============================================================ */
-  .modules-fieldset {
-    border: 0;
-    padding: 0;
-    margin: 0;
-    min-width: 0;
-  }
-  .modules-fieldset .form-label { margin-bottom: 4px; }
-  .modules-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-top: 4px;
-  }
-  .module-chip {
+  /* ----- Module chips — kit checkbox: tick + tint, no solid block ----- */
+  .contact-section .modules-fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+  .contact-section .modules-fieldset .form-label { margin-bottom: 4px; }
+  .contact-section .modules-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 4px; }
+  .contact-section .module-chip {
     position: relative;
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 14px;
-    background: var(--neutral-secondary);
-    border: 1px solid var(--white-15);
-    border-radius: var(--radius-sm);
+    padding: 11px 14px;
+    background: var(--panel);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    color: var(--body);
     cursor: pointer;
-    color: var(--white-72);
-    transition:
-      border-color 0.2s ease,
-      background 0.2s ease,
-      color 0.2s ease,
-      box-shadow 0.2s ease;
+    transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
   }
-  .module-chip:hover {
-    border-color: var(--white-30);
-    color: var(--white);
-  }
-  .module-chip-input {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-  }
-  .module-chip::before {
+  .contact-section .module-chip:hover { border-color: color-mix(in srgb, var(--accent) 42%, transparent); color: var(--ink); }
+  .contact-section .module-chip-input { position: absolute; opacity: 0; pointer-events: none; }
+  .contact-section .module-chip::before {
     content: "";
-    width: 14px; height: 14px;
-    border: 1px solid var(--white-30);
-    border-radius: 3px;
     flex-shrink: 0;
-    transition: background 0.2s ease, border-color 0.2s ease;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    background: var(--panel-2);
+    transition: border-color 0.15s ease, background-color 0.15s ease;
   }
-  .module-chip:has(.module-chip-input:checked) {
-    border-color: var(--brand-blue);
-    background: var(--blue-faint);
-    color: var(--white);
-    box-shadow: 0 0 0 1px var(--brand-blue), 0 0 18px rgba(0, 71, 255, 0.18);
+  .contact-section .module-chip:has(.module-chip-input:checked) {
+    border-color: color-mix(in srgb, var(--accent) 42%, transparent);
+    background: var(--accent-soft);
+    color: var(--ink);
   }
-  .module-chip:has(.module-chip-input:checked)::before {
-    background: var(--brand-blue);
-    border-color: var(--brand-blue);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='5 12 10 17 19 8'/%3E%3C/svg%3E");
-    background-size: 11px 11px;
+  .contact-section .module-chip:has(.module-chip-input:checked)::before {
+    border-color: var(--accent);
+    background-color: var(--accent-soft);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234c8dff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='5 12 10 17 19 8'/%3E%3C/svg%3E");
+    background-size: 12px 12px;
     background-position: center;
     background-repeat: no-repeat;
   }
-  .module-chip:focus-within {
-    border-color: var(--brand-blue);
-    box-shadow: 0 0 0 1px var(--brand-blue);
+  [data-theme="light"] .contact-section .module-chip:has(.module-chip-input:checked)::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230047FF' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='5 12 10 17 19 8'/%3E%3C/svg%3E");
   }
-  .module-chip-id {
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    color: var(--brand-blue);
+  .contact-section .module-chip:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .contact-section .module-chip-id {
+    font-family: var(--font-head);
+    font-size: var(--fs-xs);
+    font-weight: 600;
     font-variant-numeric: tabular-nums;
+    color: var(--accent);
   }
-  .module-chip-label {
-    font-size: var(--t-base-size);
-    font-weight: 500;
-  }
+  .contact-section .module-chip-label { font-size: var(--fs-small); font-weight: 500; }
 
-  /* Honeypot — off-screen, accessible-name suppressed. Bots that
-     blindly fill every input get caught by Webflow's spam rules; you
-     can also filter on `bot-field` having any value in the
-     dashboard. */
-  .field-of-honor {
-    position: absolute;
-    left: -9999px;
-    width: 1px; height: 1px;
-    opacity: 0;
-    pointer-events: none;
-  }
+  /* Honeypot — off-screen. */
+  .contact-section .field-of-honor { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 
-  /* reCAPTCHA slot. Webflow injects the iframe inside `.g-recaptcha`
-     once you enable reCAPTCHA in Project Settings → Forms. Until
-     then, the empty pseudo-element acts as a placeholder so the
-     layout doesn't collapse in local preview. */
-  .form-captcha {
-    margin-top: 6px;
-  }
-  .form-captcha .g-recaptcha {
-    min-height: 78px;
-  }
-  .form-captcha .g-recaptcha:empty {
+  /* reCAPTCHA slot — Webflow injects the widget on the live site; the
+     placeholder keeps the layout in local preview. */
+  .contact-section .form-captcha { margin-top: 6px; }
+  .contact-section .form-captcha .g-recaptcha { min-height: 78px; }
+  .contact-section .form-captcha .g-recaptcha:empty {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px dashed var(--white-15);
-    border-radius: var(--radius-sm);
-    background: var(--neutral-secondary);
     padding: 18px;
+    background: var(--panel);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius);
   }
-  .form-captcha .g-recaptcha:empty::before {
-    content: "reCAPTCHA — auto-rendered by Webflow on the live site";
-    font-size: 0.75rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--white-30);
+  .contact-section .form-captcha .g-recaptcha:empty::before {
+    content: "reCAPTCHA \2014  rendered by Webflow on the live site";
+    font-size: var(--fs-xs);
+    color: var(--muted);
     text-align: center;
   }
 
-  /* Webflow's runtime toggles `.w-form-done` / `.w-form-fail` via
-     inline `display`. Hide them by default; Webflow's JS flips
-     `display: block` on success/fail. We use [hidden] only as a
-     defensive default for non-Webflow contexts. */
-  .w-form-done,
-  .w-form-fail { display: none; }
-  .w-form-done[hidden],
-  .w-form-fail[hidden] { display: none; }
+  /* Webflow's runtime flips these with inline display. */
+  .contact-section .w-form-done,
+  .contact-section .w-form-fail { display: none; }
 
-  /* ============================================================
-     SUBMIT FOOTER
-     ============================================================ */
-  .form-footer {
+  /* ----- Submit footer ----- */
+  .contact-section .form-footer {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 24px;
     margin-top: 8px;
     padding-top: 22px;
-    border-top: 1px solid var(--white-15);
-    flex-wrap: wrap;
+    border-top: 1px solid var(--line);
   }
-  .form-meta {
-    font-size: var(--t-eyebrow-size);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--white-50);
-    margin: 0;
-  }
-  .form-meta strong {
-    color: var(--brand-blue);
-    font-weight: 700;
-  }
-
-  .form-submit {
+  .contact-section .form-meta { margin: 0; font-size: var(--fs-small); color: var(--muted); }
+  .contact-section .form-meta strong { color: var(--ink); font-weight: 600; }
+  .contact-section .form-submit {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    padding: 14px 28px;
+    gap: 10px;
+    padding: 12px 22px;
     background: var(--brand-blue);
-    /* Hard-coded white — the button sits on a brand-blue background
-       in both themes, so the text + arrow must always be light
-       (var(--white) would flip to near-black in light mode). */
-    color: #ffffff;
-    font-family: inherit;
-    font-size: var(--t-base-size);
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    color: var(--on-brand);
     border: 1px solid var(--brand-blue);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+    font-size: var(--fs-body);
+    font-weight: 600;
+    line-height: 1.2;
     cursor: pointer;
-    transition:
-      background 0.25s ease,
-      transform 0.25s ease,
-      box-shadow 0.25s ease,
-      opacity 0.25s ease;
+    transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
   }
-  .form-submit:hover {
-    background: var(--brand-blue-hover);
-    color: #ffffff;
-    box-shadow: 0 0 28px rgba(0, 71, 255, 0.45);
-    transform: translateY(-1px);
-  }
-  .form-submit:disabled,
-  .form-submit.is-sending {
-    opacity: 0.7;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-  }
-  .form-submit-arrow {
-    width: 16px; height: 16px;
+  .contact-section .form-submit:hover { background: var(--brand-blue-hover); border-color: var(--brand-blue-hover); color: var(--on-brand); }
+  .contact-section .form-submit:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+  .contact-section .form-submit:disabled,
+  .contact-section .form-submit.is-sending { opacity: 0.7; cursor: not-allowed; }
+  .contact-section .form-submit-arrow {
+    width: 16px;
+    height: 16px;
     stroke: currentColor;
     fill: none;
     stroke-width: 1.8;
     stroke-linecap: round;
     stroke-linejoin: round;
-    transition: transform 0.25s ease;
+    transition: transform 0.15s ease;
   }
-  .form-submit:hover .form-submit-arrow { transform: translateX(4px); }
-
-  /* Tiny three-dot loader for the sending state. */
-  .form-submit.is-sending .form-submit-arrow { display: none; }
-  .form-submit.is-sending::after {
+  .contact-section .form-submit:hover .form-submit-arrow { transform: translateX(3px); }
+  .contact-section .form-submit.is-sending .form-submit-arrow { display: none; }
+  .contact-section .form-submit.is-sending::after {
     content: "";
-    width: 16px; height: 16px;
+    width: 16px;
+    height: 16px;
     border: 2px solid currentColor;
     border-top-color: transparent;
     border-radius: 50%;
     animation: submitSpin 0.8s linear infinite;
   }
-  @keyframes submitSpin {
-    to { transform: rotate(360deg); }
-  }
+  @keyframes submitSpin { to { transform: rotate(360deg); } }
 
-  /* ============================================================
-     ERROR + SUCCESS STATES
-     ============================================================ */
-  .form-error {
+  /* ----- Error + success ----- */
+  .contact-section .form-error {
     margin-top: 14px;
     padding: 12px 16px;
-    background: rgba(225, 56, 56, 0.10);
-    border: 1px solid rgba(225, 56, 56, 0.4);
-    border-radius: var(--radius-sm);
-    color: #ff8a8a;
-    font-size: var(--t-base-size);
-    line-height: 1.4;
+    background: color-mix(in srgb, var(--purple) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--purple) 45%, transparent);
+    border-radius: var(--radius);
+    color: var(--ink);
+    font-size: var(--fs-small);
+    line-height: 1.5;
   }
-  .form-error[hidden] { display: none; }
+  .contact-section .form-error[hidden] { display: none; }
 
-  .form-success {
-    text-align: center;
+  .contact-section .form-success {
     padding: 56px 28px;
-    border: 1px solid rgba(0, 71, 255, 0.45);
-    border-radius: var(--radius-md);
-    background: linear-gradient(180deg, var(--neutral-secondary) 0%, rgba(0, 71, 255, 0.08) 100%);
-    box-shadow: 0 0 60px rgba(0, 71, 255, 0.18);
+    text-align: center;
+    background: var(--panel);
+    border: 1px solid color-mix(in srgb, var(--accent) 42%, transparent);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
   }
-  .form-success[hidden] { display: none; }
-  .form-success-eyebrow {
-    font-size: var(--t-eyebrow-size);
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--brand-blue);
-    font-weight: 700;
+  .contact-section .form-success[hidden] { display: none; }
+  .contact-section .form-success-eyebrow {
     margin-bottom: 12px;
+    font-family: var(--font-head);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
   }
-  .form-success-title {
-    font-size: var(--t-h2-size);
-    font-weight: var(--w-h1);
+  .contact-section .form-success-title {
+    margin: 0 0 14px;
+    font-family: var(--font-head);
+    font-size: var(--fs-h2);
+    font-weight: 600;
     line-height: 1.1;
-    letter-spacing: -0.015em;
-    color: var(--white);
-    margin-bottom: 14px;
+    color: var(--ink);
   }
-  .form-success-title em { font-style: normal; color: var(--brand-blue); }
-  .form-success-body {
-    font-size: var(--t-lg-size);
-    line-height: 1.55;
-    color: var(--white-72);
-    max-width: 480px;
-    margin: 0 auto;
-  }
-  /* A small breathing tick mark — celebratory but quiet. */
-  .form-success-tick {
-    width: 56px; height: 56px;
-    margin: 0 auto 22px;
-    border-radius: 50%;
-    border: 1.5px solid var(--brand-blue);
+  .contact-section .form-success-title em { font-style: normal; color: var(--accent); }
+  .contact-section .form-success-body { max-width: 30em; margin: 0 auto; font-size: var(--fs-lede); line-height: 1.6; color: var(--body); }
+  /* One-shot tick: a single spring + radar ping (kit motion), not a loop. */
+  .contact-section .form-success-tick {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--brand-blue);
-    box-shadow: 0 0 20px rgba(0, 71, 255, 0.25);
-    animation: tickBreath 3s ease-in-out infinite;
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 22px;
+    border-radius: 50%;
+    border: 1px solid var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent);
+    animation: tickIn 0.5s cubic-bezier(0.34, 1.4, 0.64, 1) both, tickPing 1.2s ease-out 0.2s 1;
   }
-  .form-success-tick svg {
-    width: 26px; height: 26px;
-    stroke: currentColor; fill: none;
-    stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+  .contact-section .form-success-tick svg {
+    width: 26px;
+    height: 26px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
-  @keyframes tickBreath {
-    0%, 100% { box-shadow: 0 0 20px rgba(0, 71, 255, 0.25); transform: scale(1); }
-    50%      { box-shadow: 0 0 32px rgba(0, 71, 255, 0.45); transform: scale(1.04); }
+  @keyframes tickIn { from { transform: scale(0.6); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes tickPing {
+    from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent); }
+    to   { box-shadow: 0 0 0 18px transparent; }
   }
 
-  /* ============================================================
-     RESPONSIVE
-     ============================================================ */
   @media (max-width: 960px) {
-    .modules-grid { grid-template-columns: repeat(2, 1fr); }
+    .contact-section .modules-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 720px) {
-    .contact-section { padding: 48px 24px 64px; }
-    .form-row { grid-template-columns: 1fr; }
-    .modules-grid { grid-template-columns: 1fr; }
-    .form-footer { flex-direction: column; align-items: stretch; gap: 14px; }
-    .form-submit { justify-content: center; }
-    .form-success { padding: 40px 24px; }
+    .contact-section { padding: 56px 20px 64px; }
+    .contact-section .form-row { grid-template-columns: 1fr; }
+    .contact-section .modules-grid { grid-template-columns: 1fr; }
+    .contact-section .form-footer { flex-direction: column; align-items: stretch; gap: 14px; }
+    .contact-section .form-submit { justify-content: center; }
+    .contact-section .form-success { padding: 40px 22px; }
   }
 </style>
 </head>
@@ -708,20 +557,6 @@
           </div>
           <input type="hidden" name="Modules" data-name="Modules" id="modulesValue"/>
         </fieldset>
-
-        <!-- Project Context — aligned to the four solutions in
-             section 03 (sell, launch, deliver, scrutiny). -->
-        <label class="form-field">
-          <span class="form-label">Project context <span class="form-optional">optional</span></span>
-          <select name="Context" data-name="Context">
-            <option value="">Pick the closest fit…</option>
-            <option value="Sell better">Sell better</option>
-            <option value="Launch and land">Launch and land</option>
-            <option value="Deliver at the right level">Deliver at the right level</option>
-            <option value="Stand up to scrutiny">Stand up to scrutiny</option>
-            <option value="Something else">Something else</option>
-          </select>
-        </label>
 
         <label class="form-field">
           <span class="form-label">Brief description</span>

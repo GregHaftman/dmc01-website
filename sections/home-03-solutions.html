@@ -6,76 +6,97 @@
 <title>DMC01 — Solutions · What this unlocks</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 
 <script>(function(){try{var t=localStorage.getItem('dmc01-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 
 <style>
   /* ============================================================
      DMC01 · Solutions — "What this unlocks"
-     v2 (compact 4-tile grid)
+     Header (eyebrow, title + lede side by side), then four outcome
+     tiles in a row. Each tile: icon, title, one outcome paragraph,
+     and the modules involved pinned to the bottom as chips that
+     open the matching module in the Product orbital.
 
-     Replaces the v1 editorial vertical-strip layout, which read
-     too close to the framework section's vertical timeline. This
-     version is a single horizontal grid of four tiles — number on
-     top, title, one punchy outcome paragraph, modules row pinned
-     to the bottom. Half the vertical footprint, distinct visual
-     vocabulary from framework, still uses Vercel-style Product /
-     Solutions framing.
+     Visual language: dmc01-ui-kit. Tiles are kit cards (panel
+     surface, hairline border, accent only on hover). Chips are kit
+     hairline pills. Rajdhani for titles and labels, Inter for copy.
      ============================================================ */
 
+  /* @dmc01-tokens:start */
   :root {
-    --brand-blue:        var(--accent-primary, #0047FF);
-    --brand-blue-hover:  var(--accent-primary-hover, #3c6ce7);
-    --neutral-primary:   var(--bg-primary, #070708);
-    --neutral-secondary: var(--bg-secondary, #161617);
-    --surface-3:         #1d1e22;
-    --font:              var(--font-body, "Rajdhani", system-ui, sans-serif);
-    --t-h1-size:    var(--h1-size, 4.65rem);
-    --t-h2-size:    var(--h2-size, 2.83rem);
-    --t-base-size:  var(--base-font-size, 1.1rem);
-    --t-lg-size:    var(--text-lg-size, 1.4rem);
-    --t-xl-size:    var(--text-xl-size, 1.5rem);
-    --t-eyebrow-size: var(--eyebrow-size, 1.1rem);
-    --w-h1:    var(--h1-weight, 600);
-    --w-h2:    var(--h2-weight, 600);
-    --w-base:  var(--base-font-weight, 400);
-    --w-bold:  var(--base-font-weight-bold, 600);
-    --lh-h1:   var(--h1-line-height, 1.04em);
-    --lh-h2:   var(--h2-line-height, 1.04em);
-    --lh-base: var(--base-line-height, 1.6em);
-    --white:    var(--text-primary, #FFFFFF);
-    --white-72: rgba(255, 255, 255, 0.88);
-    --white-70: rgba(255, 255, 255, 0.86);
-    --white-50: rgba(255, 255, 255, 0.62);
-    --white-30: rgba(255, 255, 255, 0.30);
-    --white-15: var(--border-secondary, rgba(255, 255, 255, 0.15));
-    --blue-glow:  var(--accent-primary-glow, rgba(0, 71, 255, 0.55));
-    --blue-faint: var(--accent-primary-faint, rgba(0, 71, 255, 0.10));
-    --blue-grid:  var(--brand-grid, rgba(73, 72, 192, 0.04));
-    --radius-sm: var(--radius-base, 2px);
-    --radius-md: calc(var(--radius-sm) * 2);
-  }
+    /* surfaces — kit */
+    --bg:          #0c0d11;
+    --panel:       #15171d;
+    --panel-2:     #1d2027;
+    --panel-3:     #232730;
 
-  [data-theme="light"] {
-    --neutral-primary:   #f5f5f7;
-    --neutral-secondary: #ffffff;
-    --surface-3:         #ebebee;
-    --white:    #070708;
-    --white-72: rgba(7, 7, 8, 0.85);
-    --white-70: rgba(7, 7, 8, 0.83);
-    --white-50: rgba(7, 7, 8, 0.68);
-    --white-30: rgba(7, 7, 8, 0.42);
-    --white-15: rgba(7, 7, 8, 0.10);
+    /* text — kit, plus --body (web) */
+    --ink:         #f3f5f8;
+    --body:        rgba(243, 245, 248, 0.80);
+    --muted:       rgba(243, 245, 248, 0.52);
+    --faint:       rgba(243, 245, 248, 0.34);
+
+    /* accents — kit (dark-surface variants) */
+    --accent:       #4c8dff;
+    --accent-hover: #6ba1ff;
+    --accent-soft:  rgba(76, 141, 255, 0.14);
+    --purple:       #9b6bdc;
+
+    /* Brand Blue as a fill — web */
+    --brand-blue:       #0047FF;
+    --brand-blue-hover: #1f5eff;
+    --on-brand:         #ffffff;
+
+    /* lines, radii, shadow — kit */
+    --line:        rgba(255, 255, 255, 0.08);
+    --line-strong: rgba(255, 255, 255, 0.14);
+    --radius-sm:   6px;
+    --radius:      8px;
+    --radius-lg:   12px;
+    --shadow:      0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.25);
+
+    /* type — kit families; Webflow's responsive heading scale where it exists */
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-head: "Rajdhani", -apple-system, sans-serif;
+    --fs-h1:     var(--h1-size, 4.65rem);
+    --fs-h2:     var(--h2-size, 2.83rem);
+    --fs-lede:   1.1875rem;
+    --fs-body:   1.0625rem;
+    --fs-small:  0.9375rem;
+    --fs-xs:     0.8125rem;
+    --fs-eyebrow: 0.9375rem;
+
+    --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   }
+  [data-theme="light"] {
+    --bg:          #f5f6f8;
+    --panel:       #ffffff;
+    --panel-2:     #eef0f3;
+    --panel-3:     #e6e9ee;
+
+    --ink:         #0c0d11;
+    --body:        rgba(12, 13, 17, 0.80);
+    --muted:       rgba(12, 13, 17, 0.60);
+    --faint:       rgba(12, 13, 17, 0.40);
+
+    --accent:       #0047FF;
+    --accent-hover: #0039cc;
+    --accent-soft:  rgba(0, 71, 255, 0.09);
+    --purple:       #6633CC;
+
+    --line:        rgba(12, 13, 17, 0.09);
+    --line-strong: rgba(12, 13, 17, 0.16);
+    --shadow:      0 1px 2px rgba(12, 13, 17, 0.06), 0 4px 16px rgba(12, 13, 17, 0.06);
+  }
+  /* @dmc01-tokens:end */
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: var(--neutral-primary);
-    color: var(--white);
-    font-family: var(--font);
-    font-weight: var(--w-base);
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -84,15 +105,20 @@
      SECTION FRAME
      ============================================================ */
   .solutions-section {
+    --sol-grid: rgba(255, 255, 255, 0.025);
     position: relative;
     z-index: 1;
     width: 100vw;
     margin-left: calc(-50vw + 50%);
-    padding: 64px clamp(24px, 4vw, 64px) 80px;
-    background: var(--neutral-primary);
+    padding: clamp(64px, 9vh, 104px) clamp(24px, 4vw, 64px) clamp(72px, 10vh, 112px);
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
     overflow: hidden;
     isolation: isolate;
   }
+  [data-theme="light"] .solutions-section { --sol-grid: rgba(12, 13, 17, 0.035); }
+  /* Faint grid, same device as the hero, faded at the edges. */
   .solutions-section::before {
     content: "";
     position: absolute;
@@ -100,8 +126,8 @@
     pointer-events: none;
     z-index: 0;
     background-image:
-      linear-gradient(var(--blue-grid) 1px, transparent 1px),
-      linear-gradient(90deg, var(--blue-grid) 1px, transparent 1px);
+      linear-gradient(var(--sol-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--sol-grid) 1px, transparent 1px);
     background-size: 60px 60px;
     mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black 40%, transparent 100%);
     -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black 40%, transparent 100%);
@@ -114,137 +140,115 @@
   }
 
   /* ============================================================
-     HEADER — eyebrow above, then a 2-col grid for title + lede
-     with first-line top-alignment so the lede sits beside the
-     title's first line regardless of how many lines either takes.
+     HEADER
+     Webflow's heading defaults leak into embeds: every heading and
+     paragraph resets margin + text-align explicitly.
      ============================================================ */
-  .solutions-header {
-    margin-bottom: 56px;
-    padding-bottom: 28px;
-    border-bottom: 1px solid var(--white-15);
+  .solutions-section .solutions-header {
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--line);
   }
-  .header-grid {
+  .solutions-section .header-grid {
     display: grid;
     grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-    gap: clamp(40px, 6vw, 96px);
-    align-items: start;
+    gap: clamp(32px, 6vw, 96px);
+    align-items: end;
   }
-
-  .eyebrow {
-    font-size: var(--t-eyebrow-size);
-    font-weight: 600;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--brand-blue);
-    margin-bottom: 14px;
+  .solutions-section .eyebrow {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
+    margin-bottom: 16px;
+    font-family: var(--font-head);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
   }
-  .eyebrow::before {
+  .solutions-section .eyebrow::before {
     content: "";
-    width: 32px; height: 1px;
-    background: var(--brand-blue);
+    width: 28px; height: 1px;
+    background: currentColor;
   }
-
-  .section-title {
-    /* margin + text-align reset to neutralise Webflow's site-wide
-       heading defaults (which center H1/H2 and add 20px margins).
-       Explicit color: var(--white) is themed (white on dark, near-
-       black on light) and overrides Webflow's body color. */
+  .solutions-section .section-title {
     margin: 0;
     text-align: left;
-    color: var(--white);
-    font-size: var(--t-h1-size);
-    font-weight: var(--w-h1);
-    line-height: var(--lh-h1);
-    letter-spacing: -0.02em;
+    font-family: var(--font-head);
+    font-size: var(--fs-h1);
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    color: var(--ink);
   }
-  .section-title em { font-style: normal; color: var(--brand-blue); }
-
-  .section-lede {
+  .solutions-section .section-title em { font-style: normal; color: var(--accent); }
+  .solutions-section .section-lede {
     margin: 0;
     text-align: left;
-    font-size: var(--t-lg-size);
-    font-weight: var(--w-base);
-    line-height: var(--lh-base);
-    color: var(--white-70);
-    max-width: 520px;
-  }
-
-  @media (max-width: 800px) {
-    .header-grid { grid-template-columns: 1fr; gap: 16px; }
+    max-width: 34em;
+    font-size: var(--fs-lede);
+    line-height: 1.6;
+    color: var(--body);
+    text-wrap: pretty;
   }
 
   /* ============================================================
-     SOLUTIONS GRID — 4 tiles in a horizontal row.
-     Each tile is a flex column so the modules row pins to the
-     bottom regardless of how much body copy lives above it
-     (uniform card heights via grid stretching).
-
-     Top brand-blue accent strip on each tile is the design DNA
-     that ties them visually — like a colour-coded chapter index
-     rather than a vertical timeline (framework) or a stage panel
-     (the old tailored).
+     TILES — kit cards
+     Flex column so the modules row pins to the bottom whatever
+     the copy length (grid stretch gives equal heights).
      ============================================================ */
-  .solutions-grid {
+  .solutions-section .solutions-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 16px;
   }
-
-  .solution-tile {
+  .solutions-section .solution-tile {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding: 28px 24px 22px;
-    background: var(--neutral-secondary);
-    border: 1px solid var(--white-15);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    /* Offset so deep-link anchor scrolls land the tile below the fixed nav
-       (~78px) rather than tucked under it. Marketing links like
-       /#solution-sell-better depend on this to read cleanly. */
+    gap: 14px;
+    padding: 24px 22px 20px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    /* Deep-link offset: /#solution-sell-better lands below the fixed nav. */
     scroll-margin-top: 100px;
+    /* Entrance: one fade-up per tile, staggered, on first view. */
+    opacity: 0;
+    transform: translateY(16px);
     transition:
-      border-color 0.3s ease,
-      transform 0.3s ease,
-      box-shadow 0.3s ease;
+      opacity 0.6s var(--ease),
+      transform 0.6s var(--ease),
+      border-color 0.15s ease,
+      background-color 0.15s ease;
   }
-  /* Brand-blue accent strip at the top — shared visual DNA
-     across all four tiles, gives them a "chapter index" feel. */
-  .solution-tile::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--brand-blue);
-    opacity: 0.55;
-    transition: opacity 0.3s ease, height 0.3s ease;
+  .solutions-section .solutions-grid.is-visible .solution-tile { opacity: 1; transform: none; }
+  .solutions-section .solutions-grid.is-visible .solution-tile:nth-child(2) { transition-delay: 0.07s, 0.07s, 0s, 0s; }
+  .solutions-section .solutions-grid.is-visible .solution-tile:nth-child(3) { transition-delay: 0.14s, 0.14s, 0s, 0s; }
+  .solutions-section .solutions-grid.is-visible .solution-tile:nth-child(4) { transition-delay: 0.21s, 0.21s, 0s, 0s; }
+  .solutions-section .solution-tile:hover {
+    border-color: color-mix(in srgb, var(--accent) 42%, transparent);
+    background: var(--panel-2);
   }
-  .solution-tile:hover {
-    border-color: rgba(0, 71, 255, 0.5);
-    transform: translateY(-3px);
-    box-shadow: 0 0 36px rgba(0, 71, 255, 0.22);
-  }
-  .solution-tile:hover::before {
-    opacity: 1;
-    height: 3px;
-  }
+  /* A deep-linked tile gets the same accent border, so the reader
+     sees which outcome the link pointed at. */
+  .solutions-section .solution-tile:target { border-color: var(--accent); }
 
-  /* Solution icon — Feather-style line icon, brand-blue, ~36px square.
-     Sits where the number used to. Icons rather than 01/02/03/04
-     because solutions are independent outcomes, not a sequence. */
-  .solution-icon {
-    width: 36px;
-    height: 36px;
-    color: var(--brand-blue);
+  /* Icon — accent line icon on an accent-soft square. */
+  .solutions-section .solution-icon {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
     flex-shrink: 0;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: var(--radius);
   }
-  .solution-icon svg {
-    width: 100%;
-    height: 100%;
+  .solutions-section .solution-icon svg {
+    width: 20px;
+    height: 20px;
     display: block;
     stroke: currentColor;
     fill: none;
@@ -252,115 +256,89 @@
     stroke-linecap: round;
     stroke-linejoin: round;
   }
-  .solution-title {
-    font-size: var(--t-xl-size);
+  .solutions-section .solution-title {
+    margin: 4px 0 0;
+    text-align: left;
+    font-family: var(--font-head);
+    font-size: 1.5rem;
     font-weight: 600;
-    color: var(--white);
-    line-height: 1.18;
-    letter-spacing: -0.01em;
-    margin: 0;
+    line-height: 1.15;
+    letter-spacing: -0.005em;
+    color: var(--ink);
   }
-  .solution-body {
-    font-size: var(--t-base-size);
-    line-height: 1.55;
-    color: var(--white-72);
+  .solutions-section .solution-body {
     margin: 0;
     flex: 1;
+    font-size: var(--fs-small);
+    line-height: 1.6;
+    color: var(--body);
   }
-  .solution-body strong {
-    color: var(--white);
-    font-weight: 600;
-  }
+  .solutions-section .solution-body strong { color: var(--ink); font-weight: 600; }
 
-  /* Modules row — pinned to bottom of each tile.
-     Chip labels are short module names ("Pricing", "Licensing"…) rather
-     than numeric codes ("02", "01"…). The earlier numbers needed a
-     mental lookup back to the orbital; the names carry meaning on their
-     own and still link through to the matching module on click. */
-  .solution-modules-row {
+  /* ----- Modules involved ----- */
+  .solutions-section .solution-modules-row {
     margin-top: auto;
     padding-top: 14px;
-    border-top: 1px dashed var(--white-15);
+    border-top: 1px solid var(--line);
     display: flex;
     flex-direction: column;
     gap: 10px;
   }
-  .solution-modules-label {
-    font-size: calc(var(--t-eyebrow-size) * 0.85);
-    letter-spacing: 0.22em;
+  .solutions-section .solution-modules-label {
+    font-family: var(--font-head);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    font-weight: 700;
-    color: var(--white-50);
+    color: var(--muted);
   }
-  .solution-modules-list {
+  .solutions-section .solution-modules-list {
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
   }
-  .solution-module-chip {
-    background: transparent;
-    border: 1px solid var(--white-15);
-    color: var(--white-72);
-    font-family: inherit;
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-    padding: 5px 10px;
-    border-radius: var(--radius-sm);
+  /* Kit hairline pill: accent on the border and text, never a fill. */
+  .solutions-section .solution-module-chip {
+    padding: 4px 10px;
+    background: none;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    color: var(--body);
+    font-family: var(--font-body);
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    line-height: 1.4;
     cursor: pointer;
-    line-height: 1.2;
-    transition:
-      border-color 0.2s ease,
-      background 0.2s ease,
-      color 0.2s ease,
-      transform 0.2s ease;
+    transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
   }
-  .solution-module-chip:hover {
-    border-color: var(--brand-blue);
-    background: rgba(0, 71, 255, 0.14);
-    color: var(--brand-blue);
-    transform: translateY(-1px);
+  .solutions-section .solution-module-chip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
   }
-  .solution-module-chip:focus-visible {
-    outline: 2px solid var(--brand-blue);
-    outline-offset: 2px;
+  .solutions-section .solution-module-chip:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
   }
-
-  /* Subtle entrance — single fade-up per tile when the row enters
-     viewport; staggered so the four tiles cascade rather than pop
-     in unison. */
-  .solution-tile {
-    opacity: 0;
-    transform: translateY(24px);
-    transition:
-      opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
-      transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
-      border-color 0.3s ease,
-      box-shadow 0.3s ease;
-  }
-  .solutions-grid.is-visible .solution-tile {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .solutions-grid.is-visible .solution-tile:nth-child(1) { transition-delay: 0s; }
-  .solutions-grid.is-visible .solution-tile:nth-child(2) { transition-delay: 0.08s; }
-  .solutions-grid.is-visible .solution-tile:nth-child(3) { transition-delay: 0.16s; }
-  .solutions-grid.is-visible .solution-tile:nth-child(4) { transition-delay: 0.24s; }
 
   @media (prefers-reduced-motion: reduce) {
-    .solution-tile { transition: none !important; opacity: 1; transform: none; }
+    .solutions-section .solution-tile { transition: none; opacity: 1; transform: none; }
   }
 
   /* ============================================================
      RESPONSIVE
      ============================================================ */
   @media (max-width: 1100px) {
-    .solutions-grid { grid-template-columns: repeat(2, 1fr); }
+    .solutions-section .solutions-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 800px) {
+    .solutions-section .header-grid { grid-template-columns: 1fr; gap: 16px; }
   }
   @media (max-width: 600px) {
-    .solutions-section { padding: 48px 20px 64px; }
-    .solutions-grid { grid-template-columns: 1fr; }
-    .solution-tile { padding: 22px 20px 18px; }
+    .solutions-section { padding: 56px 20px 64px; }
+    .solutions-section .solutions-grid { grid-template-columns: 1fr; }
+    .solutions-section .solution-tile { padding: 20px 18px 18px; }
   }
 </style>
 </head>
@@ -488,7 +466,7 @@
        Each chip dispatches `dmc01:openModule` on the document; the
        orbital section listens for it and opens the corresponding
        module + scrolls itself into view. In the fullsite preview
-       the iframes are isolated, so 00-dmc01-fullsite.html relays
+       the iframes are isolated, so fullsite-preview.html relays
        the event between docs. */
     const chips = root.querySelectorAll('.solution-module-chip');
     chips.forEach(function(chip) {

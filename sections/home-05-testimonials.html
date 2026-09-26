@@ -6,85 +6,112 @@
 <title>DMC01 — Work with me, what to expect?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 
 <script>(function(){try{var t=localStorage.getItem('dmc01-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 
 <style>
   /* ============================================================
      DMC01 · "Work with me, what to expect?"
-     Combines the bio (was the "me" section) with the testimonial
-     wall (was the testimonials section). Two zones:
-       1. Bio block — placeholder portrait illustration + intro copy.
-          The illustration is a stand-in until a real photo is dropped in.
-       2. Testimonial marquee — all ten quotes from the live site
-          scroll horizontally on a slow loop, paused on hover.
+     Two zones:
+       1. Bio — portrait (webflow/portrait.svg) + intro copy + the
+          credibility row.
+       2. Testimonials — ten quotes on a native horizontal scroller
+          that auto-advances (JS), pauses on hover; click a card for
+          the full quote in a modal.
+     Closes on the reflective one-liner before the contact form.
+
+     Visual language: dmc01-ui-kit tokens — cards are kit cards,
+     the modal is the kit modal surface.
      ============================================================ */
 
+  /* @dmc01-tokens:start */
   :root {
-    --brand-blue:        var(--accent-primary, #0047FF);
-    --brand-blue-hover:  var(--accent-primary-hover, #3c6ce7);
-    --neutral-primary:   var(--bg-primary, #070708);
-    --neutral-secondary: var(--bg-secondary, #161617);
-    --surface-3:         #1d1e22;
-    --font:              var(--font-body, "Rajdhani", system-ui, sans-serif);
-    --t-h1-size:    var(--h1-size, 4.65rem);
-    --t-h2-size:    var(--h2-size, 2.83rem);
-    --t-base-size:  var(--base-font-size, 1.1rem);
-    --t-lg-size:    var(--text-lg-size, 1.4rem);
-    --t-xl-size:    var(--text-xl-size, 1.5rem);
-    --t-eyebrow-size: var(--eyebrow-size, 1.1rem);
-    --w-h1:    var(--h1-weight, 600);
-    --w-base:  var(--base-font-weight, 400);
-    --w-bold:  var(--base-font-weight-bold, 600);
-    --lh-h1:   var(--h1-line-height, 1.04em);
-    --lh-base: var(--base-line-height, 1.6em);
-    --white:    var(--text-primary, #FFFFFF);
-    --white-72: rgba(255, 255, 255, 0.88);
-    --white-50: rgba(255, 255, 255, 0.62);
-    --white-30: rgba(255, 255, 255, 0.30);
-    --white-15: var(--border-secondary, rgba(255, 255, 255, 0.15));
-    --blue-faint: var(--accent-primary-faint, rgba(0, 71, 255, 0.10));
+    /* surfaces — kit */
+    --bg:          #0c0d11;
+    --panel:       #15171d;
+    --panel-2:     #1d2027;
+    --panel-3:     #232730;
 
-    /* Border radius — see head-alias-block.css. */
-    --radius-sm: var(--radius-base, 2px);
-    --radius-md: calc(var(--radius-sm) * 2);
+    /* text — kit, plus --body (web) */
+    --ink:         #f3f5f8;
+    --body:        rgba(243, 245, 248, 0.80);
+    --muted:       rgba(243, 245, 248, 0.52);
+    --faint:       rgba(243, 245, 248, 0.34);
+
+    /* accents — kit (dark-surface variants) */
+    --accent:       #4c8dff;
+    --accent-hover: #6ba1ff;
+    --accent-soft:  rgba(76, 141, 255, 0.14);
+    --purple:       #9b6bdc;
+
+    /* Brand Blue as a fill — web */
+    --brand-blue:       #0047FF;
+    --brand-blue-hover: #1f5eff;
+    --on-brand:         #ffffff;
+
+    /* lines, radii, shadow — kit */
+    --line:        rgba(255, 255, 255, 0.08);
+    --line-strong: rgba(255, 255, 255, 0.14);
+    --radius-sm:   6px;
+    --radius:      8px;
+    --radius-lg:   12px;
+    --shadow:      0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.25);
+
+    /* type — kit families; Webflow's responsive heading scale where it exists */
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-head: "Rajdhani", -apple-system, sans-serif;
+    --fs-h1:     var(--h1-size, 4.65rem);
+    --fs-h2:     var(--h2-size, 2.83rem);
+    --fs-lede:   1.1875rem;
+    --fs-body:   1.0625rem;
+    --fs-small:  0.9375rem;
+    --fs-xs:     0.8125rem;
+    --fs-eyebrow: 0.9375rem;
+
+    --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   }
-
-  /* Light theme — see 01-dmc01-intro.html for the rationale. */
   [data-theme="light"] {
-    --neutral-primary:   #f5f5f7;
-    --neutral-secondary: #ffffff;
-    --surface-3:         #ebebee;
-    --white:    #070708;
-    --white-72: rgba(7, 7, 8, 0.85);
-    --white-70: rgba(7, 7, 8, 0.83);
-    --white-50: rgba(7, 7, 8, 0.68);
-    --white-30: rgba(7, 7, 8, 0.42);
-    --white-15: rgba(7, 7, 8, 0.10);
+    --bg:          #f5f6f8;
+    --panel:       #ffffff;
+    --panel-2:     #eef0f3;
+    --panel-3:     #e6e9ee;
+
+    --ink:         #0c0d11;
+    --body:        rgba(12, 13, 17, 0.80);
+    --muted:       rgba(12, 13, 17, 0.60);
+    --faint:       rgba(12, 13, 17, 0.40);
+
+    --accent:       #0047FF;
+    --accent-hover: #0039cc;
+    --accent-soft:  rgba(0, 71, 255, 0.09);
+    --purple:       #6633CC;
+
+    --line:        rgba(12, 13, 17, 0.09);
+    --line-strong: rgba(12, 13, 17, 0.16);
+    --shadow:      0 1px 2px rgba(12, 13, 17, 0.06), 0 4px 16px rgba(12, 13, 17, 0.06);
   }
+  /* @dmc01-tokens:end */
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: var(--neutral-primary);
-    color: var(--white);
-    font-family: var(--font);
-    font-weight: var(--w-base);
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* ============================================================
-     SECTION FRAME
-     ============================================================ */
   .testimonials-section {
     position: relative;
     z-index: 1;
     width: 100vw;
     margin-left: calc(-50vw + 50%);
-    padding: 56px 0 72px;
-    background: var(--neutral-primary);
+    padding: clamp(64px, 9vh, 104px) 0 80px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
     overflow: hidden;
     isolation: isolate;
   }
@@ -94,120 +121,98 @@
     padding: 0 clamp(24px, 4vw, 64px);
   }
 
-  /* ============================================================
-     HEADER
-     ============================================================ */
-  .testimonials-header {
-    margin-bottom: 56px;
-    padding-bottom: 28px;
-    border-bottom: 1px solid var(--white-15);
-  }
+  /* ----- HEADER ----- */
+  .testimonials-section .testimonials-header { margin-bottom: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--line); }
   .testimonials-section .eyebrow {
-    font-size: var(--t-eyebrow-size);
-    font-weight: 600;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--brand-blue);
-    margin-bottom: 14px;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
+    margin-bottom: 16px;
+    font-family: var(--font-head);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
   }
-  .testimonials-section .eyebrow::before {
-    content: "";
-    width: 32px; height: 1px;
-    background: var(--brand-blue);
-  }
+  .testimonials-section .eyebrow::before { content: ""; width: 28px; height: 1px; background: currentColor; }
   .testimonials-section .section-title {
-    /* margin + text-align reset to neutralise Webflow's site-wide
-       heading defaults (which center H1/H2 and add 20px margins).
-       Explicit color: var(--white) is themed and overrides Webflow's
-       body color leak. */
     margin: 0;
-    text-align: left;
-    color: var(--white);
-    font-size: var(--t-h1-size);
-    font-weight: var(--w-h1);
-    line-height: var(--lh-h1);
-    letter-spacing: -0.02em;
     max-width: 1200px;
+    text-align: left;
+    font-family: var(--font-head);
+    font-size: var(--fs-h1);
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    color: var(--ink);
   }
-  .testimonials-section .section-title em {
-    font-style: normal;
-    color: var(--brand-blue);
-  }
+  .testimonials-section .section-title em { font-style: normal; color: var(--accent); }
 
   /* ============================================================
-     BIO BLOCK — illustration + intro copy
+     BIO
      ============================================================ */
-  .bio-block {
+  .testimonials-section .bio-block {
     display: grid;
-    grid-template-columns: 280px minmax(0, 1fr);
+    grid-template-columns: 260px minmax(0, 1fr);
     gap: clamp(32px, 5vw, 72px);
     align-items: start;
     margin-bottom: 72px;
   }
-  .bio-figure {
-    position: relative;
-    width: 280px;
-    aspect-ratio: 1;
-  }
-  .bio-figure .bio-portrait {
-    width: 100%;
-    height: 100%;
+  .testimonials-section .bio-figure { position: relative; width: 260px; }
+  .testimonials-section .bio-figure .bio-portrait {
     display: block;
-    filter: drop-shadow(0 0 20px rgba(0, 71, 255, 0.18));
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--line);
   }
-  .bio-figure-caption {
-    margin-top: 18px;
-    text-align: center;
-  }
-  .bio-figure-name {
-    font-size: var(--t-base-size);
+  .testimonials-section .bio-figure-caption { margin-top: 18px; text-align: center; }
+  .testimonials-section .bio-figure-name {
+    font-family: var(--font-head);
+    font-size: 1.2rem;
     font-weight: 700;
-    color: var(--white);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .testimonials-section .bio-figure-title {
+    margin-top: 2px;
+    font-family: var(--font-head);
+    font-size: var(--fs-xs);
+    font-weight: 600;
     letter-spacing: 0.18em;
     text-transform: uppercase;
+    color: var(--accent);
   }
-  .bio-figure-title {
-    margin-top: 4px;
-    font-size: var(--t-eyebrow-size);
-    font-weight: 600;
-    color: var(--brand-blue);
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-  }
-  /* Social icons row — LinkedIn + GitHub sit just below the
-     name/title. Each is a small touchable target that defaults to
-     muted white and hovers to brand-blue with a tiny upward nudge.
-     Both open in a new tab. */
-  .bio-figure-links {
+  /* LinkedIn + GitHub — kit icon buttons. */
+  .testimonials-section .bio-figure-links {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     margin-top: 14px;
   }
-  .bio-figure-link {
+  .testimonials-section .bio-figure-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 36px;
     height: 36px;
-    color: var(--white-50);
-    border: 1px solid var(--white-15);
-    border-radius: var(--radius-sm);
-    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+    color: var(--muted);
+    background: var(--panel);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
   }
-  .bio-figure-link:hover,
-  .bio-figure-link:focus-visible {
-    color: var(--brand-blue);
-    border-color: rgba(0, 71, 255, 0.5);
-    background: rgba(0, 71, 255, 0.08);
-    transform: translateY(-1px);
+  .testimonials-section .bio-figure-link:hover,
+  .testimonials-section .bio-figure-link:focus-visible {
     outline: none;
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-soft);
   }
-  .bio-figure-link svg {
+  .testimonials-section .bio-figure-link svg {
     width: 18px;
     height: 18px;
     stroke: currentColor;
@@ -217,210 +222,175 @@
     stroke-linejoin: round;
   }
 
-  .bio-text {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    padding-top: 8px;
+  .testimonials-section .bio-text { display: flex; flex-direction: column; gap: 18px; padding-top: 4px; }
+  .testimonials-section .bio-intro {
+    max-width: 40em;
+    margin: 0;
+    font-size: var(--fs-lede);
+    line-height: 1.7;
+    color: var(--body);
   }
-  .bio-intro {
-    font-size: var(--t-lg-size);
-    line-height: 1.65;
-    color: var(--white-72);
-    max-width: 720px;
-  }
-  .bio-intro strong {
-    color: var(--white);
-    font-weight: var(--w-bold);
-  }
+  .testimonials-section .bio-intro strong { color: var(--ink); font-weight: 600; }
 
-  /* ----- CREDIBILITY ROW (moved from intro section) -----
-     Sits at the bottom of the bio-text column as the "proof points"
-     that complement the introductory paragraph. Hairline dividers
-     between items, brand-blue feather icons, no boxes. */
-  .cred-row {
+  /* Credibility row — proof points, hairline dividers, no boxes. */
+  .testimonials-section .cred-row {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0;
-    margin-top: 12px;
+    margin-top: 10px;
     padding-top: 20px;
-    border-top: 1px solid var(--white-15);
-    font-size: var(--t-base-size);
+    border-top: 1px solid var(--line);
+    font-size: var(--fs-small);
     font-weight: 500;
-    color: var(--white-72);
     line-height: 1.4;
+    color: var(--body);
   }
-  .cred-row li {
+  .testimonials-section .cred-row li {
     position: relative;
-    padding: 0 22px;
     display: inline-flex;
     align-items: center;
     gap: 10px;
+    padding: 0 22px;
   }
-  .cred-row li:first-child { padding-left: 0; }
-  .cred-row li:not(:last-child)::after {
+  .testimonials-section .cred-row li:first-child { padding-left: 0; }
+  .testimonials-section .cred-row li:not(:last-child)::after {
     content: "";
     position: absolute;
-    right: 0; top: 20%; bottom: 20%;
+    right: 0;
+    top: 20%;
+    bottom: 20%;
     width: 1px;
-    background: var(--white-15);
+    background: var(--line-strong);
   }
-  .cred-icon {
+  .testimonials-section .cred-icon {
+    flex-shrink: 0;
     width: 16px;
     height: 16px;
-    stroke: var(--brand-blue);
+    stroke: var(--accent);
     fill: none;
     stroke-width: 1.6;
     stroke-linecap: round;
     stroke-linejoin: round;
-    flex-shrink: 0;
   }
 
   /* ============================================================
-     TESTIMONIAL MARQUEE
+     TESTIMONIALS — native horizontal scroller (JS auto-advance)
      ============================================================ */
-  .testimonials-eyebrow {
+  .testimonials-section .testimonials-eyebrow {
     display: flex;
     align-items: center;
-    gap: 16px;
-    margin-bottom: 28px;
-    font-size: var(--t-eyebrow-size);
+    gap: 14px;
+    margin-bottom: 24px;
+    font-family: var(--font-head);
+    font-size: var(--fs-eyebrow);
     font-weight: 600;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--white-50);
+    color: var(--muted);
   }
-  .testimonials-eyebrow::before {
-    content: "";
-    width: 28px; height: 1px;
-    background: var(--brand-blue);
-  }
-  .testimonials-eyebrow::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: var(--white-15);
-  }
+  .testimonials-section .testimonials-eyebrow::before { content: ""; width: 28px; height: 1px; background: var(--accent); }
+  .testimonials-section .testimonials-eyebrow::after { content: ""; flex: 1; height: 1px; background: var(--line); }
 
-  /* Marquee — uses native horizontal scroll (overflow-x: auto) with
-     the scrollbar visually hidden. JS drives a slow auto-advance via
-     scrollLeft and pauses on hover OR when the user scrolls horizontally
-     with a trackpad. The container scrolls naturally; the auto-loop
-     wraps invisibly (the cards are duplicated to make the seam smooth).
-     Doing it this way — instead of CSS transform animation — lets users
-     two-finger-scroll without fighting the animation. */
-  .testimonials-marquee {
+  .testimonials-section .testimonials-marquee {
     position: relative;
     width: 100vw;
     margin-left: calc(50% - 50vw);
+    padding: 4px 0;
     overflow-x: auto;
     overflow-y: hidden;
-    scrollbar-width: none;            /* Firefox */
-    -ms-overflow-style: none;          /* old IE/Edge */
-    /* Edge fade so cards dissolve in/out at left/right rather than
-       cutting off hard against the viewport. */
-    mask-image: linear-gradient(
-      90deg, transparent 0%, black 6%, black 94%, transparent 100%
-    );
-    -webkit-mask-image: linear-gradient(
-      90deg, transparent 0%, black 6%, black 94%, transparent 100%
-    );
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    mask-image: linear-gradient(90deg, transparent 0%, black 6%, black 94%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 6%, black 94%, transparent 100%);
   }
-  .testimonials-marquee::-webkit-scrollbar { display: none; }
+  .testimonials-section .testimonials-marquee::-webkit-scrollbar { display: none; }
+  .testimonials-section .testimonials-track { display: flex; gap: 16px; width: max-content; }
 
-  .testimonials-track {
-    display: flex;
-    gap: 20px;
-    width: max-content;
-    /* No CSS animation — JS increments scrollLeft frame-by-frame. */
-  }
-
-  /* Cards have a fixed height (was min-height) so very long quotes
-     can't push their card taller than the others — the long
-     "Macrobond Pre-Sales" testimonial used to overflow the box on
-     wider viewports. Click anywhere on a card to read the full
-     quote in a modal. */
-  .testimonial-card {
+  /* Fixed height so a long quote can't stretch its card; click for
+     the full text. */
+  .testimonials-section .testimonial-card {
+    position: relative;
     flex: 0 0 380px;
     height: 260px;
-    padding: 24px 26px;
-    background: var(--neutral-secondary);
-    border: 1px solid var(--white-15);
-    border-radius: var(--radius-md);
     display: flex;
     flex-direction: column;
-    position: relative;
+    padding: 24px 24px 20px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
     cursor: pointer;
-    transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
   }
-  .testimonial-card:hover {
-    border-color: rgba(0, 71, 255, 0.45);
-    transform: translateY(-2px);
-    box-shadow: 0 0 28px rgba(0, 71, 255, 0.18);
+  .testimonials-section .testimonial-card:hover {
+    border-color: color-mix(in srgb, var(--accent) 42%, transparent);
+    background: var(--panel-2);
   }
-  .testimonial-card:focus-visible {
-    outline: 2px solid var(--brand-blue);
-    outline-offset: 2px;
+  .testimonials-section .testimonial-card:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
   }
-  /* Stylised opening quote mark in the top-left corner. */
-  .testimonial-card::before {
-    content: "“";
+  .testimonials-section .testimonial-card::before {
+    content: "\201C";
     position: absolute;
-    top: 12px;
+    top: 10px;
     left: 18px;
-    font-size: 3.4rem;
-    line-height: 1;
-    color: var(--brand-blue);
-    opacity: 0.35;
     font-family: Georgia, serif;
+    font-size: 3.2rem;
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.4;
     pointer-events: none;
   }
-  /* Subtle "read more" affordance in the bottom-right corner of every
-     card — pairs with the cursor:pointer to invite the click. */
-  .testimonial-card::after {
-    content: "Read full →";
+  .testimonials-section .testimonial-card::after {
+    content: "Read full \2192";
     position: absolute;
-    bottom: 8px;
-    right: 14px;
-    font-size: 0.7rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-weight: 700;
-    color: var(--white-30);
+    right: 16px;
+    bottom: 10px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--faint);
     pointer-events: none;
-    transition: color 0.3s ease;
+    transition: color 0.15s ease;
   }
-  .testimonial-card:hover::after { color: var(--brand-blue); }
-
-  .quote-text {
-    font-size: var(--t-base-size);
-    line-height: 1.55;
-    color: var(--white-72);
-    margin-top: 18px;
-    padding-left: 8px;
-    /* Ellipsize very long quotes to keep cards uniform.
-       Clamp at 5 lines (was 6) so the longest quote sits comfortably
-       inside the new fixed card height. */
+  .testimonials-section .testimonial-card:hover::after { color: var(--accent); }
+  .testimonials-section .quote-text {
+    margin: 22px 0 0;
+    padding-left: 6px;
+    font-size: var(--fs-small);
+    line-height: 1.6;
+    color: var(--body);
     display: -webkit-box;
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-
-  .quote-author {
-    margin-top: auto;                  /* push to the bottom of the card */
-    padding-top: 14px;
-    border-top: 1px solid var(--white-15);
+  .testimonials-section .quote-author { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--line); }
+  .testimonials-section .author-title {
+    font-size: var(--fs-small);
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+  .testimonials-section .author-company {
+    margin-top: 3px;
+    font-family: var(--font-head);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
   }
 
-  /* ============================================================
-     READ-FULL MODAL — opens when a card is clicked.
-     ============================================================ */
-  .testimonial-modal {
+  /* ----- Read-full modal (kit modal surface) ----- */
+  /* --vv-top / --vv-h are set only by the local fullsite preview (the section
+     is an iframe there); on the live page they're unset and this is a normal
+     full-viewport overlay. */
+  .testimonials-section .testimonial-modal {
     position: fixed;
-    inset: 0;
+    inset: var(--vv-top, 0px) 0 auto 0;
+    height: var(--vv-h, 100%);
     z-index: 100;
     display: flex;
     align-items: center;
@@ -428,176 +398,111 @@
     padding: 24px;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.25s ease;
   }
-  .testimonial-modal.is-visible { opacity: 1; pointer-events: auto; }
-  .testimonial-modal[hidden] { display: none; }
-  .testimonial-modal-backdrop {
+  .testimonials-section .testimonial-modal.is-visible { opacity: 1; pointer-events: auto; }
+  .testimonials-section .testimonial-modal[hidden] { display: none; }
+  .testimonials-section .testimonial-modal-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(7, 7, 8, 0.78);
+    background: color-mix(in srgb, var(--bg) 78%, transparent);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
   }
-  .testimonial-modal-card {
+  .testimonials-section .testimonial-modal-card {
     position: relative;
-    max-width: 640px;
     width: 100%;
-    max-height: 84vh;
+    max-width: 640px;
+    max-height: calc(var(--vv-h, 100vh) * 0.84);
     overflow-y: auto;
-    background: var(--neutral-secondary);
-    border: 1px solid var(--brand-blue);
-    padding: 40px 44px 36px;
-    border-radius: var(--radius-md);
-    box-shadow: 0 0 60px rgba(0, 71, 255, 0.35);
-    transform: scale(0.96);
-    transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+  overscroll-behavior: contain;
+    padding: 36px 40px 32px;
+    background: var(--panel);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow), 0 18px 48px rgba(0, 0, 0, 0.35);
+    transform: scale(0.97);
+    transition: transform 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
   }
-  .testimonial-modal.is-visible .testimonial-modal-card { transform: scale(1); }
-  .testimonial-modal-close {
+  .testimonials-section .testimonial-modal.is-visible .testimonial-modal-card { transform: scale(1); }
+  .testimonials-section .testimonial-modal-close {
     position: absolute;
-    top: 10px; right: 14px;
-    background: transparent;
+    top: 10px;
+    right: 12px;
+    padding: 6px 10px;
+    background: none;
     border: 0;
-    color: var(--white-50);
-    font-size: 1.6rem;
+    border-radius: var(--radius-sm);
+    color: var(--muted);
+    font: inherit;
+    font-size: 1.4rem;
     line-height: 1;
     cursor: pointer;
-    padding: 8px 10px;
-    font-family: inherit;
-    transition: color 0.2s ease;
+    transition: color 0.15s ease, background-color 0.15s ease;
   }
-  .testimonial-modal-close:hover { color: var(--white); }
-  .testimonial-modal-quote {
-    font-size: 1.05rem;
-    line-height: 1.7;
-    color: var(--white);
-    font-weight: 500;
+  .testimonials-section .testimonial-modal-close:hover { color: var(--ink); background: var(--panel-2); }
+  .testimonials-section .testimonial-modal-quote {
     margin: 0 0 24px;
+    font-size: var(--fs-body);
+    line-height: 1.75;
+    color: var(--ink);
   }
-  .testimonial-modal-quote::before {
-    content: "“";
+  .testimonials-section .testimonial-modal-quote::before {
+    content: "\201C";
     display: block;
-    font-size: 3.6rem;
-    line-height: 0.8;
-    color: var(--brand-blue);
-    opacity: 0.45;
-    font-family: Georgia, serif;
-    margin-bottom: 14px;
-  }
-  .testimonial-modal-author {
-    padding-top: 18px;
-    border-top: 1px solid var(--white-15);
-  }
-  .testimonial-modal .author-title {
-    font-size: var(--t-base-size);
-    font-weight: 700;
-    color: var(--white);
-  }
-  .testimonial-modal .author-company {
-    margin-top: 4px;
-    font-size: var(--t-eyebrow-size);
-    font-weight: 600;
-    color: var(--brand-blue);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  }
-  .author-title {
-    font-size: var(--t-base-size);
-    font-weight: 700;
-    color: var(--white);
-    line-height: 1.25;
-  }
-  .author-company {
-    margin-top: 4px;
-    font-size: var(--t-eyebrow-size);
-    font-weight: 600;
-    color: var(--brand-blue);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  }
-
-  /* ============================================================
-     CLOSING LINE — moved here from the intro hero. Sits at the
-     foot of the social-proof block as the final reflective beat
-     before the contact form. Same typography as it had in intro;
-     wrapped in .closing-line-wrap so it shares the section-inner
-     constraint while staying outside the bio-block grid above.
-     ============================================================ */
-  .closing-line-wrap {
-    max-width: 1500px;
-    margin: 0 auto;
-    padding: 56px clamp(24px, 4vw, 64px) 0;
-  }
-  .closing-line {
-    text-align: center;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-  .closing-line-eyebrow {
-    font-size: var(--t-eyebrow-size);
-    letter-spacing: 0.4em;
-    text-transform: uppercase;
-    color: var(--brand-blue);
-    font-weight: 600;
     margin-bottom: 12px;
+    font-family: Georgia, serif;
+    font-size: 3.4rem;
+    line-height: 0.8;
+    color: var(--accent);
+    opacity: 0.5;
   }
-  .closing-line-text {
-    font-size: var(--t-xl-size);
+  .testimonials-section .testimonial-modal-author { padding-top: 16px; border-top: 1px solid var(--line); }
+
+  /* ----- Closing line ----- */
+  .testimonials-section .closing-line-wrap { max-width: 1500px; margin: 0 auto; padding: 64px clamp(24px, 4vw, 64px) 0; }
+  .testimonials-section .closing-line { max-width: 900px; margin: 0 auto; text-align: center; }
+  .testimonials-section .closing-line-eyebrow {
+    margin-bottom: 12px;
+    font-family: var(--font-head);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .testimonials-section .closing-line-text {
+    margin: 0 auto;
+    font-family: var(--font-head);
+    font-size: 1.75rem;
     font-weight: 500;
     line-height: 1.3;
-    letter-spacing: -0.01em;
-    color: var(--white-72);
-    margin: 0 auto;
+    color: var(--body);
   }
-  .closing-line-text em {
-    font-style: normal;
-    color: var(--brand-blue);
-    font-weight: 600;
-  }
+  .testimonials-section .closing-line-text em { font-style: normal; font-weight: 600; color: var(--accent); }
 
   /* ============================================================
      RESPONSIVE
      ============================================================ */
   @media (max-width: 900px) {
     .testimonials-section .section-inner { padding: 0 32px; }
-    .bio-block {
-      grid-template-columns: 1fr;
-      gap: 32px;
-      margin-bottom: 56px;
-    }
-    .bio-figure {
-      width: 220px;
-      margin: 0 auto;
-    }
-    .testimonial-card { flex-basis: 320px; height: 250px; }
+    .testimonials-section .bio-block { grid-template-columns: 1fr; gap: 32px; margin-bottom: 56px; }
+    .testimonials-section .bio-figure { width: 220px; margin: 0 auto; }
+    .testimonials-section .testimonial-card { flex-basis: 320px; height: 250px; }
   }
-
   @media (max-width: 540px) {
-    .testimonials-section { padding: 48px 0 64px; }
+    .testimonials-section { padding: 56px 0 64px; }
     .testimonials-section .section-inner { padding: 0 20px; }
-    .testimonial-card { flex-basis: 280px; height: 240px; padding: 20px 22px; }
-    .testimonial-modal-card { padding: 32px 26px 28px; }
-    .testimonial-modal-quote { font-size: 1rem; }
-    /* Stack KPI row vertically on narrow viewports — dividers off.
-       Each li becomes a full-width flex (block-level) with the icon
-       top-aligned to the first text line, so when long text wraps to
-       two lines (e.g. the "Customer Success / Pre-Sales / …" KPI)
-       the icon stays put at the left and the text starts at the same
-       X as the other KPIs above. Without `display: flex; width: 100%`
-       the LI shrink-wraps to its content and the wrapped text reads
-       as if it were centered. */
-    .cred-row { flex-direction: column; align-items: flex-start; gap: 10px; }
-    .cred-row li {
-      padding: 0;
-      display: flex;
-      align-items: flex-start;
-      width: 100%;
-    }
-    .cred-row li .cred-icon { margin-top: 4px; }
-    .cred-row li:not(:last-child)::after { display: none; }
-    .closing-line-wrap { padding: 40px 20px 0; }
-    .closing-line-text { font-size: var(--t-lg-size); }
+    .testimonials-section .testimonial-card { flex-basis: 280px; height: 250px; padding: 20px; }
+    .testimonials-section .testimonial-modal-card { padding: 32px 24px 26px; }
+    /* KPIs stack; each li is full-width flex so a wrapped line keeps
+       its icon at the left. */
+    .testimonials-section .cred-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .testimonials-section .cred-row li { display: flex; align-items: flex-start; width: 100%; padding: 0; }
+    .testimonials-section .cred-row li .cred-icon { margin-top: 2px; }
+    .testimonials-section .cred-row li:not(:last-child)::after { display: none; }
+    .testimonials-section .closing-line-wrap { padding: 48px 20px 0; }
+    .testimonials-section .closing-line-text { font-size: 1.4rem; }
   }
 </style>
 </head>
@@ -742,7 +647,7 @@
     {
       title: 'Head of Sales · Former CCO',
       company: 'Regnology',
-      quote: "G was my second hire when I joined and he was a massive success. He built our datafeeds business from scratch, running everything from product design through to marketing and GTM. I have no hesitation in recommending him to anyone looking to scale a data business."
+      quote: "Greg was my second hire when I joined Macrobond and he was a massive success. He built our datafeeds business from scratch, running everything from product design through to marketing and GTM. I have no hesitation in recommending him to anyone looking to scale a data business."
     },
     {
       title: 'Product Manager',
@@ -847,9 +752,13 @@
       modal.hidden = false;
       void modal.offsetWidth;
       modal.classList.add('is-visible');
+      document.documentElement.style.overflow = 'hidden';   // page stays put under the popup
+      document.documentElement.classList.add('dmc01-overlay-open');   // nav steps aside
     }
     function closeModal() {
       modal.classList.remove('is-visible');
+      document.documentElement.style.overflow = '';
+      document.documentElement.classList.remove('dmc01-overlay-open');
       setTimeout(function() { modal.hidden = true; }, 300);
     }
     modalClose.addEventListener('click', closeModal);

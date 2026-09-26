@@ -6,445 +6,362 @@
 <title>DMC01 — Powered by a rigorous framework</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 
 <script>(function(){try{var t=localStorage.getItem('dmc01-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 
 <style>
   /* ============================================================
-     DMC01 · "Powered by a rigorous framework"
-     v2 — vertical timeline. Five steps stacked top-to-bottom,
-     each row pairing the activity copy with its illustration.
-     A single connecting line runs through the numbered nodes; a
-     pulse drifts down the line on a slow loop. Rows fade in as
-     they enter the viewport (IntersectionObserver), and the
-     active row's marker lights up.
+     DMC01 · Framework — "Powered by a rigorous framework"
+     Vertical timeline: five steps, each row pairing the activity
+     copy with its illustration. One rail runs through the numbered
+     markers; a pulse drifts down it. Rows fade in on view and their
+     marker lights up.
 
-     Design intent: a *journey* metaphor, distinct from the
-     menu-and-detail pattern used in tailored. All content is
-     always visible — no click-to-reveal needed.
+     Visual language: dmc01-ui-kit tokens. Illustrations carry
+     classes (f-*, s-*) rather than hex values, so they follow the
+     theme; no red / amber / green (restricted palette).
      ============================================================ */
 
+  /* @dmc01-tokens:start */
   :root {
-    /* Variables reference Webflow's alias block; fallbacks for
-       dev preview only. Editing Webflow → Variables propagates. */
-    --brand-blue:        var(--accent-primary, #0047FF);
-    --neutral-primary:   var(--bg-primary, #070708);
-    --neutral-secondary: var(--bg-secondary, #161617);
-    --surface-3:         #1d1e22;
-    --font:              var(--font-body, "Rajdhani", system-ui, sans-serif);
-    --t-h1-size:    var(--h1-size, 4.65rem);
-    --t-h2-size:    var(--h2-size, 2.83rem);
-    --t-base-size:  var(--base-font-size, 1.1rem);
-    --t-lg-size:    var(--text-lg-size, 1.4rem);
-    --t-xl-size:    var(--text-xl-size, 1.5rem);
-    --t-eyebrow-size: var(--eyebrow-size, 1.1rem);
-    --w-h1:    var(--h1-weight, 600);
-    --w-h2:    var(--h2-weight, 600);
-    --w-base:  var(--base-font-weight, 400);
-    --w-bold:  var(--base-font-weight-bold, 600);
-    --lh-h1:   var(--h1-line-height, 1.04em);
-    --lh-h2:   var(--h2-line-height, 1.04em);
-    --lh-base: var(--base-line-height, 1.6em);
-    --white:    var(--text-primary, #FFFFFF);
-    --white-72: rgba(255, 255, 255, 0.88);
-    --white-70: rgba(255, 255, 255, 0.86);
-    --white-50: rgba(255, 255, 255, 0.62);
-    --white-30: rgba(255, 255, 255, 0.30);
-    --white-15: var(--border-secondary, rgba(255, 255, 255, 0.15));
-    --blue-glow:  var(--accent-primary-glow, rgba(0, 71, 255, 0.55));
-    --blue-faint: var(--accent-primary-faint, rgba(0, 71, 255, 0.10));
-    --blue-grid:  var(--brand-grid, rgba(73, 72, 192, 0.04));
+    /* surfaces — kit */
+    --bg:          #0c0d11;
+    --panel:       #15171d;
+    --panel-2:     #1d2027;
+    --panel-3:     #232730;
 
-    /* Border radius — see head-alias-block.css. */
-    --radius-sm: var(--radius-base, 2px);
-    --radius-md: calc(var(--radius-sm) * 2);
+    /* text — kit, plus --body (web) */
+    --ink:         #f3f5f8;
+    --body:        rgba(243, 245, 248, 0.80);
+    --muted:       rgba(243, 245, 248, 0.52);
+    --faint:       rgba(243, 245, 248, 0.34);
+
+    /* accents — kit (dark-surface variants) */
+    --accent:       #4c8dff;
+    --accent-hover: #6ba1ff;
+    --accent-soft:  rgba(76, 141, 255, 0.14);
+    --purple:       #9b6bdc;
+
+    /* Brand Blue as a fill — web */
+    --brand-blue:       #0047FF;
+    --brand-blue-hover: #1f5eff;
+    --on-brand:         #ffffff;
+
+    /* lines, radii, shadow — kit */
+    --line:        rgba(255, 255, 255, 0.08);
+    --line-strong: rgba(255, 255, 255, 0.14);
+    --radius-sm:   6px;
+    --radius:      8px;
+    --radius-lg:   12px;
+    --shadow:      0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.25);
+
+    /* type — kit families; Webflow's responsive heading scale where it exists */
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-head: "Rajdhani", -apple-system, sans-serif;
+    --fs-h1:     var(--h1-size, 4.65rem);
+    --fs-h2:     var(--h2-size, 2.83rem);
+    --fs-lede:   1.1875rem;
+    --fs-body:   1.0625rem;
+    --fs-small:  0.9375rem;
+    --fs-xs:     0.8125rem;
+    --fs-eyebrow: 0.9375rem;
+
+    --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   }
-
-  /* Light theme — see 01-dmc01-intro.html for the rationale. */
   [data-theme="light"] {
-    --neutral-primary:   #f5f5f7;
-    --neutral-secondary: #ffffff;
-    --surface-3:         #ebebee;
-    --white:    #070708;
-    --white-72: rgba(7, 7, 8, 0.85);
-    --white-70: rgba(7, 7, 8, 0.83);
-    --white-50: rgba(7, 7, 8, 0.68);
-    --white-30: rgba(7, 7, 8, 0.42);
-    --white-15: rgba(7, 7, 8, 0.10);
+    --bg:          #f5f6f8;
+    --panel:       #ffffff;
+    --panel-2:     #eef0f3;
+    --panel-3:     #e6e9ee;
+
+    --ink:         #0c0d11;
+    --body:        rgba(12, 13, 17, 0.80);
+    --muted:       rgba(12, 13, 17, 0.60);
+    --faint:       rgba(12, 13, 17, 0.40);
+
+    --accent:       #0047FF;
+    --accent-hover: #0039cc;
+    --accent-soft:  rgba(0, 71, 255, 0.09);
+    --purple:       #6633CC;
+
+    --line:        rgba(12, 13, 17, 0.09);
+    --line-strong: rgba(12, 13, 17, 0.16);
+    --shadow:      0 1px 2px rgba(12, 13, 17, 0.06), 0 4px 16px rgba(12, 13, 17, 0.06);
   }
-  /* Step-figure gradient — same hardcoded `rgba(22,22,23,0.6)` issue. */
-  [data-theme="light"] .step-figure {
-    background: linear-gradient(180deg, var(--neutral-secondary) 0%, rgba(0, 0, 0, 0.04) 100%);
-  }
-  /* Marker circle — keep it visible against the new white background;
-     the brand-blue border + filled-blue active state both still work. */
+  /* @dmc01-tokens:end */
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: var(--neutral-primary);
-    color: var(--white);
-    font-family: var(--font);
-    font-weight: var(--w-base);
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* ============================================================
-     SECTION FRAME
-     ============================================================ */
   .framework-section {
+    --sec-grid: rgba(255, 255, 255, 0.025);
     position: relative;
     z-index: 1;
     width: 100vw;
     margin-left: calc(-50vw + 50%);
-    padding: 56px clamp(24px, 4vw, 64px) 72px;
-    background: var(--neutral-primary);
+    padding: clamp(64px, 9vh, 104px) clamp(24px, 4vw, 64px) 80px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
     overflow: hidden;
     isolation: isolate;
   }
+  [data-theme="light"] .framework-section { --sec-grid: rgba(12, 13, 17, 0.035); }
   .framework-section::before {
     content: "";
     position: absolute;
     inset: 0;
-    pointer-events: none;
     z-index: 0;
+    pointer-events: none;
     background-image:
-      linear-gradient(var(--blue-grid) 1px, transparent 1px),
-      linear-gradient(90deg, var(--blue-grid) 1px, transparent 1px);
+      linear-gradient(var(--sec-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--sec-grid) 1px, transparent 1px);
     background-size: 60px 60px;
     mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black 40%, transparent 100%);
     -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 50%, black 40%, transparent 100%);
   }
+  .framework-section .section-inner { position: relative; z-index: 2; max-width: 1500px; margin: 0 auto; }
 
-  .framework-section .section-inner {
-    position: relative;
-    z-index: 2;
-    max-width: 1500px;
-    margin: 0 auto;
-  }
-
-  /* ============================================================
-     HEADER — eyebrow above, then a 2-col grid for title + lede
-     with first-line top-alignment so the lede sits beside the
-     title's first line regardless of how many lines either takes.
-     ============================================================ */
-  .framework-header {
-    margin-bottom: 56px;
-    padding-bottom: 28px;
-    border-bottom: 1px solid var(--white-15);
-  }
-  .framework-header .header-grid {
+  /* ----- HEADER (same pattern as Solutions / Product) ----- */
+  .framework-section .framework-header { margin-bottom: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--line); }
+  .framework-section .header-grid {
     display: grid;
     grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-    gap: clamp(40px, 6vw, 96px);
-    align-items: start;
+    gap: clamp(32px, 6vw, 96px);
+    align-items: end;
   }
-
   .framework-section .eyebrow {
-    font-size: var(--t-eyebrow-size);
-    font-weight: 600;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--brand-blue);
-    margin-bottom: 14px;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
+    margin-bottom: 16px;
+    font-family: var(--font-head);
+    font-size: var(--fs-eyebrow);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
   }
-  .framework-section .eyebrow::before {
-    content: "";
-    width: 32px; height: 1px;
-    background: var(--brand-blue);
-  }
+  .framework-section .eyebrow::before { content: ""; width: 28px; height: 1px; background: currentColor; }
   .framework-section .section-title {
-    /* margin + text-align reset to neutralise Webflow's site-wide
-       heading defaults (which center H1/H2 and add 20px margins).
-       Explicit color: var(--white) is themed and overrides Webflow's
-       body color leak. */
     margin: 0;
     text-align: left;
-    color: var(--white);
-    font-size: var(--t-h1-size);
-    font-weight: var(--w-h1);
-    line-height: var(--lh-h1);
-    letter-spacing: -0.02em;
+    font-family: var(--font-head);
+    font-size: var(--fs-h1);
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    color: var(--ink);
   }
-  .framework-section .section-title em { font-style: normal; color: var(--brand-blue); }
+  .framework-section .section-title em,
+  .framework-section .step-title em { font-style: normal; color: var(--accent); }
   .framework-section .section-lede {
     margin: 0;
     text-align: left;
-    font-size: var(--t-lg-size);
-    font-weight: var(--w-base);
-    line-height: var(--lh-base);
-    color: var(--white-70);
-    max-width: 520px;
+    max-width: 34em;
+    font-size: var(--fs-lede);
+    line-height: 1.6;
+    color: var(--body);
+    text-wrap: pretty;
   }
 
   /* ============================================================
-     VERTICAL TIMELINE
-     A single connecting line runs through the column of marker
-     circles. Drawn as a pseudo-element on the <ol>; the markers
-     sit on top with z-index. A second pseudo-element animates a
-     small pulse down the line.
+     TIMELINE — rail behind the markers, pulse drifting down it
      ============================================================ */
-  .step-timeline {
-    list-style: none;
-    position: relative;
-    /* Inset 24px top/bottom so the line ends just inside the
-       first/last marker (centre-aligned visually). */
-    padding: 24px 0 24px 0;
-  }
-  .step-timeline::before {
-    /* The static rail. Vertical, behind markers. */
+  .framework-section .step-timeline { list-style: none; position: relative; padding: 24px 0; }
+  .framework-section .step-timeline::before {
     content: "";
     position: absolute;
-    top: 56px;     /* aligns with centre of first marker */
-    bottom: 56px;  /* aligns with centre of last marker */
-    left: 31px;    /* aligns with centre of marker column (32px) */
+    top: 56px;
+    bottom: 56px;
+    left: 31px;
     width: 2px;
-    background: linear-gradient(
-      180deg,
-      transparent 0%,
-      var(--white-15) 8%,
-      var(--white-15) 92%,
-      transparent 100%
-    );
     z-index: 0;
+    background: linear-gradient(180deg, transparent 0%, var(--line-strong) 8%, var(--line-strong) 92%, transparent 100%);
   }
-  .step-timeline::after {
-    /* Pulse drifting down the line. CSS only — `top` percentages
-       resolve against the parent <ol>, so the pulse traverses the
-       full timeline regardless of how tall the rows end up. */
+  .framework-section .step-timeline::after {
     content: "";
     position: absolute;
-    width: 8px; height: 8px;
-    background: var(--brand-blue);
-    border-radius: 50%;
     left: 28px;
-    margin-left: 0;
-    filter: drop-shadow(0 0 8px var(--blue-glow));
-    animation: timelinePulse 9s linear infinite;
+    width: 8px;
+    height: 8px;
     z-index: 1;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
     pointer-events: none;
+    animation: timelinePulse 9s linear infinite;
   }
   @keyframes timelinePulse {
-    0%   { top: 32px;                opacity: 0; }
+    0%   { top: 32px; opacity: 0; }
     8%   { opacity: 1; }
     92%  { opacity: 1; }
-    100% { top: calc(100% - 32px);   opacity: 0; }
+    100% { top: calc(100% - 32px); opacity: 0; }
   }
 
-  /* ============================================================
-     STEP ROW
-     Three columns: marker | text content | illustration.
-     Rows fade in via IntersectionObserver (the .is-visible class
-     is added by JS when the row enters the viewport).
-     ============================================================ */
-  .step-row {
+  /* ----- STEP ROW: marker | copy | illustration ----- */
+  .framework-section .step-row {
     display: grid;
     grid-template-columns: 64px minmax(0, 1fr) minmax(0, 1.1fr);
     gap: clamp(20px, 2.5vw, 40px);
     align-items: start;
     padding: 32px 0;
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
+    transform: translateY(16px);
+    transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
   }
-  .step-row.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  .framework-section .step-row.is-visible { opacity: 1; transform: none; }
 
-  /* ----- MARKER (numbered circle) ----- */
-  .step-marker {
-    width: 64px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    /* Push the marker down a touch so it aligns with the title baseline. */
-    padding-top: 4px;
-  }
-  .step-num {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    border: 1.5px solid var(--brand-blue);
-    background: var(--neutral-secondary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--brand-blue);
-    letter-spacing: 0.02em;
+  .framework-section .step-marker { width: 64px; display: flex; justify-content: center; padding-top: 4px; }
+  .framework-section .step-num {
     position: relative;
     z-index: 2;
-    transition:
-      background 0.5s ease,
-      color 0.5s ease,
-      box-shadow 0.5s ease,
-      transform 0.5s ease;
-  }
-  .step-row.is-visible .step-num {
-    background: var(--brand-blue);
-    /* Hard-coded white instead of var(--white) — the number sits on
-       a brand-blue circle in both themes, so it must always be light. */
-    color: #ffffff;
-    box-shadow: 0 0 28px var(--blue-glow);
-    transform: scale(1.05);
-  }
-
-  /* ----- TEXT CONTENT ----- */
-  .step-content {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    /* Align with marker baseline */
-    padding-top: 8px;
-  }
-  .step-eyebrow {
+    width: 56px;
+    height: 56px;
     display: flex;
     align-items: center;
-    gap: 14px;
-    font-size: var(--t-eyebrow-size);
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--panel);
+    border: 1px solid var(--line-strong);
+    font-family: var(--font-head);
+    font-size: 1.25rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+    transition: border-color 0.5s ease, color 0.5s ease, background-color 0.5s ease, box-shadow 0.5s ease;
+  }
+  /* Lit marker: accent ring + tint, never a solid block (kit). */
+  .framework-section .step-row.is-visible .step-num {
+    color: var(--accent);
+    background: var(--panel-2);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 6px var(--accent-soft);
+  }
+
+  .framework-section .step-content { display: flex; flex-direction: column; gap: 14px; padding-top: 8px; }
+  .framework-section .step-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-head);
+    font-size: var(--fs-eyebrow);
     font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
   }
-  .step-icon {
-    width: 18px; height: 18px;
-    color: var(--brand-blue);
-    flex-shrink: 0;
-  }
-  .step-icon svg {
+  .framework-section .step-icon { width: 18px; height: 18px; flex-shrink: 0; color: var(--accent); }
+  .framework-section .step-icon svg {
     width: 100%; height: 100%;
     stroke: currentColor; fill: none;
     stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
   }
-  .step-name {
-    color: var(--brand-blue);
-    font-weight: 700;
-  }
-  .step-duration {
+  .framework-section .step-name { color: var(--accent); font-weight: 700; }
+  .framework-section .step-duration {
     margin-left: auto;
-    color: var(--white-50);
+    padding-left: 12px;
+    border-left: 1px solid var(--line-strong);
+    color: var(--muted);
+  }
+  .framework-section .step-title {
+    margin: 0;
+    text-align: left;
+    font-family: var(--font-head);
+    font-size: var(--fs-h2);
     font-weight: 600;
-    border-left: 1px solid var(--white-15);
-    padding-left: 14px;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    color: var(--ink);
   }
-  .step-title {
-    font-size: var(--t-h2-size);
-    font-weight: var(--w-h2);
-    line-height: var(--lh-h2);
-    letter-spacing: -0.012em;
-    color: var(--white);
-  }
-  .step-title em { font-style: normal; color: var(--brand-blue); }
-  .step-body {
-    font-size: var(--t-base-size);
-    line-height: var(--lh-base);
-    color: var(--white-72);
-    max-width: 540px;
+  .framework-section .step-body {
+    margin: 0;
+    max-width: 36em;
+    font-size: var(--fs-body);
+    line-height: 1.65;
+    color: var(--body);
   }
 
-  /* ----- ILLUSTRATION FIGURE ----- */
-  .step-figure {
+  /* ----- ILLUSTRATION — kit card ----- */
+  .framework-section .step-figure {
     position: relative;
-    background: linear-gradient(180deg, var(--neutral-secondary) 0%, rgba(22,22,23,0.6) 100%);
-    border: 1px solid var(--white-15);
-    border-radius: var(--radius-md);
+    margin: 0;
     padding: 22px;
     overflow: hidden;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
   }
-  /* Corner-bracket flourish on each figure — small visual tie to the
-     orbital section's deliverable previews. */
-  .step-figure::after {
-    content: "";
-    position: absolute;
-    top: 8px; left: 8px; right: 8px; bottom: 8px;
-    pointer-events: none;
-    background:
-      linear-gradient(to right, var(--brand-blue) 0, var(--brand-blue) 14px, transparent 14px, transparent calc(100% - 14px), var(--brand-blue) calc(100% - 14px), var(--brand-blue) 100%) top    / 100% 1px no-repeat,
-      linear-gradient(to right, var(--brand-blue) 0, var(--brand-blue) 14px, transparent 14px, transparent calc(100% - 14px), var(--brand-blue) calc(100% - 14px), var(--brand-blue) 100%) bottom / 100% 1px no-repeat,
-      linear-gradient(to bottom, var(--brand-blue) 0, var(--brand-blue) 14px, transparent 14px, transparent calc(100% - 14px), var(--brand-blue) calc(100% - 14px), var(--brand-blue) 100%) left   / 1px 100% no-repeat,
-      linear-gradient(to bottom, var(--brand-blue) 0, var(--brand-blue) 14px, transparent 14px, transparent calc(100% - 14px), var(--brand-blue) calc(100% - 14px), var(--brand-blue) 100%) right  / 1px 100% no-repeat;
-    opacity: 0.35;
-  }
-  .step-figure svg {
+  .framework-section .step-figure svg {
+    position: relative;
+    z-index: 1;
+    display: block;
     width: 100%;
     height: auto;
     max-height: 240px;
-    display: block;
-    position: relative;
-    z-index: 1;
   }
+  .framework-section .f-ink     { fill: var(--ink); }
+  .framework-section .f-accent  { fill: var(--accent); }
+  .framework-section .f-brand   { fill: var(--brand-blue); }
+  .framework-section .f-onbrand { fill: var(--on-brand); }
+  .framework-section .f-purple  { fill: var(--purple); }
+  .framework-section .f-muted   { fill: var(--muted); }
+  .framework-section .f-p2      { fill: var(--panel-2); }
+  .framework-section .f-p3      { fill: var(--panel-3); }
+  .framework-section .s-ink     { stroke: var(--ink); }
+  .framework-section .s-accent  { stroke: var(--accent); }
+  .framework-section .s-purple  { stroke: var(--purple); }
 
-  /* ============================================================
-     PROJECT ENVELOPE FOOTER
-     ============================================================ */
-  .step-envelope {
-    margin-top: 24px;
-    padding-top: 24px;
-    border-top: 1px solid var(--white-15);
-    text-align: center;
-  }
-  .envelope-text {
+  /* ----- PROJECT ENVELOPE ----- */
+  .framework-section .step-envelope { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--line); text-align: center; }
+  .framework-section .envelope-text {
     display: inline-flex;
     align-items: center;
     gap: 16px;
-    font-size: var(--t-eyebrow-size);
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
+    font-family: var(--font-head);
+    font-size: var(--fs-eyebrow);
     font-weight: 600;
-    color: var(--white-50);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
-  .envelope-strong { color: var(--brand-blue); font-weight: 700; }
-  .envelope-pip {
-    width: 6px; height: 6px;
-    border: 1px solid var(--white-30);
-    transform: rotate(45deg);
+  .framework-section .envelope-strong { color: var(--accent); font-weight: 700; }
+  .framework-section .envelope-pip { width: 6px; height: 6px; border: 1px solid var(--faint); transform: rotate(45deg); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .framework-section .step-timeline::after { animation: none; opacity: 0; }
+    .framework-section .step-row { transition: none; opacity: 1; transform: none; }
   }
 
   /* ============================================================
-     RESPONSIVE
-     Below 900px the figure drops below the content (full-width).
-     The marker becomes the left rail; the connecting line still
-     runs through it.
+     RESPONSIVE — below 900px the figure drops under the copy
      ============================================================ */
   @media (max-width: 900px) {
-    .framework-header .header-grid {
-      grid-template-columns: 1fr;
+    .framework-section .header-grid { grid-template-columns: 1fr; gap: 16px; }
+    .framework-section .step-row {
+      grid-template-columns: 48px minmax(0, 1fr);
+      grid-template-areas: "marker content" "marker figure";
       gap: 16px;
     }
-    .step-row {
-      grid-template-columns: 56px 1fr;
-      grid-template-areas:
-        "marker content"
-        "marker figure";
-      gap: 16px;
-    }
-    .step-marker  { grid-area: marker; }
-    .step-content { grid-area: content; }
-    .step-figure  { grid-area: figure; margin-top: 14px; }
-    .step-num { width: 48px; height: 48px; font-size: 1rem; }
-    .step-marker { width: 48px; padding-top: 2px; }
-    .step-timeline::before { left: 23px; top: 48px; bottom: 48px; }
-    .step-timeline::after  { left: 20px; }
-    @keyframes timelinePulse {
-      0%   { top: 24px; opacity: 0; }
-      8%   { opacity: 1; }
-      92%  { opacity: 1; }
-      100% { top: calc(100% - 24px); opacity: 0; }
-    }
+    .framework-section .step-marker { grid-area: marker; width: 48px; padding-top: 2px; }
+    .framework-section .step-content { grid-area: content; }
+    .framework-section .step-figure { grid-area: figure; margin-top: 14px; }
+    .framework-section .step-num { width: 44px; height: 44px; font-size: 1rem; }
+    .framework-section .step-timeline::before { left: 23px; top: 48px; bottom: 48px; }
+    .framework-section .step-timeline::after { left: 20px; }
   }
-
   @media (max-width: 540px) {
-    .framework-section { padding: 48px 20px 64px; }
-    .step-eyebrow { flex-wrap: wrap; gap: 8px; }
-    .step-duration { margin-left: 0; padding-left: 0; border-left: 0; }
-    .envelope-text { flex-direction: column; gap: 8px; }
+    .framework-section { padding: 56px 20px 64px; }
+    .framework-section .step-eyebrow { flex-wrap: wrap; gap: 8px; }
+    .framework-section .step-duration { margin-left: 0; padding-left: 0; border-left: 0; }
+    .framework-section .envelope-text { flex-direction: column; gap: 8px; }
   }
 </style>
 </head>
@@ -482,34 +399,34 @@
         </div>
         <figure class="step-figure">
           <svg viewBox="0 0 760 280" font-family="Rajdhani">
-            <rect x="190" y="20" width="380" height="240" fill="#1d1e22" stroke="#0047FF" stroke-width="1"/>
-            <rect x="190" y="20" width="380" height="36" fill="#0047FF" opacity="0.15"/>
-            <text x="380" y="44" text-anchor="middle" fill="#FFF" font-size="14" font-weight="700" letter-spacing="2">STATEMENT OF WORK</text>
-            <text x="208" y="76" fill="#0047FF" font-size="10" font-weight="700" letter-spacing="1.5">PARTIES</text>
-            <rect x="208" y="84" width="170" height="2" fill="#FFF" opacity="0.35"/>
-            <rect x="208" y="92" width="140" height="2" fill="#FFF" opacity="0.35"/>
-            <text x="208" y="120" fill="#0047FF" font-size="10" font-weight="700" letter-spacing="1.5">SCOPE &amp; DELIVERABLES</text>
-            <rect x="208" y="128" width="344" height="2" fill="#FFF" opacity="0.25"/>
-            <rect x="208" y="136" width="320" height="2" fill="#FFF" opacity="0.25"/>
-            <rect x="208" y="144" width="280" height="2" fill="#FFF" opacity="0.25"/>
-            <text x="208" y="170" fill="#0047FF" font-size="10" font-weight="700" letter-spacing="1.5">COMMERCIALS</text>
-            <rect x="208" y="178" width="200" height="2" fill="#FFF" opacity="0.25"/>
-            <rect x="208" y="186" width="240" height="2" fill="#FFF" opacity="0.25"/>
-            <line x1="208" y1="222" x2="338" y2="222" stroke="#FFF" stroke-opacity="0.5"/>
-            <text x="208" y="240" fill="#FFF" opacity="0.55" font-size="9">DMC01</text>
-            <text x="220" y="218" fill="#0047FF" font-size="13" font-style="italic" font-weight="600">Director</text>
-            <line x1="412" y1="222" x2="552" y2="222" stroke="#FFF" stroke-opacity="0.5"/>
-            <text x="412" y="240" fill="#FFF" opacity="0.55" font-size="9">CLIENT</text>
-            <text x="426" y="218" fill="#0047FF" font-size="13" font-style="italic" font-weight="600" opacity="0.85">Authorised</text>
+            <rect class="f-p3 s-accent" x="190" y="20" width="380" height="240" stroke-width="1"/>
+            <rect class="f-accent" x="190" y="20" width="380" height="36" opacity="0.15"/>
+            <text class="f-ink" x="380" y="44" text-anchor="middle" font-size="14" font-weight="700" letter-spacing="2">STATEMENT OF WORK</text>
+            <text class="f-accent" x="208" y="76" font-size="10" font-weight="700" letter-spacing="1.5">PARTIES</text>
+            <rect class="f-ink" x="208" y="84" width="170" height="2" opacity="0.35"/>
+            <rect class="f-ink" x="208" y="92" width="140" height="2" opacity="0.35"/>
+            <text class="f-accent" x="208" y="120" font-size="10" font-weight="700" letter-spacing="1.5">SCOPE &amp; DELIVERABLES</text>
+            <rect class="f-ink" x="208" y="128" width="344" height="2" opacity="0.25"/>
+            <rect class="f-ink" x="208" y="136" width="320" height="2" opacity="0.25"/>
+            <rect class="f-ink" x="208" y="144" width="280" height="2" opacity="0.25"/>
+            <text class="f-accent" x="208" y="170" font-size="10" font-weight="700" letter-spacing="1.5">COMMERCIALS</text>
+            <rect class="f-ink" x="208" y="178" width="200" height="2" opacity="0.25"/>
+            <rect class="f-ink" x="208" y="186" width="240" height="2" opacity="0.25"/>
+            <line class="s-ink" x1="208" y1="222" x2="338" y2="222" stroke-opacity="0.5"/>
+            <text class="f-ink" x="208" y="240" opacity="0.55" font-size="9">DMC01</text>
+            <text class="f-accent" x="220" y="218" font-size="13" font-style="italic" font-weight="600">Director</text>
+            <line class="s-ink" x1="412" y1="222" x2="552" y2="222" stroke-opacity="0.5"/>
+            <text class="f-ink" x="412" y="240" opacity="0.55" font-size="9">CLIENT</text>
+            <text class="f-accent" x="426" y="218" font-size="13" font-style="italic" font-weight="600" opacity="0.85">Authorised</text>
             <g transform="translate(550,72) rotate(-12)">
-              <rect x="-32" y="-14" width="64" height="28" fill="none" stroke="#22BB66" stroke-width="2"/>
-              <text x="0" y="5" text-anchor="middle" fill="#22BB66" font-size="13" font-weight="700" letter-spacing="2">AGREED</text>
+              <rect class="s-purple" x="-32" y="-14" width="64" height="28" fill="none" stroke-width="2"/>
+              <text class="f-purple" x="0" y="5" text-anchor="middle" font-size="13" font-weight="700" letter-spacing="2">AGREED</text>
             </g>
-            <g transform="translate(80,150)" stroke="#0047FF" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <g class="s-accent" transform="translate(80,150)" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M0 30 L20 18 L36 26 L46 16 L56 22"/>
               <path d="M40 60 L52 44 L64 50 L74 38 L88 30"/>
-              <circle cx="56" cy="22" r="3" fill="#0047FF"/>
-              <circle cx="74" cy="38" r="3" fill="#0047FF"/>
+              <circle class="f-accent" cx="56" cy="22" r="3"/>
+              <circle class="f-accent" cx="74" cy="38" r="3"/>
               <line x1="56" y1="22" x2="74" y2="38" stroke-width="2"/>
             </g>
           </svg>
@@ -541,39 +458,39 @@
             <g font-size="10" font-weight="600">
               <!-- Top-left: label outside-left, avatar inside-right -->
               <g transform="translate(40,40)">
-                <text x="0" y="22" fill="#FFF" opacity="0.7">Sales lead</text>
-                <rect x="0" y="28" width="96" height="14" fill="none" stroke="#FFF" stroke-opacity="0.25"/>
-                <text x="6" y="38" fill="#FFF" opacity="0.55" font-size="8" font-style="italic">"Pricing risk"</text>
-                <circle cx="124" cy="24" r="20" fill="none" stroke="#0047FF" stroke-width="1.5"/>
-                <circle cx="124" cy="18" r="6" fill="#0047FF" opacity="0.9"/>
-                <path d="M110 36 a14 14 0 0 1 28 0" fill="#0047FF" opacity="0.9"/>
+                <text class="f-ink" x="0" y="22" opacity="0.7">Sales lead</text>
+                <rect class="s-ink" x="0" y="28" width="96" height="14" fill="none" stroke-opacity="0.25"/>
+                <text class="f-ink" x="6" y="38" opacity="0.55" font-size="8" font-style="italic">"Pricing risk"</text>
+                <circle class="s-accent" cx="124" cy="24" r="20" fill="none" stroke-width="1.5"/>
+                <circle class="f-accent" cx="124" cy="18" r="6" opacity="0.9"/>
+                <path class="f-accent" d="M110 36 a14 14 0 0 1 28 0" opacity="0.9"/>
               </g>
               <!-- Top-right: avatar inside-left, label outside-right -->
               <g transform="translate(596,40)">
-                <circle cx="0" cy="24" r="20" fill="none" stroke="#0047FF" stroke-width="1.5"/>
-                <circle cx="0" cy="18" r="6" fill="#0047FF" opacity="0.9"/>
-                <path d="M-14 36 a14 14 0 0 1 28 0" fill="#0047FF" opacity="0.9"/>
-                <text x="28" y="22" fill="#FFF" opacity="0.7">Product manager</text>
-                <rect x="28" y="28" width="96" height="14" fill="none" stroke="#FFF" stroke-opacity="0.25"/>
-                <text x="34" y="38" fill="#FFF" opacity="0.55" font-size="8" font-style="italic">"Adoption gap"</text>
+                <circle class="s-accent" cx="0" cy="24" r="20" fill="none" stroke-width="1.5"/>
+                <circle class="f-accent" cx="0" cy="18" r="6" opacity="0.9"/>
+                <path class="f-accent" d="M-14 36 a14 14 0 0 1 28 0" opacity="0.9"/>
+                <text class="f-ink" x="28" y="22" opacity="0.7">Product manager</text>
+                <rect class="s-ink" x="28" y="28" width="96" height="14" fill="none" stroke-opacity="0.25"/>
+                <text class="f-ink" x="34" y="38" opacity="0.55" font-size="8" font-style="italic">"Adoption gap"</text>
               </g>
               <!-- Bottom-left: label outside-left, avatar inside-right -->
               <g transform="translate(40,200)">
-                <text x="0" y="22" fill="#FFF" opacity="0.7">Data officer</text>
-                <rect x="0" y="28" width="96" height="14" fill="none" stroke="#FFF" stroke-opacity="0.25"/>
-                <text x="6" y="38" fill="#FFF" opacity="0.55" font-size="8" font-style="italic">"Licensing"</text>
-                <circle cx="124" cy="24" r="20" fill="none" stroke="#0047FF" stroke-width="1.5"/>
-                <circle cx="124" cy="18" r="6" fill="#0047FF" opacity="0.9"/>
-                <path d="M110 36 a14 14 0 0 1 28 0" fill="#0047FF" opacity="0.9"/>
+                <text class="f-ink" x="0" y="22" opacity="0.7">Data officer</text>
+                <rect class="s-ink" x="0" y="28" width="96" height="14" fill="none" stroke-opacity="0.25"/>
+                <text class="f-ink" x="6" y="38" opacity="0.55" font-size="8" font-style="italic">"Licensing"</text>
+                <circle class="s-accent" cx="124" cy="24" r="20" fill="none" stroke-width="1.5"/>
+                <circle class="f-accent" cx="124" cy="18" r="6" opacity="0.9"/>
+                <path class="f-accent" d="M110 36 a14 14 0 0 1 28 0" opacity="0.9"/>
               </g>
               <!-- Bottom-right: avatar inside-left, label outside-right -->
               <g transform="translate(596,200)">
-                <circle cx="0" cy="24" r="20" fill="none" stroke="#0047FF" stroke-width="1.5"/>
-                <circle cx="0" cy="18" r="6" fill="#0047FF" opacity="0.9"/>
-                <path d="M-14 36 a14 14 0 0 1 28 0" fill="#0047FF" opacity="0.9"/>
-                <text x="28" y="22" fill="#FFF" opacity="0.7">Legal counsel</text>
-                <rect x="28" y="28" width="96" height="14" fill="none" stroke="#FFF" stroke-opacity="0.25"/>
-                <text x="34" y="38" fill="#FFF" opacity="0.55" font-size="8" font-style="italic">"AI clauses"</text>
+                <circle class="s-accent" cx="0" cy="24" r="20" fill="none" stroke-width="1.5"/>
+                <circle class="f-accent" cx="0" cy="18" r="6" opacity="0.9"/>
+                <path class="f-accent" d="M-14 36 a14 14 0 0 1 28 0" opacity="0.9"/>
+                <text class="f-ink" x="28" y="22" opacity="0.7">Legal counsel</text>
+                <rect class="s-ink" x="28" y="28" width="96" height="14" fill="none" stroke-opacity="0.25"/>
+                <text class="f-ink" x="34" y="38" opacity="0.55" font-size="8" font-style="italic">"AI clauses"</text>
               </g>
             </g>
             <!-- Connecting lines: from each avatar's outer edge to the
@@ -581,20 +498,20 @@
                  Origins/targets are computed to land just outside the
                  avatar circles (radius 20) so the lines don't appear
                  to pierce them. -->
-            <g stroke="#0047FF" stroke-opacity="0.4" stroke-dasharray="3,4" stroke-linecap="round">
+            <g class="s-accent" stroke-opacity="0.4" stroke-dasharray="3,4" stroke-linecap="round">
               <line x1="180" y1="72"  x2="280" y2="120"/>
               <line x1="580" y1="72"  x2="480" y2="120"/>
               <line x1="180" y1="216" x2="280" y2="176"/>
               <line x1="580" y1="216" x2="480" y2="176"/>
             </g>
             <g transform="translate(280,108)">
-              <rect x="0" y="0" width="200" height="80" fill="#1d1e22" stroke="#0047FF" stroke-width="1.5"/>
-              <text x="14" y="22" fill="#0047FF" font-size="10" font-weight="700" letter-spacing="1.5">PROBLEM STATEMENT</text>
-              <rect x="14" y="30" width="170" height="2" fill="#FFF" opacity="0.4"/>
-              <rect x="14" y="38" width="150" height="2" fill="#FFF" opacity="0.4"/>
-              <rect x="14" y="46" width="160" height="2" fill="#FFF" opacity="0.4"/>
-              <line x1="14" y1="56" x2="186" y2="56" stroke="#FFF" stroke-opacity="0.2"/>
-              <text x="14" y="70" fill="#22BB66" font-size="10" font-weight="600">→ Coordinated plan</text>
+              <rect class="f-p3 s-accent" x="0" y="0" width="200" height="80" stroke-width="1.5"/>
+              <text class="f-accent" x="14" y="22" font-size="10" font-weight="700" letter-spacing="1.5">PROBLEM STATEMENT</text>
+              <rect class="f-ink" x="14" y="30" width="170" height="2" opacity="0.4"/>
+              <rect class="f-ink" x="14" y="38" width="150" height="2" opacity="0.4"/>
+              <rect class="f-ink" x="14" y="46" width="160" height="2" opacity="0.4"/>
+              <line class="s-ink" x1="14" y1="56" x2="186" y2="56" stroke-opacity="0.2"/>
+              <text class="f-purple" x="14" y="70" font-size="10" font-weight="600">→ Coordinated plan</text>
             </g>
           </svg>
         </figure>
@@ -616,46 +533,46 @@
         </div>
         <figure class="step-figure">
           <svg viewBox="0 0 760 280" font-family="Rajdhani">
-            <rect x="20" y="10" width="720" height="260" fill="#1d1e22" stroke="#FFF" stroke-opacity="0.18" stroke-width="1"/>
-            <rect x="20" y="10" width="720" height="20" fill="#0047FF" opacity="0.12"/>
-            <circle cx="34" cy="20" r="3" fill="#FF5C5C" opacity="0.6"/>
-            <circle cx="46" cy="20" r="3" fill="#FFC857" opacity="0.6"/>
-            <circle cx="58" cy="20" r="3" fill="#22BB66" opacity="0.6"/>
-            <text x="380" y="24" text-anchor="middle" fill="#FFF" opacity="0.45" font-size="9">notion.so / dmc01 / discovery</text>
-            <rect x="20" y="30" width="160" height="240" fill="#16161a"/>
-            <text x="32" y="56" fill="#FFF" opacity="0.45" font-size="9" letter-spacing="1">WORKSPACE</text>
-            <text x="32" y="76" fill="#FFF" opacity="0.7" font-size="10">▾ DMC01 · Project</text>
-            <text x="42" y="92" fill="#0047FF" font-size="10" font-weight="600">• Discovery notes</text>
-            <text x="42" y="106" fill="#FFF" opacity="0.6" font-size="10">• Findings</text>
-            <text x="42" y="120" fill="#FFF" opacity="0.6" font-size="10">• Recommendations</text>
-            <text x="42" y="134" fill="#FFF" opacity="0.6" font-size="10">• Roadmap draft</text>
-            <text x="32" y="160" fill="#FFF" opacity="0.45" font-size="9" letter-spacing="1">SHARED</text>
-            <text x="42" y="176" fill="#FFF" opacity="0.6" font-size="10">• Stakeholder map</text>
-            <text x="42" y="190" fill="#FFF" opacity="0.6" font-size="10">• Data inventory</text>
-            <text x="200" y="60" fill="#FFF" font-size="16" font-weight="700">Discovery findings</text>
-            <text x="200" y="76" fill="#FFF" opacity="0.45" font-size="9">Last edited 4 min ago · Greg</text>
-            <line x1="200" y1="86" x2="720" y2="86" stroke="#FFF" stroke-opacity="0.15"/>
-            <g font-size="10" fill="#FFF">
-              <circle cx="208" cy="106" r="2.5" fill="#0047FF"/>
+            <rect class="f-p3 s-ink" x="20" y="10" width="720" height="260" stroke-opacity="0.18" stroke-width="1"/>
+            <rect class="f-accent" x="20" y="10" width="720" height="20" opacity="0.12"/>
+            <circle class="f-muted" cx="34" cy="20" r="3" opacity="0.6"/>
+            <circle class="f-muted" cx="46" cy="20" r="3" opacity="0.6"/>
+            <circle class="f-purple" cx="58" cy="20" r="3" opacity="0.6"/>
+            <text class="f-ink" x="380" y="24" text-anchor="middle" opacity="0.45" font-size="9">notion.so / dmc01 / discovery</text>
+            <rect class="f-p2" x="20" y="30" width="160" height="240"/>
+            <text class="f-ink" x="32" y="56" opacity="0.45" font-size="9" letter-spacing="1">WORKSPACE</text>
+            <text class="f-ink" x="32" y="76" opacity="0.7" font-size="10">▾ DMC01 · Project</text>
+            <text class="f-accent" x="42" y="92" font-size="10" font-weight="600">• Discovery notes</text>
+            <text class="f-ink" x="42" y="106" opacity="0.6" font-size="10">• Findings</text>
+            <text class="f-ink" x="42" y="120" opacity="0.6" font-size="10">• Recommendations</text>
+            <text class="f-ink" x="42" y="134" opacity="0.6" font-size="10">• Roadmap draft</text>
+            <text class="f-ink" x="32" y="160" opacity="0.45" font-size="9" letter-spacing="1">SHARED</text>
+            <text class="f-ink" x="42" y="176" opacity="0.6" font-size="10">• Stakeholder map</text>
+            <text class="f-ink" x="42" y="190" opacity="0.6" font-size="10">• Data inventory</text>
+            <text class="f-ink" x="200" y="60" font-size="16" font-weight="700">Discovery findings</text>
+            <text class="f-ink" x="200" y="76" opacity="0.45" font-size="9">Last edited 4 min ago · Greg</text>
+            <line class="s-ink" x1="200" y1="86" x2="720" y2="86" stroke-opacity="0.15"/>
+            <g class="f-ink" font-size="10">
+              <circle class="f-accent" cx="208" cy="106" r="2.5"/>
               <text x="218" y="110" opacity="0.85">Pricing audit complete — three monetisation gaps identified</text>
-              <circle cx="208" cy="124" r="2.5" fill="#0047FF"/>
+              <circle class="f-accent" cx="208" cy="124" r="2.5"/>
               <text x="218" y="128" opacity="0.85">Stakeholder map drafted, validated with Sales &amp; Data</text>
-              <circle cx="208" cy="142" r="2.5" fill="#0047FF"/>
+              <circle class="f-accent" cx="208" cy="142" r="2.5"/>
               <text x="218" y="146" opacity="0.85">Quick-win backlog scored by impact × effort × dependency</text>
             </g>
-            <rect x="200" y="158" width="520" height="100" fill="#16161a" stroke="#0047FF" stroke-opacity="0.4" stroke-width="1"/>
-            <text x="210" y="172" fill="#FFF" opacity="0.55" font-size="9" letter-spacing="1">REVENUE OPPORTUNITY · ANNUAL</text>
+            <rect class="f-p2 s-accent" x="200" y="158" width="520" height="100" stroke-opacity="0.4" stroke-width="1"/>
+            <text class="f-ink" x="210" y="172" opacity="0.55" font-size="9" letter-spacing="1">REVENUE OPPORTUNITY · ANNUAL</text>
             <g>
-              <rect x="220" y="184" width="50" height="60" fill="#0047FF" opacity="0.85"/>
-              <text x="245" y="256" text-anchor="middle" fill="#FFF" opacity="0.55" font-size="8">Pricing</text>
-              <rect x="290" y="200" width="50" height="44" fill="#194BCD" opacity="0.85"/>
-              <text x="315" y="256" text-anchor="middle" fill="#FFF" opacity="0.55" font-size="8">Packaging</text>
-              <rect x="360" y="178" width="50" height="66" fill="#0047FF" opacity="0.85"/>
-              <text x="385" y="256" text-anchor="middle" fill="#FFF" opacity="0.55" font-size="8">Marketplaces</text>
-              <rect x="430" y="218" width="50" height="26" fill="#194BCD" opacity="0.85"/>
-              <text x="455" y="256" text-anchor="middle" fill="#FFF" opacity="0.55" font-size="8">Tools</text>
-              <line x1="500" y1="200" x2="710" y2="186" stroke="#22BB66" stroke-width="1.5" stroke-dasharray="3,3"/>
-              <text x="700" y="180" text-anchor="end" fill="#22BB66" font-size="8">+38% YoY</text>
+              <rect class="f-accent" x="220" y="184" width="50" height="60" opacity="0.85"/>
+              <text class="f-ink" x="245" y="256" text-anchor="middle" opacity="0.55" font-size="8">Pricing</text>
+              <rect class="f-purple" x="290" y="200" width="50" height="44" opacity="0.85"/>
+              <text class="f-ink" x="315" y="256" text-anchor="middle" opacity="0.55" font-size="8">Packaging</text>
+              <rect class="f-accent" x="360" y="178" width="50" height="66" opacity="0.85"/>
+              <text class="f-ink" x="385" y="256" text-anchor="middle" opacity="0.55" font-size="8">Marketplaces</text>
+              <rect class="f-purple" x="430" y="218" width="50" height="26" opacity="0.85"/>
+              <text class="f-ink" x="455" y="256" text-anchor="middle" opacity="0.55" font-size="8">Tools</text>
+              <line class="s-accent" x1="500" y1="200" x2="710" y2="186" stroke-width="1.5" stroke-dasharray="3,3"/>
+              <text class="f-accent" x="700" y="180" text-anchor="end" font-size="8">+38% YoY</text>
             </g>
           </svg>
         </figure>
@@ -677,65 +594,65 @@
         </div>
         <figure class="step-figure">
           <svg viewBox="0 0 760 280" font-family="Rajdhani">
-            <rect x="20" y="20" width="350" height="240" fill="#1d1e22" stroke="#FFF" stroke-opacity="0.2"/>
-            <rect x="20" y="20" width="350" height="22" fill="#0047FF" opacity="0.12"/>
-            <text x="34" y="35" fill="#FFF" font-size="10" font-weight="700" letter-spacing="1">▱ Figma · Pricing.fig</text>
-            <rect x="40" y="60" width="310" height="180" fill="#16161a" stroke="#0047FF" stroke-opacity="0.4"/>
-            <text x="195" y="86" text-anchor="middle" fill="#FFF" font-size="14" font-weight="700">PRICING TIERS</text>
-            <line x1="80" y1="94" x2="310" y2="94" stroke="#0047FF" stroke-opacity="0.4"/>
+            <rect class="f-p3 s-ink" x="20" y="20" width="350" height="240" stroke-opacity="0.2"/>
+            <rect class="f-accent" x="20" y="20" width="350" height="22" opacity="0.12"/>
+            <text class="f-ink" x="34" y="35" font-size="10" font-weight="700" letter-spacing="1">▱ Figma · Pricing.fig</text>
+            <rect class="f-p2 s-accent" x="40" y="60" width="310" height="180" stroke-opacity="0.4"/>
+            <text class="f-ink" x="195" y="86" text-anchor="middle" font-size="14" font-weight="700">PRICING TIERS</text>
+            <line class="s-accent" x1="80" y1="94" x2="310" y2="94" stroke-opacity="0.4"/>
             <g>
-              <rect x="60" y="106" width="80" height="116" fill="#1d1e22" stroke="#FFF" stroke-opacity="0.25"/>
-              <text x="100" y="124" text-anchor="middle" fill="#FFF" opacity="0.7" font-size="9" letter-spacing="1">BASIC</text>
-              <text x="100" y="146" text-anchor="middle" fill="#FFF" font-size="14" font-weight="700">$1k<tspan fill="#999" font-size="9" font-weight="500">/mo</tspan></text>
-              <line x1="74" y1="158" x2="126" y2="158" stroke="#FFF" stroke-opacity="0.15"/>
-              <text x="100" y="172" text-anchor="middle" fill="#FFF" opacity="0.55" font-size="8">2 seats</text>
-              <text x="100" y="186" text-anchor="middle" fill="#FFF" opacity="0.55" font-size="8">EU only</text>
-              <text x="100" y="200" text-anchor="middle" fill="#FFF" opacity="0.55" font-size="8">REST API</text>
+              <rect class="f-p3 s-ink" x="60" y="106" width="80" height="116" stroke-opacity="0.25"/>
+              <text class="f-ink" x="100" y="124" text-anchor="middle" opacity="0.7" font-size="9" letter-spacing="1">BASIC</text>
+              <text class="f-ink" x="100" y="146" text-anchor="middle" font-size="14" font-weight="700">$1k<tspan class="f-muted" font-size="9" font-weight="500">/mo</tspan></text>
+              <line class="s-ink" x1="74" y1="158" x2="126" y2="158" stroke-opacity="0.15"/>
+              <text class="f-ink" x="100" y="172" text-anchor="middle" opacity="0.55" font-size="8">2 seats</text>
+              <text class="f-ink" x="100" y="186" text-anchor="middle" opacity="0.55" font-size="8">EU only</text>
+              <text class="f-ink" x="100" y="200" text-anchor="middle" opacity="0.55" font-size="8">REST API</text>
             </g>
             <g>
-              <rect x="155" y="100" width="80" height="124" fill="#1d1e22" stroke="#0047FF" stroke-width="1.5"/>
-              <text x="195" y="118" text-anchor="middle" fill="#0047FF" font-size="9" font-weight="700" letter-spacing="1">PRO</text>
-              <text x="195" y="142" text-anchor="middle" fill="#FFF" font-size="14" font-weight="700">$5k<tspan fill="#999" font-size="9" font-weight="500">/mo</tspan></text>
-              <line x1="170" y1="154" x2="220" y2="154" stroke="#0047FF" stroke-opacity="0.4"/>
-              <text x="195" y="168" text-anchor="middle" fill="#FFF" opacity="0.7" font-size="8">10 seats</text>
-              <text x="195" y="182" text-anchor="middle" fill="#FFF" opacity="0.7" font-size="8">Global</text>
-              <text x="195" y="196" text-anchor="middle" fill="#FFF" opacity="0.7" font-size="8">Stream + REST</text>
+              <rect class="f-p3 s-accent" x="155" y="100" width="80" height="124" stroke-width="1.5"/>
+              <text class="f-accent" x="195" y="118" text-anchor="middle" font-size="9" font-weight="700" letter-spacing="1">PRO</text>
+              <text class="f-ink" x="195" y="142" text-anchor="middle" font-size="14" font-weight="700">$5k<tspan class="f-muted" font-size="9" font-weight="500">/mo</tspan></text>
+              <line class="s-accent" x1="170" y1="154" x2="220" y2="154" stroke-opacity="0.4"/>
+              <text class="f-ink" x="195" y="168" text-anchor="middle" opacity="0.7" font-size="8">10 seats</text>
+              <text class="f-ink" x="195" y="182" text-anchor="middle" opacity="0.7" font-size="8">Global</text>
+              <text class="f-ink" x="195" y="196" text-anchor="middle" opacity="0.7" font-size="8">Stream + REST</text>
             </g>
             <g>
-              <rect x="250" y="106" width="80" height="116" fill="#1d1e22" stroke="#FFF" stroke-opacity="0.25"/>
-              <text x="290" y="124" text-anchor="middle" fill="#FFF" opacity="0.7" font-size="9" letter-spacing="1">ENTERPRISE</text>
-              <text x="290" y="146" text-anchor="middle" fill="#FFF" font-size="14" font-weight="700">$50k<tspan fill="#999" font-size="9" font-weight="500">+</tspan></text>
-              <line x1="264" y1="158" x2="316" y2="158" stroke="#FFF" stroke-opacity="0.15"/>
-              <text x="290" y="172" text-anchor="middle" fill="#FFF" opacity="0.55" font-size="8">Unlimited</text>
-              <text x="290" y="186" text-anchor="middle" fill="#FFF" opacity="0.55" font-size="8">SLA + DPA</text>
-              <text x="290" y="200" text-anchor="middle" fill="#FFF" opacity="0.55" font-size="8">Bespoke</text>
+              <rect class="f-p3 s-ink" x="250" y="106" width="80" height="116" stroke-opacity="0.25"/>
+              <text class="f-ink" x="290" y="124" text-anchor="middle" opacity="0.7" font-size="9" letter-spacing="1">ENTERPRISE</text>
+              <text class="f-ink" x="290" y="146" text-anchor="middle" font-size="14" font-weight="700">$50k<tspan class="f-muted" font-size="9" font-weight="500">+</tspan></text>
+              <line class="s-ink" x1="264" y1="158" x2="316" y2="158" stroke-opacity="0.15"/>
+              <text class="f-ink" x="290" y="172" text-anchor="middle" opacity="0.55" font-size="8">Unlimited</text>
+              <text class="f-ink" x="290" y="186" text-anchor="middle" opacity="0.55" font-size="8">SLA + DPA</text>
+              <text class="f-ink" x="290" y="200" text-anchor="middle" opacity="0.55" font-size="8">Bespoke</text>
             </g>
-            <rect x="390" y="20" width="350" height="240" fill="#1d1e22" stroke="#FFF" stroke-opacity="0.2"/>
-            <rect x="390" y="20" width="350" height="22" fill="#0047FF" opacity="0.12"/>
-            <text x="404" y="35" fill="#FFF" font-size="10" font-weight="700" letter-spacing="1">{ } VS Code · roadmap.md</text>
+            <rect class="f-p3 s-ink" x="390" y="20" width="350" height="240" stroke-opacity="0.2"/>
+            <rect class="f-accent" x="390" y="20" width="350" height="22" opacity="0.12"/>
+            <text class="f-ink" x="404" y="35" font-size="10" font-weight="700" letter-spacing="1">{ } VS Code · roadmap.md</text>
             <g font-family="ui-monospace, SFMono-Regular, monospace" font-size="10">
-              <text x="404" y="60" fill="#FFF" opacity="0.35">1</text>
-              <text x="424" y="60" fill="#22BB66"># Roadmap — Pricing &amp; Packaging</text>
-              <text x="404" y="76" fill="#FFF" opacity="0.35">2</text>
-              <text x="404" y="92" fill="#FFF" opacity="0.35">3</text>
-              <text x="424" y="92" fill="#0047FF" font-weight="700">## Q1 · Foundation</text>
-              <text x="404" y="108" fill="#FFF" opacity="0.35">4</text>
-              <text x="424" y="108" fill="#FFF" opacity="0.85">- [x] Pricing model rebuilt</text>
-              <text x="404" y="124" fill="#FFF" opacity="0.35">5</text>
-              <text x="424" y="124" fill="#FFF" opacity="0.85">- [x] Tier definitions</text>
-              <text x="404" y="140" fill="#FFF" opacity="0.35">6</text>
-              <text x="424" y="140" fill="#FFF" opacity="0.85">- [ ] API entitlements</text>
-              <text x="404" y="156" fill="#FFF" opacity="0.35">7</text>
-              <text x="404" y="172" fill="#FFF" opacity="0.35">8</text>
-              <text x="424" y="172" fill="#0047FF" font-weight="700">## Q2 · Build</text>
-              <text x="404" y="188" fill="#FFF" opacity="0.35">9</text>
-              <text x="424" y="188" fill="#FFF" opacity="0.85">- [ ] Snowflake listing</text>
-              <text x="404" y="204" fill="#FFF" opacity="0.35">10</text>
-              <text x="424" y="204" fill="#FFF" opacity="0.85">- [ ] Databricks marketplace</text>
-              <text x="404" y="220" fill="#FFF" opacity="0.35">11</text>
-              <text x="424" y="220" fill="#FFF" opacity="0.85">- [ ] Streaming endpoints</text>
-              <text x="404" y="236" fill="#FFF" opacity="0.35">12</text>
-              <text x="424" y="236" fill="#FFF" opacity="0.55" font-style="italic">// see assumptions.md</text>
+              <text class="f-ink" x="404" y="60" opacity="0.35">1</text>
+              <text class="f-purple" x="424" y="60"># Roadmap — Pricing &amp; Packaging</text>
+              <text class="f-ink" x="404" y="76" opacity="0.35">2</text>
+              <text class="f-ink" x="404" y="92" opacity="0.35">3</text>
+              <text class="f-accent" x="424" y="92" font-weight="700">## Q1 · Foundation</text>
+              <text class="f-ink" x="404" y="108" opacity="0.35">4</text>
+              <text class="f-ink" x="424" y="108" opacity="0.85">- [x] Pricing model rebuilt</text>
+              <text class="f-ink" x="404" y="124" opacity="0.35">5</text>
+              <text class="f-ink" x="424" y="124" opacity="0.85">- [x] Tier definitions</text>
+              <text class="f-ink" x="404" y="140" opacity="0.35">6</text>
+              <text class="f-ink" x="424" y="140" opacity="0.85">- [ ] API entitlements</text>
+              <text class="f-ink" x="404" y="156" opacity="0.35">7</text>
+              <text class="f-ink" x="404" y="172" opacity="0.35">8</text>
+              <text class="f-accent" x="424" y="172" font-weight="700">## Q2 · Build</text>
+              <text class="f-ink" x="404" y="188" opacity="0.35">9</text>
+              <text class="f-ink" x="424" y="188" opacity="0.85">- [ ] Snowflake listing</text>
+              <text class="f-ink" x="404" y="204" opacity="0.35">10</text>
+              <text class="f-ink" x="424" y="204" opacity="0.85">- [ ] Databricks marketplace</text>
+              <text class="f-ink" x="404" y="220" opacity="0.35">11</text>
+              <text class="f-ink" x="424" y="220" opacity="0.85">- [ ] Streaming endpoints</text>
+              <text class="f-ink" x="404" y="236" opacity="0.35">12</text>
+              <text class="f-ink" x="424" y="236" opacity="0.55" font-style="italic">// see assumptions.md</text>
             </g>
           </svg>
         </figure>
@@ -757,65 +674,65 @@
         </div>
         <figure class="step-figure">
           <svg viewBox="0 0 760 280" font-family="Rajdhani">
-            <rect x="60" y="20" width="280" height="240" fill="#1d1e22" stroke="#0047FF" stroke-width="1"/>
-            <rect x="60" y="20" width="280" height="40" fill="#0047FF"/>
-            <text x="200" y="44" text-anchor="middle" fill="#FFF" font-size="12" font-weight="700" letter-spacing="2">EXECUTIVE BRIEF</text>
-            <text x="200" y="86" text-anchor="middle" fill="#FFF" font-size="14" font-weight="700">Monetisation Strategy</text>
-            <text x="200" y="102" text-anchor="middle" fill="#FFF" opacity="0.55" font-size="9" letter-spacing="2">2026 — H1</text>
-            <line x1="120" y1="116" x2="280" y2="116" stroke="#0047FF" stroke-opacity="0.5"/>
-            <text x="80" y="142" fill="#FFF" font-size="10" font-weight="700">Key findings</text>
+            <rect class="f-p3 s-accent" x="60" y="20" width="280" height="240" stroke-width="1"/>
+            <rect x="60" y="20" width="280" height="40" class="f-accent" opacity="0.15"/>
+            <text x="200" y="44" text-anchor="middle" class="f-ink" font-size="12" font-weight="700" letter-spacing="2">EXECUTIVE BRIEF</text>
+            <text class="f-ink" x="200" y="86" text-anchor="middle" font-size="14" font-weight="700">Monetisation Strategy</text>
+            <text class="f-ink" x="200" y="102" text-anchor="middle" opacity="0.55" font-size="9" letter-spacing="2">2026 — H1</text>
+            <line class="s-accent" x1="120" y1="116" x2="280" y2="116" stroke-opacity="0.5"/>
+            <text class="f-ink" x="80" y="142" font-size="10" font-weight="700">Key findings</text>
             <g font-size="9">
-              <circle cx="86" cy="156" r="2.5" fill="#0047FF"/>
-              <text x="96" y="159" fill="#FFF" opacity="0.85">$2.5M revenue opportunity</text>
-              <circle cx="86" cy="172" r="2.5" fill="#0047FF"/>
-              <text x="96" y="175" fill="#FFF" opacity="0.85">3 priority initiatives</text>
-              <circle cx="86" cy="188" r="2.5" fill="#0047FF"/>
-              <text x="96" y="191" fill="#FFF" opacity="0.85">12-month sequenced roadmap</text>
+              <circle class="f-accent" cx="86" cy="156" r="2.5"/>
+              <text class="f-ink" x="96" y="159" opacity="0.85">$2.5M revenue opportunity</text>
+              <circle class="f-accent" cx="86" cy="172" r="2.5"/>
+              <text class="f-ink" x="96" y="175" opacity="0.85">3 priority initiatives</text>
+              <circle class="f-accent" cx="86" cy="188" r="2.5"/>
+              <text class="f-ink" x="96" y="191" opacity="0.85">12-month sequenced roadmap</text>
             </g>
-            <rect x="80" y="206" width="240" height="44" fill="#16161a" stroke="#FFF" stroke-opacity="0.18"/>
-            <text x="86" y="220" fill="#FFF" opacity="0.5" font-size="8" letter-spacing="1">REVENUE PROJECTION · 3-YEAR</text>
+            <rect class="f-p2 s-ink" x="80" y="206" width="240" height="44" stroke-opacity="0.18"/>
+            <text class="f-ink" x="86" y="220" opacity="0.5" font-size="8" letter-spacing="1">REVENUE PROJECTION · 3-YEAR</text>
             <!-- Sparkline kept fully inside the box (y range 224–244 with
                  padding above/below). Was bleeding through the top edge. -->
-            <polyline points="92,244 132,240 172,236 212,232 252,228 292,224 314,224"
-                      fill="none" stroke="#0047FF" stroke-width="1.8"/>
-            <circle cx="92"  cy="244" r="2" fill="#0047FF"/>
-            <circle cx="132" cy="240" r="2" fill="#0047FF"/>
-            <circle cx="172" cy="236" r="2" fill="#0047FF"/>
-            <circle cx="212" cy="232" r="2" fill="#0047FF"/>
-            <circle cx="252" cy="228" r="2" fill="#0047FF"/>
-            <circle cx="292" cy="224" r="2" fill="#0047FF"/>
-            <circle cx="314" cy="224" r="2" fill="#0047FF"/>
+            <polyline class="s-accent" points="92,244 132,240 172,236 212,232 252,228 292,224 314,224"
+                      fill="none" stroke-width="1.8"/>
+            <circle class="f-accent" cx="92"  cy="244" r="2"/>
+            <circle class="f-accent" cx="132" cy="240" r="2"/>
+            <circle class="f-accent" cx="172" cy="236" r="2"/>
+            <circle class="f-accent" cx="212" cy="232" r="2"/>
+            <circle class="f-accent" cx="252" cy="228" r="2"/>
+            <circle class="f-accent" cx="292" cy="224" r="2"/>
+            <circle class="f-accent" cx="314" cy="224" r="2"/>
             <g transform="translate(420,40)">
-              <text x="0" y="0" fill="#0047FF" font-size="10" font-weight="700" letter-spacing="2">+ HANDOVER</text>
-              <line x1="0" y1="8" x2="280" y2="8" stroke="#0047FF" stroke-opacity="0.4"/>
+              <text class="f-accent" x="0" y="0" font-size="10" font-weight="700" letter-spacing="2">+ HANDOVER</text>
+              <line class="s-accent" x1="0" y1="8" x2="280" y2="8" stroke-opacity="0.4"/>
             </g>
             <g transform="translate(420,60)" font-size="9">
-              <rect x="0" y="0" width="84" height="100" fill="#1d1e22" stroke="#FFF" stroke-opacity="0.2"/>
-              <rect x="0" y="0" width="84" height="14" fill="#0047FF" opacity="0.18"/>
-              <text x="6" y="10" fill="#FFF" font-size="8" font-weight="700">PLAYBOOK</text>
-              <line x1="8" y1="22" x2="76" y2="22" stroke="#FFF" stroke-opacity="0.3"/>
-              <line x1="8" y1="30" x2="60" y2="30" stroke="#FFF" stroke-opacity="0.3"/>
-              <line x1="8" y1="38" x2="70" y2="38" stroke="#FFF" stroke-opacity="0.3"/>
-              <line x1="8" y1="46" x2="56" y2="46" stroke="#FFF" stroke-opacity="0.3"/>
-              <line x1="8" y1="60" x2="76" y2="60" stroke="#FFF" stroke-opacity="0.2"/>
-              <line x1="8" y1="68" x2="64" y2="68" stroke="#FFF" stroke-opacity="0.2"/>
-              <line x1="8" y1="76" x2="68" y2="76" stroke="#FFF" stroke-opacity="0.2"/>
-              <line x1="8" y1="84" x2="44" y2="84" stroke="#FFF" stroke-opacity="0.2"/>
-              <rect x="98" y="0" width="84" height="100" fill="#1d1e22" stroke="#FFF" stroke-opacity="0.2"/>
-              <rect x="98" y="0" width="84" height="14" fill="#0047FF" opacity="0.18"/>
-              <text x="104" y="10" fill="#FFF" font-size="8" font-weight="700">TEMPLATES</text>
-              <rect x="106" y="22" width="32" height="20" fill="none" stroke="#0047FF" stroke-opacity="0.5"/>
-              <rect x="142" y="22" width="32" height="20" fill="none" stroke="#0047FF" stroke-opacity="0.5"/>
-              <rect x="106" y="46" width="32" height="20" fill="none" stroke="#0047FF" stroke-opacity="0.5"/>
-              <rect x="142" y="46" width="32" height="20" fill="none" stroke="#0047FF" stroke-opacity="0.5"/>
-              <rect x="106" y="70" width="68" height="20" fill="#0047FF" opacity="0.4"/>
-              <text x="140" y="83" text-anchor="middle" fill="#FFF" font-size="8" font-weight="700">+ BUNDLE</text>
-              <rect x="196" y="0" width="84" height="100" fill="#1d1e22" stroke="#22BB66" stroke-width="1.5"/>
-              <text x="238" y="20" text-anchor="middle" fill="#22BB66" font-size="8" font-weight="700" letter-spacing="1">OWNER</text>
-              <circle cx="238" cy="48" r="14" fill="#22BB66" opacity="0.18" stroke="#22BB66"/>
-              <path d="M232 48 l4 4 l8 -8" fill="none" stroke="#22BB66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <text x="238" y="78" text-anchor="middle" fill="#FFF" opacity="0.7" font-size="8">Internal team</text>
-              <text x="238" y="90" text-anchor="middle" fill="#FFF" opacity="0.55" font-size="7">From day one</text>
+              <rect class="f-p3 s-ink" x="0" y="0" width="84" height="100" stroke-opacity="0.2"/>
+              <rect class="f-accent" x="0" y="0" width="84" height="14" opacity="0.18"/>
+              <text class="f-ink" x="6" y="10" font-size="8" font-weight="700">PLAYBOOK</text>
+              <line class="s-ink" x1="8" y1="22" x2="76" y2="22" stroke-opacity="0.3"/>
+              <line class="s-ink" x1="8" y1="30" x2="60" y2="30" stroke-opacity="0.3"/>
+              <line class="s-ink" x1="8" y1="38" x2="70" y2="38" stroke-opacity="0.3"/>
+              <line class="s-ink" x1="8" y1="46" x2="56" y2="46" stroke-opacity="0.3"/>
+              <line class="s-ink" x1="8" y1="60" x2="76" y2="60" stroke-opacity="0.2"/>
+              <line class="s-ink" x1="8" y1="68" x2="64" y2="68" stroke-opacity="0.2"/>
+              <line class="s-ink" x1="8" y1="76" x2="68" y2="76" stroke-opacity="0.2"/>
+              <line class="s-ink" x1="8" y1="84" x2="44" y2="84" stroke-opacity="0.2"/>
+              <rect class="f-p3 s-ink" x="98" y="0" width="84" height="100" stroke-opacity="0.2"/>
+              <rect class="f-accent" x="98" y="0" width="84" height="14" opacity="0.18"/>
+              <text class="f-ink" x="104" y="10" font-size="8" font-weight="700">TEMPLATES</text>
+              <rect class="s-accent" x="106" y="22" width="32" height="20" fill="none" stroke-opacity="0.5"/>
+              <rect class="s-accent" x="142" y="22" width="32" height="20" fill="none" stroke-opacity="0.5"/>
+              <rect class="s-accent" x="106" y="46" width="32" height="20" fill="none" stroke-opacity="0.5"/>
+              <rect class="s-accent" x="142" y="46" width="32" height="20" fill="none" stroke-opacity="0.5"/>
+              <rect class="f-accent" x="106" y="70" width="68" height="20" opacity="0.4"/>
+              <text class="f-ink" x="140" y="83" text-anchor="middle" font-size="8" font-weight="700">+ BUNDLE</text>
+              <rect class="f-p3 s-purple" x="196" y="0" width="84" height="100" stroke-width="1.5"/>
+              <text class="f-purple" x="238" y="20" text-anchor="middle" font-size="8" font-weight="700" letter-spacing="1">OWNER</text>
+              <circle class="f-purple s-purple" cx="238" cy="48" r="14" opacity="0.18"/>
+              <path class="s-purple" d="M232 48 l4 4 l8 -8" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <text class="f-ink" x="238" y="78" text-anchor="middle" opacity="0.7" font-size="8">Internal team</text>
+              <text class="f-ink" x="238" y="90" text-anchor="middle" opacity="0.55" font-size="7">From day one</text>
             </g>
           </svg>
         </figure>

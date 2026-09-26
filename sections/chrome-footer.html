@@ -6,7 +6,7 @@
 <title>DMC01 — Footer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 
 <script>(function(){try{var t=localStorage.getItem('dmc01-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 
@@ -21,39 +21,80 @@
      Stacks centred on mobile.
      ============================================================ */
 
+  /* @dmc01-tokens:start */
   :root {
-    --brand-blue:        var(--accent-primary, #0047FF);
-    --neutral-primary:   var(--bg-primary, #070708);
-    --neutral-secondary: var(--bg-secondary, #161617);
-    --font:              var(--font-body, "Rajdhani", system-ui, sans-serif);
-    --t-base-size:    var(--base-font-size, 1.1rem);
-    --t-eyebrow-size: var(--eyebrow-size, 1.1rem);
-    --w-base:  var(--base-font-weight, 400);
-    --white:    var(--text-primary, #FFFFFF);
-    --white-72: rgba(255, 255, 255, 0.88);
-    --white-50: rgba(255, 255, 255, 0.62);
-    --white-30: rgba(255, 255, 255, 0.30);
-    --white-15: var(--border-secondary, rgba(255, 255, 255, 0.15));
-  }
+    /* surfaces — kit */
+    --bg:          #0c0d11;
+    --panel:       #15171d;
+    --panel-2:     #1d2027;
+    --panel-3:     #232730;
 
-  /* Light theme — see 01-dmc01-intro.html for the rationale. */
-  [data-theme="light"] {
-    --neutral-primary:   #f5f5f7;
-    --neutral-secondary: #ffffff;
-    --white:    #070708;
-    --white-72: rgba(7, 7, 8, 0.85);
-    --white-50: rgba(7, 7, 8, 0.68);
-    --white-30: rgba(7, 7, 8, 0.42);
-    --white-15: rgba(7, 7, 8, 0.10);
+    /* text — kit, plus --body (web) */
+    --ink:         #f3f5f8;
+    --body:        rgba(243, 245, 248, 0.80);
+    --muted:       rgba(243, 245, 248, 0.52);
+    --faint:       rgba(243, 245, 248, 0.34);
+
+    /* accents — kit (dark-surface variants) */
+    --accent:       #4c8dff;
+    --accent-hover: #6ba1ff;
+    --accent-soft:  rgba(76, 141, 255, 0.14);
+    --purple:       #9b6bdc;
+
+    /* Brand Blue as a fill — web */
+    --brand-blue:       #0047FF;
+    --brand-blue-hover: #1f5eff;
+    --on-brand:         #ffffff;
+
+    /* lines, radii, shadow — kit */
+    --line:        rgba(255, 255, 255, 0.08);
+    --line-strong: rgba(255, 255, 255, 0.14);
+    --radius-sm:   6px;
+    --radius:      8px;
+    --radius-lg:   12px;
+    --shadow:      0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.25);
+
+    /* type — kit families; Webflow's responsive heading scale where it exists */
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-head: "Rajdhani", -apple-system, sans-serif;
+    --fs-h1:     var(--h1-size, 4.65rem);
+    --fs-h2:     var(--h2-size, 2.83rem);
+    --fs-lede:   1.1875rem;
+    --fs-body:   1.0625rem;
+    --fs-small:  0.9375rem;
+    --fs-xs:     0.8125rem;
+    --fs-eyebrow: 0.9375rem;
+
+    --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   }
+  [data-theme="light"] {
+    --bg:          #f5f6f8;
+    --panel:       #ffffff;
+    --panel-2:     #eef0f3;
+    --panel-3:     #e6e9ee;
+
+    --ink:         #0c0d11;
+    --body:        rgba(12, 13, 17, 0.80);
+    --muted:       rgba(12, 13, 17, 0.60);
+    --faint:       rgba(12, 13, 17, 0.40);
+
+    --accent:       #0047FF;
+    --accent-hover: #0039cc;
+    --accent-soft:  rgba(0, 71, 255, 0.09);
+    --purple:       #6633CC;
+
+    --line:        rgba(12, 13, 17, 0.09);
+    --line-strong: rgba(12, 13, 17, 0.16);
+    --shadow:      0 1px 2px rgba(12, 13, 17, 0.06), 0 4px 16px rgba(12, 13, 17, 0.06);
+  }
+  /* @dmc01-tokens:end */
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: var(--neutral-primary);
-    color: var(--white);
-    font-family: var(--font);
-    font-weight: var(--w-base);
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -65,147 +106,91 @@
     position: relative;
     width: 100vw;
     margin-left: calc(-50vw + 50%);
-    background: var(--neutral-primary);
-    /* Tightened from 48px → 24px; the previous footer left a lot of
-       empty dark space below the bottom row, especially in the
-       fullsite preview where the iframe sized to its content. */
-    padding: 24px clamp(20px, 4vw, 64px);
-    border-top: 1px solid var(--white-15);
+    background: var(--bg);
+    padding: 28px clamp(20px, 4vw, 64px);
+    border-top: 1px solid var(--line);
+    font-family: var(--font-body);
+    color: var(--ink);
   }
-  .footer-inner {
+  .dmc01-footer .footer-inner {
     max-width: 1500px;
     margin: 0 auto;
   }
 
-  /* ============================================================
-     TOP ROW — brand + legal links
-     ============================================================ */
-  .footer-top {
+  /* ----- TOP ROW — brand + legal links ----- */
+  .dmc01-footer .footer-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 24px;
     flex-wrap: wrap;
   }
-
-  /* Brand: combined mark + wordmark lockup, mirrors the nav. */
-  .footer-brand {
+  .dmc01-footer .footer-brand {
     display: inline-flex;
     align-items: center;
-    gap: 14px;
     text-decoration: none;
-    color: var(--white);
-    transition: opacity 0.2s ease;
+    transition: opacity 0.15s ease;
   }
-  .footer-brand:hover { opacity: 0.85; }
+  .dmc01-footer .footer-brand:hover { opacity: 0.8; }
 
-  /* Combined logo lockup — mark + DMC01 wordmark in one SVG.
-     Mirrors the nav treatment with a slightly smaller render size. */
-  .footer-logo {
-    width: 56px; height: 46px;
+  /* Lockup — same geometry as the nav. No glow: the Brand
+     Guidelines forbid effects on the logo. */
+  .dmc01-footer .footer-logo {
+    --ink-logo: var(--ink);
+    width: 52px; height: 44px;
     flex-shrink: 0;
-    filter: drop-shadow(0 0 6px rgba(0, 71, 255, 0.35));
   }
-  .footer-logo svg { width: 100%; height: 100%; display: block; }
-  .footer-logo .mark-stroke {
-    stroke: var(--white);
-    stroke-width: 18;
-    stroke-miterlimit: 10;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    fill: none;
-  }
-  .footer-logo .mark-fill {
-    fill: var(--white);
-  }
-  /* Light mode — soften the blue halo since the logo turns
-     near-black against pale chrome. */
-  [data-theme="light"] .footer-logo {
-    filter: drop-shadow(0 0 3px rgba(0, 71, 255, 0.18));
-  }
+  .dmc01-footer .footer-logo svg { width: 100%; height: 100%; display: block; overflow: visible; }
 
-  /* Legal links — small caps, middot dividers. */
-  .footer-legal {
+  .dmc01-footer .footer-legal {
     display: inline-flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 0;
+    gap: 22px;
     list-style: none;
-    margin: 0;
-    padding: 0;
   }
-  .footer-legal li {
-    position: relative;
-    padding: 0 14px;
-  }
-  .footer-legal li:first-child { padding-left: 0; }
-  .footer-legal li:last-child  { padding-right: 0; }
-  .footer-legal li:not(:last-child)::after {
-    content: "·";
-    position: absolute;
-    right: -3px;
-    color: var(--white-30);
-    font-weight: 700;
-  }
-  .footer-legal a {
-    font-size: 0.78rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--white-50);
+  .dmc01-footer .footer-legal a {
+    font-size: var(--fs-small);
+    font-weight: 500;
+    color: var(--muted);
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: color 0.15s ease;
   }
-  .footer-legal a:hover { color: var(--brand-blue); }
+  .dmc01-footer .footer-legal a:hover { color: var(--ink); }
+  .dmc01-footer .footer-legal a:focus-visible {
+    outline: none;
+    color: var(--ink);
+    box-shadow: 0 1px 0 var(--accent);
+  }
 
-  /* ============================================================
-     DIVIDER
-     ============================================================ */
-  .footer-divider {
+  .dmc01-footer .footer-divider {
     height: 1px;
-    background: var(--white-15);
-    margin: 18px 0;
+    background: var(--line);
+    margin: 20px 0 18px;
   }
 
-  /* ============================================================
-     BOTTOM ROW — company info + copyright
-     ============================================================ */
-  .footer-bottom {
+  /* ----- BOTTOM ROW — company info + copyright ----- */
+  .dmc01-footer .footer-bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 16px;
     flex-wrap: wrap;
-    font-size: 0.78rem;
+    font-size: var(--fs-xs);
     line-height: 1.5;
-    color: var(--white-50);
+    color: var(--muted);
   }
-  .footer-bottom strong {
-    color: var(--white-72);
-    font-weight: 600;
-  }
-  .footer-copyright {
-    font-size: 0.78rem;
-    font-weight: 500;
-    color: var(--white-30);
-  }
+  .dmc01-footer .footer-bottom strong { color: var(--ink); font-weight: 600; }
+  .dmc01-footer .footer-copyright { color: var(--faint); }
 
-  /* ============================================================
-     RESPONSIVE
-     ============================================================ */
   @media (max-width: 720px) {
-    .dmc01-footer { padding: 20px 24px; }
-    .footer-top {
+    .dmc01-footer { padding: 24px 20px; }
+    .dmc01-footer .footer-top,
+    .dmc01-footer .footer-bottom {
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 18px;
-    }
-    .footer-bottom {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 12px;
+      gap: 16px;
     }
   }
 </style>
@@ -220,13 +205,15 @@
     <div class="footer-top">
       <a class="footer-brand" href="/" aria-label="DMC01 — home">
         <span class="footer-logo" aria-hidden="true">
-          <svg viewBox="65 145 435 365" xmlns="http://www.w3.org/2000/svg">
-            <polyline class="mark-stroke"
-                      points="190.71 265.57 310.95 148.9 71.42 148.9 190.74 479.32 190.71 265.57 71.42 148.9"/>
-            <g class="mark-fill">
+          <svg viewBox="56 132 452 386" xmlns="http://www.w3.org/2000/svg">
+            <path d="M190.71 265.57 L310.95 148.9 L71.42 148.9 L190.74 479.32 L190.71 265.57 L71.42 148.9"
+                  fill="none" stroke="var(--ink-logo)" stroke-width="11" stroke-linejoin="miter" stroke-miterlimit="10"/>
+            <g fill="var(--ink-logo)">
               <path d="M224.66,375.19v-94.88c0-2.21,1.11-3.31,3.32-3.31h38.99c8.21,0,14.6,2.24,19.18,6.71,4.58,4.47,6.87,10.81,6.87,19.02v50.04c0,8.21-2.29,14.55-6.87,19.02-4.58,4.47-10.97,6.71-19.18,6.71h-38.99c-2.21,0-3.32-1.1-3.32-3.31ZM246.45,361.14h17.21c3.37,0,5.76-.71,7.18-2.13,1.42-1.42,2.13-3.81,2.13-7.18v-48.15c0-3.37-.71-5.76-2.13-7.18-1.42-1.42-3.82-2.13-7.18-2.13h-17.21c-1.16,0-1.74.58-1.74,1.74v63.31c0,1.16.58,1.74,1.74,1.74Z"/>
               <path d="M379.37,276.99h23.37c2.21,0,3.31,1.1,3.31,3.31v94.88c0,2.21-1.11,3.31-3.31,3.31h-12.95c-2.21,0-3.32-1.1-3.32-3.31v-74.83h-.63l-16.1,52.89c-.63,2.11-1.95,3.16-3.95,3.16h-13.26c-2,0-3.32-1.05-3.95-3.16l-16.42-53.04h-.63v74.99c0,1.26-.21,2.13-.63,2.6-.42.47-1.32.71-2.68.71h-12.95c-2.21,0-3.32-1.1-3.32-3.31v-94.88c0-2.21,1.11-3.31,3.32-3.31h23.52c1.47,0,2.47.74,3,2.21l16.73,55.73h.95l16.89-55.73c.32-1.47,1.32-2.21,3-2.21Z"/>
               <path d="M468.25,378.5h-17.21c-8.31,0-14.74-2.21-19.26-6.63-4.53-4.42-6.79-10.79-6.79-19.1v-50.04c0-8.31,2.26-14.68,6.79-19.1,4.52-4.42,10.95-6.63,19.26-6.63h17.21c8.21,0,14.6,2.24,19.18,6.71,4.58,4.47,6.87,10.81,6.87,19.02v7.42c0,2.31-1.16,3.47-3.47,3.47h-13.26c-2.21,0-3.32-1.16-3.32-3.47v-6.47c0-3.37-.71-5.76-2.13-7.18s-3.82-2.13-7.19-2.13h-10.73c-3.26,0-5.6.71-7.02,2.13s-2.13,3.82-2.13,7.18v48.15c0,3.37.71,5.76,2.13,7.18,1.42,1.42,3.76,2.13,7.02,2.13h10.73c3.37,0,5.76-.71,7.19-2.13,1.42-1.42,2.13-3.81,2.13-7.18v-6.47c0-2.31,1.1-3.47,3.32-3.47h13.26c2.31,0,3.47,1.16,3.47,3.47v7.42c0,8.21-2.29,14.55-6.87,19.02-4.58,4.47-10.97,6.71-19.18,6.71Z"/>
+            </g>
+            <g fill="var(--ink-logo)" fill-opacity=".45">
               <path d="M264.18,502.66h-15.79c-8.32,0-14.74-2.21-19.26-6.63-4.53-4.42-6.79-10.79-6.79-19.1v-50.04c0-8.31,2.26-14.68,6.79-19.1,4.52-4.42,10.94-6.63,19.26-6.63h15.79c8.21,0,14.58,2.24,19.1,6.71,4.52,4.47,6.79,10.81,6.79,19.02v50.04c0,8.21-2.26,14.55-6.79,19.02-4.53,4.47-10.89,6.71-19.1,6.71ZM251.71,485.29h9.32c3.37,0,5.73-.71,7.1-2.13,1.37-1.42,2.05-3.81,2.05-7.18v-48.15c0-3.37-.68-5.76-2.05-7.18-1.37-1.42-3.74-2.13-7.1-2.13h-9.32c-3.37,0-5.74.71-7.1,2.13-1.37,1.42-2.05,3.82-2.05,7.18v48.15c0,3.37.68,5.76,2.05,7.18,1.37,1.42,3.73,2.13,7.1,2.13Z"/>
               <path d="M302.22,429.41v-12.95c0-1.79.79-3.16,2.37-4.1l14.37-9c2.42-1.47,4.47-2.21,6.16-2.21h12.63c2.21,0,3.31,1.1,3.31,3.31v94.88c0,1.26-.24,2.13-.71,2.6-.47.47-1.29.71-2.45.71h-13.58c-2.21,0-3.31-1.1-3.31-3.31v-76.88l-15.47,8.84c-2.21.95-3.31.32-3.31-1.9Z"/>
             </g>
