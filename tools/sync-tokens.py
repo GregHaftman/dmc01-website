@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stamp shared/brand-tokens.css into every section embed.
+"""Stamp shared/brand-tokens.css into every section embed (and webflow/*.css).
 
 Each Webflow Code Embed must be self-contained, so every section file
 carries a copy of the token block between these markers:
@@ -42,7 +42,8 @@ def main() -> int:
     check = "--check" in sys.argv
     block = source_block()
     stale = []
-    for path in sorted((ROOT / "sections").glob("*.html")):
+    targets = sorted((ROOT / "sections").glob("*.html")) + sorted((ROOT / "webflow").glob("*.css"))
+    for path in targets:
         text = path.read_text()
         if START not in text:
             continue
