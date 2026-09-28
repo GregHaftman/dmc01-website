@@ -545,6 +545,10 @@
      before consent.
    • Anything on the page with [data-cookie-settings] opens the
      preferences (the footer's "Cookie settings" link does).
+   • Every choice is also recorded server-side (Cloudflare Worker →
+     KV, see worker/index.js): a random consent id, the choice, the
+     banner version, the page — no IP, no user agent. Skipped in
+     local preview.
    ============================================================ */
 (function() {
   'use strict';
@@ -556,6 +560,7 @@
   var CONSENT_VERSION = 1;
   var MAX_AGE = 182 * 24 * 3600;           // ~6 months
   var GA_COOKIE_EXPIRES = 395 * 24 * 3600; // 13 months, as the cookie policy says
+  var LOG_URL = 'https://dmc01-website.ghaftman.workers.dev/consent';
 
   window.dataLayer = window.dataLayer || [];
   function gtag() { window.dataLayer.push(arguments); }
@@ -573,10 +578,28 @@
       return v && v.v === CONSENT_VERSION ? v : null;
     } catch (e) { return null; }
   }
+  function newId() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(ch) {
+      var r = Math.random() * 16 | 0; return (ch === 'x' ? r : (r & 3 | 8)).toString(16);
+    });
+  }
+  /* Server-side record of the choice (evidence of consent). Fire and
+     forget: never blocks or breaks the banner. */
+  function logChoice(v) {
+    if (!/(^|\.)dmc01\.com$|\.webflow\.io$/.test(location.hostname)) return;   // not in local preview
+    try {
+      var payload = JSON.stringify({ id: v.id, v: v.v, analytics: v.analytics, path: location.pathname.slice(0, 200) });
+      if (navigator.sendBeacon) navigator.sendBeacon(LOG_URL, new Blob([payload], { type: 'text/plain' }));
+      else fetch(LOG_URL, { method: 'POST', body: payload, mode: 'cors', keepalive: true, headers: { 'Content-Type': 'text/plain' } });
+    } catch (e) {}
+  }
   function saveChoice(analytics) {
-    var v = { v: CONSENT_VERSION, analytics: !!analytics, t: Date.now() };
+    var prev = readChoice();
+    var v = { v: CONSENT_VERSION, analytics: !!analytics, t: Date.now(), id: (prev && prev.id) || newId() };
     document.cookie = COOKIE + '=' + encodeURIComponent(JSON.stringify(v)) +
       '; Max-Age=' + MAX_AGE + '; Path=/; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : '');
+    logChoice(v);
     return v;
   }
 

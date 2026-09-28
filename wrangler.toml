@@ -41,5 +41,17 @@ workers_dev = true   # explicit: enable the <project>.<account>.workers.dev host
 # Files are reachable directly off the project hostname — the
 # `webflow/` prefix is dropped. To expose a new file, put it in this
 # folder and push.
+# Worker script: only handles POST /consent (cookie-consent records).
+# Static files in ./webflow are matched FIRST and served exactly as
+# before; the script only sees requests that aren't a file.
+main = "worker/index.js"
+
 [assets]
 directory = "./webflow"
+binding = "ASSETS"
+
+# Consent log (see worker/index.js). Create the namespace once in the
+# Cloudflare dashboard (Storage & Databases → KV) and paste its ID here.
+[[kv_namespaces]]
+binding = "CONSENT_LOG"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
