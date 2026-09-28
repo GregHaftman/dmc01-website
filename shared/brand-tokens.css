@@ -10,7 +10,7 @@
    Server preview), and the live page has no shared stylesheet we
    control. Identical :root values from several embeds are harmless.
 
-   DERIVED FROM dmc01-ui-kit/tokens.css (github.com/GregHaftman/dmc01-ui-kit).
+   DERIVED FROM dmc01-ui-kit/tokens.css (DMC01's private design-system repo).
    Dark theme = the kit's values. Light theme = derived here (the kit
    has none). Brand authority: Notion "Brand Guidelines".
 
