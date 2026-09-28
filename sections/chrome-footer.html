@@ -153,14 +153,23 @@
     gap: 22px;
     list-style: none;
   }
-  .dmc01-footer .footer-legal a {
+  .dmc01-footer .footer-legal button {
+    padding: 0;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+  .dmc01-footer .footer-legal a,
+  .dmc01-footer .footer-legal button {
     font-size: var(--fs-small);
     font-weight: 500;
     color: var(--muted);
     text-decoration: none;
     transition: color 0.15s ease;
   }
-  .dmc01-footer .footer-legal a:hover { color: var(--ink); }
+  .dmc01-footer .footer-legal a:hover,
+  .dmc01-footer .footer-legal button:hover { color: var(--ink); }
+  .dmc01-footer .footer-legal button:focus-visible,
   .dmc01-footer .footer-legal a:focus-visible {
     outline: none;
     color: var(--ink);
@@ -197,6 +206,229 @@
       gap: 16px;
     }
   }
+
+  /* ============================================================
+     COOKIE CONSENT — our own banner (replaced the FlowAppz app).
+     Lives in the footer embed so it's on every page. Banner: a kit
+     card bottom-right (bottom sheet on phones). Preferences: a kit
+     modal. "Allow all" and "Reject all" are equally prominent (UK /
+     ICO guidance). Google Analytics loads only after consent — see
+     the script at the foot of this embed.
+     ============================================================ */
+  .dmc01-consent { font-family: var(--font-body); color: var(--ink); }
+  .dmc01-consent[hidden],
+  .dmc01-consent [hidden] { display: none !important; }
+
+  .dmc01-consent .cc-banner {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 1050;
+    width: calc(100% - 40px);
+    max-width: 400px;
+    padding: 22px 22px 18px;
+    background: var(--panel);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow), 0 18px 48px rgba(0, 0, 0, 0.35);
+    animation: ccIn 0.35s var(--ease) both;
+  }
+  @keyframes ccIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  .dmc01-consent .cc-title {
+    margin: 0;
+    text-align: left;
+    font-family: var(--font-head);
+    font-size: 1.35rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .dmc01-consent .cc-text {
+    margin: 10px 0 0;
+    text-align: left;
+    font-size: var(--fs-small);
+    line-height: 1.6;
+    color: var(--body);
+  }
+  .dmc01-consent .cc-text a {
+    color: var(--accent);
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  }
+  .dmc01-consent .cc-text a:hover { color: var(--accent-hover); border-bottom-color: var(--accent-hover); }
+  .dmc01-consent .cc-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .dmc01-consent .cc-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 10px 14px;
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+  }
+  .dmc01-consent .cc-btn-allow {
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid color-mix(in srgb, var(--accent) 42%, transparent);
+  }
+  .dmc01-consent .cc-btn-allow:hover { background: color-mix(in srgb, var(--accent) 22%, transparent); border-color: var(--accent); }
+  .dmc01-consent .cc-btn-reject,
+  .dmc01-consent .cc-btn-save {
+    color: var(--ink);
+    background: var(--panel-2);
+    border: 1px solid var(--line-strong);
+  }
+  .dmc01-consent .cc-btn-reject:hover,
+  .dmc01-consent .cc-btn-save:hover { background: var(--panel-3); border-color: var(--accent); }
+  .dmc01-consent .cc-btn:focus-visible,
+  .dmc01-consent .cc-link:focus-visible,
+  .dmc01-consent .cc-close:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+  .dmc01-consent .cc-link {
+    display: block;
+    margin: 12px auto 0;
+    padding: 2px 4px;
+    background: none;
+    border: 0;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.15s ease;
+  }
+  .dmc01-consent .cc-link:hover { color: var(--ink); }
+
+  /* ----- Preferences (kit modal) ----- */
+  .dmc01-consent .cc-modal {
+    position: fixed;
+    inset: var(--vv-top, 0px) 0 auto 0;
+    height: var(--vv-h, 100%);
+    height: var(--vv-h, 100dvh);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .dmc01-consent .cc-backdrop {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--bg) 80%, transparent);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+  .dmc01-consent .cc-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 560px;
+    max-height: calc(var(--vv-h, 100dvh) - 32px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: var(--panel);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow), 0 18px 48px rgba(0, 0, 0, 0.35);
+    animation: ccIn 0.3s var(--ease) both;
+  }
+  .dmc01-consent .cc-card-body { padding: 26px 28px 8px; }
+  .dmc01-consent .cc-card-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .dmc01-consent .cc-card .cc-title { font-size: 1.6rem; }
+  .dmc01-consent .cc-close {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    font: inherit;
+    font-size: 1.3rem;
+    line-height: 1;
+    color: var(--body);
+    background: var(--panel-2);
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .dmc01-consent .cc-close:hover { color: var(--ink); border-color: var(--accent); }
+  .dmc01-consent .cc-card .cc-text { margin: 14px 0 18px; }
+  .dmc01-consent .cc-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin: 0 0 8px;
+    padding: 14px 16px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .dmc01-consent .cc-row-text { flex: 1; min-width: 0; }
+  .dmc01-consent .cc-row-title { font-size: var(--fs-small); font-weight: 600; line-height: 1.3; color: var(--ink); }
+  .dmc01-consent .cc-row-note { margin-left: 6px; font-size: var(--fs-xs); font-weight: 500; color: var(--muted); }
+  .dmc01-consent .cc-row-desc { margin: 5px 0 0; font-size: var(--fs-xs); line-height: 1.55; color: var(--body); }
+  /* Kit switch — state by knob position + tint, never a solid block */
+  .dmc01-consent .cc-switch {
+    position: relative;
+    flex-shrink: 0;
+    width: 38px;
+    height: 22px;
+    margin: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--panel-3);
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+  .dmc01-consent .cc-switch::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 3px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--muted);
+    transform: translateY(-50%);
+    transition: transform 0.2s cubic-bezier(0.34, 1.4, 0.64, 1), background-color 0.15s ease;
+  }
+  .dmc01-consent .cc-switch:checked { background: var(--accent-soft); border-color: var(--accent); }
+  .dmc01-consent .cc-switch:checked::after { background: var(--accent); transform: translate(16px, -50%); }
+  .dmc01-consent .cc-switch:disabled { cursor: default; opacity: 0.6; }
+  .dmc01-consent .cc-switch:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+  .dmc01-consent .cc-card-actions {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 16px 28px 20px;
+    background: var(--panel);
+    border-top: 1px solid var(--line);
+  }
+
+  @media (max-width: 480px) {
+    .dmc01-consent .cc-banner { right: 12px; bottom: 12px; width: calc(100% - 24px); max-width: none; }
+    .dmc01-consent .cc-modal { padding: 12px; }
+    .dmc01-consent .cc-card { max-height: calc(var(--vv-h, 100dvh) - 24px); }
+    .dmc01-consent .cc-card-body { padding: 20px 18px 6px; }
+    .dmc01-consent .cc-card-actions { padding: 14px 18px 18px; }
+    .dmc01-consent .cc-card-actions .cc-btn { flex-basis: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dmc01-consent .cc-banner,
+    .dmc01-consent .cc-card { animation: none; }
+  }
 </style>
 </head>
 
@@ -229,6 +461,7 @@
         <li><a href="/terms-of-use">Terms</a></li>
         <li><a href="/privacy-policy">Privacy</a></li>
         <li><a href="/cookie-policy">Cookies</a></li>
+        <li><button type="button" data-cookie-settings>Cookie settings</button></li>
       </ul>
     </div>
 
@@ -244,6 +477,204 @@
 
   </div>
 </footer>
+
+<!-- ============================================================
+     COOKIE CONSENT — banner + preferences (see the CSS above and
+     the script below). Wording lives here: edit, re-paste this
+     footer embed, publish.
+     ============================================================ -->
+<div class="dmc01-consent" id="dmc01Consent" hidden>
+
+  <section class="cc-banner" id="ccBanner" role="region" aria-labelledby="ccBannerTitle" hidden>
+    <h2 class="cc-title" id="ccBannerTitle">Cookies</h2>
+    <p class="cc-text">We use a few cookies to keep this site working and, with your permission, Google Analytics to understand how it's used. You can change your choice at any time. More in our <a href="/cookie-policy">cookie policy</a>.</p>
+    <div class="cc-actions">
+      <button type="button" class="cc-btn cc-btn-allow" data-cc="allow">Allow all</button>
+      <button type="button" class="cc-btn cc-btn-reject" data-cc="reject">Reject all</button>
+    </div>
+    <button type="button" class="cc-link" data-cc="customise">Customise</button>
+  </section>
+
+  <div class="cc-modal" id="ccModal" role="dialog" aria-modal="true" aria-labelledby="ccModalTitle" hidden>
+    <div class="cc-backdrop" data-cc="close"></div>
+    <div class="cc-card">
+      <div class="cc-card-body">
+        <div class="cc-card-head">
+          <h2 class="cc-title" id="ccModalTitle">Cookie settings</h2>
+          <button type="button" class="cc-close" data-cc="close" aria-label="Close">&times;</button>
+        </div>
+        <p class="cc-text">Cookies are small text files that help a website work and remember your choices. We set only strictly necessary cookies without asking; analytics needs your permission, and you can change your mind here at any time.</p>
+
+        <div class="cc-row">
+          <div class="cc-row-text">
+            <div class="cc-row-title">Necessary <span class="cc-row-note">Always on</span></div>
+            <p class="cc-row-desc">Required for the site to work: security, spam protection on the contact form, and remembering this choice.</p>
+          </div>
+          <input type="checkbox" class="cc-switch" checked disabled aria-label="Necessary cookies (always on)">
+        </div>
+
+        <div class="cc-row">
+          <div class="cc-row-text">
+            <label class="cc-row-title" for="ccAnalytics">Analytics</label>
+            <p class="cc-row-desc">Google Analytics, to understand how visitors use the site and spot technical issues, so we can improve it.</p>
+          </div>
+          <input type="checkbox" class="cc-switch" id="ccAnalytics">
+        </div>
+      </div>
+      <div class="cc-card-actions">
+        <button type="button" class="cc-btn cc-btn-reject" data-cc="reject">Reject all</button>
+        <button type="button" class="cc-btn cc-btn-save" data-cc="save">Save choices</button>
+        <button type="button" class="cc-btn cc-btn-allow" data-cc="allow">Allow all</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   COOKIE CONSENT
+   • The choice is stored in a first-party cookie, dmc01_consent
+     (6 months). Bump CONSENT_VERSION to ask everyone again (e.g.
+     after adding a new cookie category).
+   • Google Analytics (GA_ID) is NOT loaded until the visitor allows
+     analytics. Google Consent Mode v2 is set to "denied" first, then
+     updated to "granted" before gtag.js loads. Withdrawing consent
+     deletes the _ga cookies. Webflow's own GA integration must stay
+     OFF (Site settings → Apps & integrations), or GA would load
+     before consent.
+   • Anything on the page with [data-cookie-settings] opens the
+     preferences (the footer's "Cookie settings" link does).
+   ============================================================ */
+(function() {
+  'use strict';
+  if (window.__dmc01Consent) return;       // footer embed rendered twice
+  window.__dmc01Consent = true;
+
+  var GA_ID = 'G-48CEX4YPKP';
+  var COOKIE = 'dmc01_consent';
+  var CONSENT_VERSION = 1;
+  var MAX_AGE = 182 * 24 * 3600;           // ~6 months
+  var GA_COOKIE_EXPIRES = 395 * 24 * 3600; // 13 months, as the cookie policy says
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { window.dataLayer.push(arguments); }
+  gtag('consent', 'default', {
+    ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied',
+    analytics_storage: 'denied', functionality_storage: 'denied',
+    personalization_storage: 'denied', security_storage: 'granted'
+  });
+
+  function readChoice() {
+    var m = document.cookie.match(/(?:^|;\s*)dmc01_consent=([^;]*)/);
+    if (!m) return null;
+    try {
+      var v = JSON.parse(decodeURIComponent(m[1]));
+      return v && v.v === CONSENT_VERSION ? v : null;
+    } catch (e) { return null; }
+  }
+  function saveChoice(analytics) {
+    var v = { v: CONSENT_VERSION, analytics: !!analytics, t: Date.now() };
+    document.cookie = COOKIE + '=' + encodeURIComponent(JSON.stringify(v)) +
+      '; Max-Age=' + MAX_AGE + '; Path=/; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : '');
+    return v;
+  }
+
+  var gaLoaded = false;
+  function loadAnalytics() {
+    gtag('consent', 'update', { analytics_storage: 'granted' });
+    if (gaLoaded) return;
+    gaLoaded = true;
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+    document.head.appendChild(s);
+    gtag('js', new Date());
+    gtag('config', GA_ID, { cookie_expires: GA_COOKIE_EXPIRES });
+  }
+  function stopAnalytics() {
+    gtag('consent', 'update', { analytics_storage: 'denied' });
+    /* Remove any _ga cookies already set, on every domain variant. */
+    var host = location.hostname, root = host.replace(/^www\./, '');
+    document.cookie.split(/;\s*/).forEach(function(c) {
+      var name = c.split('=')[0];
+      if (!/^_ga/.test(name)) return;
+      ['', host, '.' + host, '.' + root].forEach(function(d) {
+        document.cookie = name + '=; Max-Age=0; Path=/' + (d ? '; Domain=' + d : '');
+      });
+    });
+  }
+  function apply(choice) {
+    if (choice && choice.analytics) loadAnalytics();
+    else stopAnalytics();
+  }
+
+  function init() {
+    var root = document.getElementById('dmc01Consent');
+    if (!root) return;
+    var banner = root.querySelector('#ccBanner');
+    var modal = root.querySelector('#ccModal');
+    var analyticsSwitch = root.querySelector('#ccAnalytics');
+    var lastFocus = null;
+
+    function lockPage(on) {
+      document.documentElement.style.overflow = on ? 'hidden' : '';
+      document.documentElement.classList.toggle('dmc01-overlay-open', on);
+    }
+    function showBanner() { root.hidden = false; banner.hidden = false; }
+    function hideBanner() { banner.hidden = true; }
+    function openSettings() {
+      var current = readChoice();
+      analyticsSwitch.checked = !!(current && current.analytics);
+      lastFocus = document.activeElement;
+      root.hidden = false;
+      modal.hidden = false;
+      lockPage(true);
+      modal.querySelector('.cc-close').focus({ preventScroll: true });
+    }
+    function closeSettings() {
+      if (modal.hidden) return;
+      modal.hidden = true;
+      lockPage(false);
+      if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+    }
+    function decide(analytics) {
+      apply(saveChoice(analytics));
+      hideBanner();
+      closeSettings();
+    }
+
+    root.addEventListener('click', function(e) {
+      var t = e.target.closest('[data-cc]');
+      if (!t) return;
+      var a = t.getAttribute('data-cc');
+      if (a === 'allow') decide(true);
+      else if (a === 'reject') decide(false);
+      else if (a === 'save') decide(analyticsSwitch.checked);
+      else if (a === 'customise') openSettings();
+      else if (a === 'close') closeSettings();
+    });
+    document.addEventListener('click', function(e) {
+      var t = e.target.closest && e.target.closest('[data-cookie-settings]');
+      if (!t) return;
+      e.preventDefault();
+      openSettings();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeSettings();
+    });
+    window.dmc01OpenCookieSettings = openSettings;
+
+    var choice = readChoice();
+    if (choice) apply(choice);
+    else showBanner();
+    console.log('[DMC01-consent] Initialised. ' + (choice ? 'Choice: analytics ' + (choice.analytics ? 'on' : 'off') + '.' : 'No choice yet — banner shown.'));
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
 
 </body>
 </html>

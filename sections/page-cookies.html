@@ -325,6 +325,21 @@
     border-radius: var(--radius-sm);
   }
 
+  .legal-section .legal-cookie-btn {
+    padding: 9px 14px;
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid color-mix(in srgb, var(--accent) 42%, transparent);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .legal-section .legal-cookie-btn:hover { border-color: var(--accent); }
+  .legal-section .legal-cookie-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+
   /* ----- FOOTER CTA ----- */
   .legal-section .legal-cta {
     margin-top: 56px;
@@ -365,7 +380,7 @@
       <div class="eyebrow">Cookie Policy</div>
       <h2 class="section-title">Cookies, <em>plainly listed.</em></h2>
       <div class="legal-meta">
-        <span class="legal-meta-item"><span class="legal-meta-label">Last updated</span><span class="legal-meta-value">January 2026</span></span>
+        <span class="legal-meta-item"><span class="legal-meta-label">Last updated</span><span class="legal-meta-value">September 2026</span></span>
         <span class="legal-meta-item"><span class="legal-meta-label">Contact</span><span class="legal-meta-value"><a href="mailto:privacy@dmc01.com">privacy@dmc01.com</a></span></span>
       </div>
       <p class="section-lede">DMC01 Ltd ("we", "us") uses cookies on <strong>dmc01.com</strong>. This policy explains what they do, which ones we set, and how you control them.</p>
@@ -393,21 +408,22 @@
 
       <section id="what">
         <h3 class="legal-h3"><span class="legal-section-num">02</span><span>What are cookies?</span></h3>
-        <p>Small text files placed on your device that help the site function, remember actions and preferences, or help us understand how the site is being used. We also use privacy-respecting analytics where enabled.</p>
+        <p>Small text files placed on your device that help the site function, remember actions and preferences, or help us understand how the site is being used. We use analytics cookies only if you allow them.</p>
       </section>
 
       <section id="how-we-use">
         <h3 class="legal-h3"><span class="legal-section-num">03</span><span>How we use cookies</span></h3>
         <ul class="legal-list">
-          <li><strong>Strictly necessary (always on)</strong> — site security, load balancing, form operation.</li>
-          <li><strong>Analytics (optional)</strong> — to understand site performance and improve content.</li>
-          <li><strong>Functional / embeds (optional)</strong> — content from third parties (e.g. Vimeo, Calendly) which may set cookies when you interact with them.</li>
+          <li><strong>Strictly necessary (always on)</strong> — site security, spam protection on the contact form, and remembering your cookie choice.</li>
+          <li><strong>Analytics (optional, off until you allow it)</strong> — Google Analytics, to understand how the site is used and improve it.</li>
         </ul>
       </section>
 
       <section id="choices">
         <h3 class="legal-h3"><span class="legal-section-num">04</span><span>Your choices (consent)</span></h3>
-        <p>On your first visit, we show a banner asking for your consent for non-essential cookies. You can <strong>Accept all</strong>, <strong>Reject non-essential</strong>, or <strong>Manage preferences</strong>. You can change your preference at any time via "Cookie settings" in the footer.</p>
+        <p>On your first visit, a banner asks whether you allow analytics cookies. You can <strong>Allow all</strong>, <strong>Reject all</strong>, or <strong>Customise</strong>. No optional cookie is set until you choose.</p>
+        <p>You can change your mind at any time via <strong>Cookie settings</strong> in the footer of every page. Withdrawing consent removes the analytics cookies.</p>
+        <p><button type="button" class="legal-cookie-btn" data-cookie-settings>Open cookie settings</button></p>
       </section>
 
       <section id="cookies-list">
@@ -427,31 +443,38 @@
             <tbody>
               <tr>
                 <td>Necessary</td>
-                <td><code>wf_csrftoken</code></td>
-                <td>Webflow</td>
-                <td>Security for forms</td>
+                <td><code>dmc01_consent</code></td>
+                <td>DMC01</td>
+                <td>Remembers your cookie choice</td>
+                <td>6 months</td>
+              </tr>
+              <tr>
+                <td>Necessary</td>
+                <td><code>_cfuvid</code></td>
+                <td>Cloudflare</td>
+                <td>Security and rate limiting</td>
                 <td>Session</td>
+              </tr>
+              <tr>
+                <td>Necessary</td>
+                <td><code>_GRECAPTCHA</code></td>
+                <td>Google (reCAPTCHA)</td>
+                <td>Spam protection on the contact form</td>
+                <td>6 months</td>
               </tr>
               <tr>
                 <td>Analytics</td>
                 <td><code>_ga</code></td>
                 <td>Google</td>
-                <td>Visit analytics (if enabled)</td>
+                <td>Distinguishes visitors — only if you allow analytics</td>
                 <td>13 months</td>
               </tr>
               <tr>
                 <td>Analytics</td>
                 <td><code>_ga_*</code></td>
                 <td>Google</td>
-                <td>Session analytics (if enabled)</td>
+                <td>Keeps session state — only if you allow analytics</td>
                 <td>13 months</td>
-              </tr>
-              <tr>
-                <td>Functional</td>
-                <td><code>__calendly_session</code></td>
-                <td>Calendly</td>
-                <td>Scheduling embed</td>
-                <td>21 days</td>
               </tr>
             </tbody>
           </table>
