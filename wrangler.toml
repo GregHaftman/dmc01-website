@@ -1,46 +1,32 @@
 # =====================================================================
-# Cloudflare Workers — Static Assets configuration
+# Cloudflare Worker — dmc01-website
 # =====================================================================
 #
-# This file tells Cloudflare's Workers runtime to serve the contents of
-# this repo as static files, with no custom code (no Worker handler).
-# The project is connected via Cloudflare Dashboard → Workers & Pages →
-# Connect to Git, and auto-deploys on push to `main`.
+# Two jobs, one Worker. Connected via Cloudflare Dashboard → Workers &
+# Pages → Connect to Git; auto-deploys on every push to `main`.
 #
-# WHAT GETS SERVED
-# Only the contents of the `webflow/` folder. Each file there is
-# addressable directly off the project hostname (the `webflow/` prefix
-# is stripped). Currently:
-#   webflow/dmc01-orbital.js   → https://dmc01-website.../dmc01-orbital.js
-#   webflow/head-alias-block.css → https://dmc01-website.../head-alias-block.css
+# 1. STATIC FILES — the contents of `webflow/`, each reachable directly
+#    off the project hostname (the `webflow/` prefix is stripped):
+#      webflow/dmc01-product-v2.js → https://dmc01-website.ghaftman.workers.dev/dmc01-product-v2.js
+#      webflow/portrait.svg        → …/portrait.svg
+#      webflow/logo-lockup.svg     → …/logo-lockup.svg
+#    They exist because Webflow's Code Embed has a 50kB limit.
+#
+# 2. CONSENT LOG — worker/index.js handles POST /consent from the
+#    cookie banner (chrome-footer.html) and stores each choice in KV.
 #
 # We deliberately do NOT serve the repo root. Wrangler does not honour
 # .gitignore for static assets, and an earlier `directory = "."` config
 # uploaded the entire repo — including .git/ (full history), .wrangler/
 # cache files, and section embed sources — to public URLs. Scoping to
 # `./webflow` keeps the public surface to exactly what's meant to be
-# fetched externally.
-#
-# IF YOU NEED TO EXPOSE A NEW FILE
-# Put it in webflow/. Anything outside that folder stays private (the
-# repo is private on GitHub; this Worker only sees `./webflow`).
-#
-# WHY WE'RE ON CLOUDFLARE WORKERS, NOT PAGES
-# The orbital section's JS (~47kB) exceeds Webflow's 50kB-per-embed
-# limit, so the embed loads it externally. Cloudflare Pages was the
-# obvious place to host it, but new Cloudflare accounts (May 2026
-# rollout) only get the unified Workers flow with a Static Assets
-# config — `npx wrangler deploy` reads this file to know what to do.
+# fetched externally. To expose a new file, put it in webflow/ and push.
 # =====================================================================
 
 name = "dmc01-website"
 compatibility_date = "2026-05-01"
 workers_dev = true   # explicit: enable the <project>.<account>.workers.dev hostname
 
-# Assets-only Worker: serve files from `./webflow` and nothing else.
-# Files are reachable directly off the project hostname — the
-# `webflow/` prefix is dropped. To expose a new file, put it in this
-# folder and push.
 # Worker script: only handles POST /consent (cookie-consent records).
 # Static files in ./webflow are matched FIRST and served exactly as
 # before; the script only sees requests that aren't a file.
