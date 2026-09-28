@@ -38,3 +38,6 @@ sections/fullsite-preview.html
 
 # Claude Code project instructions — local only, never committed
 CLAUDE.md
+
+# Wrangler local dev state
+.wrangler/
