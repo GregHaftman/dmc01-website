@@ -15,7 +15,7 @@
    dial around the DMC01 mark; hover one to swing the hand and bring
    forward its relationships;
    click to open the module detail in a modal. Behaviour and module
-   data live in webflow/dmc01-product.js (Cloudflare-hosted, loaded
+   data live in webflow/dmc01-product-v2.js (Cloudflare-hosted, loaded
    at the foot of this embed).
 
    The dial is drawn on a fixed 1200 × 680 stage (the design's
@@ -371,7 +371,17 @@ body {
 #dmc01-product .fx-caption-s { font-size: 15px; line-height: 1.6; color: var(--muted); text-wrap: pretty; }
 
 /* ----- Phone layout: plain list of modules ----- */
-#dmc01-product .fx-list { display: none; flex-direction: column; gap: 8px; }
+#dmc01-product .fx-list { display: none; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+#dmc01-product .fx-module { margin: 0; padding: 0; }
+/* Module detail text: in the HTML for crawlers and as the dial's text
+   source; shown only if the script hasn't run (no .fx-ready). */
+#dmc01-product.fx-ready .fx-module-detail { display: none; }
+#dmc01-product:not(.fx-ready) .flux { display: none; }
+#dmc01-product:not(.fx-ready) .fx-list { display: flex; }
+#dmc01-product .fx-module-detail { padding: 12px 16px 4px; font-size: var(--fs-small); line-height: 1.6; color: var(--body); }
+#dmc01-product .fx-module-detail p { margin: 0 0 8px; }
+#dmc01-product .fx-module-included { font-family: var(--font-head); font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+#dmc01-product .fx-module-deliverables { margin: 0 0 8px 18px; padding: 0; }
 #dmc01-product .fx-list-item {
   display: flex;
   align-items: flex-start;
@@ -575,7 +585,7 @@ body {
 #dmc01-product .preview-content { flex: 1; display: flex; align-items: center; justify-content: center; }
 #dmc01-product .preview-content svg { width: 100%; height: auto; max-height: 280px; }
 
-/* Sample-deliverable SVGs (dmc01-product.js) carry classes, not hex
+/* Sample-deliverable SVGs (dmc01-product-v2.js) carry classes, not hex
    values, so they follow the theme. Status is carried by shape. */
 #dmc01-product .preview-content .f-ink     { fill: var(--ink); }
 #dmc01-product .preview-content .f-accent  { fill: var(--accent); }
@@ -793,13 +803,149 @@ body {
   </div><!-- /.section-inner header -->
 
   <div class="section-inner">
-    <!-- Flux dial — built by webflow/dmc01-product.js on a 1200×680
+    <!-- Flux dial — built by webflow/dmc01-product-v2.js on a 1200×680
          stage (the design's coordinates), scaled to fit. -->
     <div class="flux" id="flux">
       <div class="fx-stage" id="fluxStage"></div>
     </div>
     <!-- Phone layout (< 760px): the six modules as a list. -->
-    <div class="fx-list" id="fxList"></div>
+    <!-- THE SIX MODULES, as plain HTML. This is the single source of the
+         modules' text: dmc01-product-v2.js reads it to build the dial and the
+         popups. It is also what search engines and AI assistants read (most
+         don't run JavaScript), the phone layout, and the fallback if the
+         script doesn't load. Edit module wording HERE, then re-paste. -->
+    <ol class="fx-list" id="fxList" aria-label="The six modules">
+      <li class="fx-module" data-id="01" data-slug="licensing" data-code="Licensing">
+        <button type="button" class="fx-list-item" data-id="01">
+          <span class="fx-list-icon" aria-hidden="true"></span>
+          <span class="fx-list-body">
+            <span class="fx-list-n">01</span>
+            <span class="fx-list-t">Rights &amp; Licensing Framework</span>
+            <span class="fx-list-s">Define who can use what, where and for how long — licence terms that hold up in negotiation.</span>
+          </span>
+          <span class="fx-list-cta" aria-hidden="true">→</span>
+        </button>
+        <div class="fx-module-detail">
+          <p class="fx-module-paragraph">Advisory and review of Master Service Agreements (MSA), order forms, and commercial terms governing data licensing and delivery. Aligns contractual language with monetisation best practice — including modern use cases such as API distribution, downstream access or consumption to derived data, and AI-driven applications with clearly defined permissioning tiers.</p>
+          <p class="fx-module-included">What's included</p>
+          <ul class="fx-module-deliverables">
+            <li>MSA &amp; order form clause review with redline recommendations</li>
+            <li>Trial Agreement review and alignement on permitted workflows</li>
+            <li>AI-use permissioning matrix across data tiers</li>
+            <li>Redistribution &amp; downstream use framework</li>
+            <li>Audit-ready entitlement model</li>
+          </ul>
+        </div>
+      </li>
+      <li class="fx-module" data-id="02" data-slug="pricing" data-code="Pricing">
+        <button type="button" class="fx-list-item" data-id="02">
+          <span class="fx-list-icon" aria-hidden="true"></span>
+          <span class="fx-list-body">
+            <span class="fx-list-n">02</span>
+            <span class="fx-list-t">Monetisation Model &amp; Pricing</span>
+            <span class="fx-list-s">Set pricing metrics and tiers that match how clients actually extract value from your data.</span>
+          </span>
+          <span class="fx-list-cta" aria-hidden="true">→</span>
+        </button>
+        <div class="fx-module-detail">
+          <p class="fx-module-paragraph">Design and assessment of pricing frameworks and commercial models (seat-based, usage-based, enterprise, embedded). Aligns pricing with packaging, segmentation, and real client workflows, from direct data consumption to advanced integration use cases, ensuring models scale as customer utilisation and value creation evolve.</p>
+          <p class="fx-module-included">What's included</p>
+          <ul class="fx-module-deliverables">
+            <li>Pricing framework design across seat / usage / enterprise / embedded</li>
+            <li>Bespoke workflow rights aligned onto transfer of IP and corresponding premium</li>
+            <li>Segmentation-driven pricing tiers with elasticity assumptions</li>
+            <li>Three-year revenue projection scenarios</li>
+            <li>Discounting guardrails &amp; commercial governance</li>
+          </ul>
+        </div>
+      </li>
+      <li class="fx-module" data-id="03" data-slug="roadmap" data-code="Roadmap">
+        <button type="button" class="fx-list-item" data-id="03">
+          <span class="fx-list-icon" aria-hidden="true"></span>
+          <span class="fx-list-body">
+            <span class="fx-list-n">03</span>
+            <span class="fx-list-t">Product Direction &amp; Roadmap</span>
+            <span class="fx-list-s">Identify what matters, prioritise actions, and sequence a roadmap the team can deliver.</span>
+          </span>
+          <span class="fx-list-cta" aria-hidden="true">→</span>
+        </button>
+        <div class="fx-module-detail">
+          <p class="fx-module-paragraph">Strategic input on long-term product development — including prioritisation of data assets, API improvements, and delivery channels to support future scalability and monetisation. Translates business ambition into a sequenced delivery plan with clear trade-offs and dependencies.</p>
+          <p class="fx-module-included">What's included</p>
+          <ul class="fx-module-deliverables">
+            <li>Roadmap outline with quarterly sequencing</li>
+            <li>Asset prioritisation matrix (impact × effort × dependency)</li>
+            <li>Trade-off framework for build / buy / partner decisions</li>
+            <li>Delivery planning &amp; resource modelling</li>
+          </ul>
+        </div>
+      </li>
+      <li class="fx-module" data-id="04" data-slug="enablement" data-code="Enablement">
+        <button type="button" class="fx-list-item" data-id="04">
+          <span class="fx-list-icon" aria-hidden="true"></span>
+          <span class="fx-list-body">
+            <span class="fx-list-n">04</span>
+            <span class="fx-list-t">Value Strategy &amp; Enablement</span>
+            <span class="fx-list-s">Give the commercial team the story, the proof and the tools to sell better.</span>
+          </span>
+          <span class="fx-list-cta" aria-hidden="true">→</span>
+        </button>
+        <div class="fx-module-detail">
+          <p class="fx-module-paragraph">Product positioning and value proposition design. Includes review or creation of pitch decks and go-to-market narratives that equip Sales and Pre-Sales teams to articulate the commercial and strategic value of data products to specific buyer personas.</p>
+          <p class="fx-module-included">What's included</p>
+          <ul class="fx-module-deliverables">
+            <li>Pitch deck refinement (cover, problem, solution, proof, CTA)</li>
+            <li>Persona-mapped value propositions with proof points</li>
+            <li>Sales enablement playbook &amp; objection-handling guide</li>
+            <li>Discovery question library by buyer role</li>
+          </ul>
+        </div>
+      </li>
+      <li class="fx-module" data-id="05" data-slug="packaging" data-code="Packaging">
+        <button type="button" class="fx-list-item" data-id="05">
+          <span class="fx-list-icon" aria-hidden="true"></span>
+          <span class="fx-list-body">
+            <span class="fx-list-n">05</span>
+            <span class="fx-list-t">Offer Design &amp; Packaging</span>
+            <span class="fx-list-s">Turn raw datasets into products buyers can understand, compare and buy.</span>
+          </span>
+          <span class="fx-list-cta" aria-hidden="true">→</span>
+        </button>
+        <div class="fx-module-detail">
+          <p class="fx-module-paragraph">Review or creation of data packaging strategy, ensuring alignment with customer workflows, investment strategies, and commercial models. Covers asset-type bundles, regional groupings, and thematic or cross-asset packages calibrated for clear price/value laddering.</p>
+          <p class="fx-module-included">What's included</p>
+          <ul class="fx-module-deliverables">
+            <li>Tiered package architecture</li>
+            <li>Asset-type bundles aligned to buyer workflows</li>
+            <li>Entity Mastery evaluation</li>
+            <li>Thematic cross-asset packages</li>
+            <li>Data Dictionary &amp; Content Methodology guidance</li>
+            <li>Data-driven evaluation of packaging options</li>
+          </ul>
+        </div>
+      </li>
+      <li class="fx-module" data-id="06" data-slug="distribution" data-code="Distribution">
+        <button type="button" class="fx-list-item" data-id="06">
+          <span class="fx-list-icon" aria-hidden="true"></span>
+          <span class="fx-list-body">
+            <span class="fx-list-n">06</span>
+            <span class="fx-list-t">Distribution &amp; Delivery Architecture</span>
+            <span class="fx-list-s">Choose the channels and delivery formats that get data to clients at scale.</span>
+          </span>
+          <span class="fx-list-cta" aria-hidden="true">→</span>
+        </button>
+        <div class="fx-module-detail">
+          <p class="fx-module-paragraph">Technical and functional advisory on data delivery channels — APIs, file-based delivery, marketplace listings. Includes endpoint specifications, recommended delivery workflows, and architecture for listing on platforms such as Snowflake or Databricks.</p>
+          <p class="fx-module-included">What's included</p>
+          <ul class="fx-module-deliverables">
+            <li>OpenAPI endpoint specifications &amp; field-level documentation (pre-requisite for MCP servers)</li>
+            <li>Snowflake / Databricks marketplace listing specifications</li>
+            <li>Delivery workflow architecture (real-time / batch / hybrid)</li>
+            <li>Latency &amp; SLA framework with monitoring approach</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
   </div>
 
   <!-- Module detail modal — opened from the dial, the list, the
@@ -837,24 +983,30 @@ body {
 
 <!-- ============================================================
      PRODUCT JS (Flux Dial) — loaded externally to keep this embed under
-     Webflow's 50kB-per-embed limit. The MODULES data array
-     and animation code live in webflow/dmc01-product.js.
+     Webflow's 50kB-per-embed limit. The module text lives in the
+     #fxList markup above; the visuals and animation code live in
+     webflow/dmc01-product-v2.js.
+
+     Versioned file name: v2 reads its text from #fxList, which older
+     embeds lack. When a change to the JS needs a new embed, publish it
+     under a new name (v3…) so the live embed keeps its own script
+     until the new embed is pasted and published.
 
      The inline loader below picks the right URL automatically
      based on where the page is being served from:
 
        LOCAL DEV  (localhost, 127.0.0.1, file://, *.local)
-         → ../webflow/dmc01-product.js   (the repo file, hot)
+         → ../webflow/dmc01-product-v2.js   (the repo file, hot)
 
        EVERYWHERE ELSE  (Webflow staging, live site, anywhere)
-         → https://dmc01-website.ghaftman.workers.dev/dmc01-product.js
+         → https://dmc01-website.ghaftman.workers.dev/dmc01-product-v2.js
             (Cloudflare Worker, auto-deployed from this repo on
              every push to main)
 
      This means you can paste this embed into Webflow verbatim —
-     no manual URL swap required. To update the JS itself: edit
-     webflow/dmc01-product.js, commit, push. Cloudflare redeploys
-     (~30s); the embed never changes.
+     no manual URL swap required. To update the JS without touching the
+     embed: edit webflow/dmc01-product-v2.js, commit, push. Cloudflare
+     redeploys (~30s).
      ============================================================ -->
 <script>
 (function(){
@@ -863,8 +1015,8 @@ body {
   var s = document.createElement('script');
   s.defer = true;
   s.src = isLocal
-    ? '../webflow/dmc01-product.js'
-    : 'https://dmc01-website.ghaftman.workers.dev/dmc01-product.js';
+    ? '../webflow/dmc01-product-v2.js'
+    : 'https://dmc01-website.ghaftman.workers.dev/dmc01-product-v2.js';
   document.head.appendChild(s);
 })();
 </script>
