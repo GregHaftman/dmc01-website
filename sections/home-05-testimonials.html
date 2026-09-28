@@ -633,8 +633,79 @@
   <!-- The marquee escapes .section-inner so cards run edge-to-edge. -->
   <div class="testimonials-marquee" id="testimonialsMarquee" tabindex="0" aria-label="Testimonials carousel — scroll horizontally to browse">
     <div class="testimonials-track" id="testimonialsTrack">
-      <!-- Cards are rendered here by JS — the source list lives in
-           the script, and we duplicate it for seamless looping. -->
+      <!-- The testimonials, as plain HTML: this is where their text lives
+           (edit here), and what search engines and AI assistants read.
+           The script duplicates the set on desktop for the seamless loop. -->
+      <article class="testimonial-card" role="button" tabindex="0" aria-label="Read full testimonial from Head of Pre-Sales, Macrobond Financial">
+        <blockquote class="quote-text">Very exciting for all the companies that will now get direct access to Greg's invaluable expertise. Working with you over the past few years has really been inspirational! I can't think of many people who bring a unique combination of technical skills, commercial acumen, and business savvy while staying uniquely professional, fair, and genuine. Being both detail oriented and innately able to see the bigger picture while being both necessarily sceptical yet contagiously optimistic makes Greg a truly unique talent.</blockquote>
+        <footer class="quote-author">
+          <div class="author-title">Head of Pre-Sales</div>
+          <div class="author-company">Macrobond Financial</div>
+        </footer>
+      </article>
+      <article class="testimonial-card" role="button" tabindex="0" aria-label="Read full testimonial from Head of Sales · Former CCO, Regnology">
+        <blockquote class="quote-text">Greg was my second hire when I joined Macrobond and he was a massive success. He built our datafeeds business from scratch, running everything from product design through to marketing and GTM. I have no hesitation in recommending him to anyone looking to scale a data business.</blockquote>
+        <footer class="quote-author">
+          <div class="author-title">Head of Sales · Former CCO</div>
+          <div class="author-company">Regnology</div>
+        </footer>
+      </article>
+      <article class="testimonial-card" role="button" tabindex="0" aria-label="Read full testimonial from Product Manager, Macrobond Financial">
+        <blockquote class="quote-text">Data without a business model is just a lake. Only senior architects like Greg can turn it into a flowing system that nourishes the industry. Exciting stuff and looking forward to your great contribution to the industry!</blockquote>
+        <footer class="quote-author">
+          <div class="author-title">Product Manager</div>
+          <div class="author-company">Macrobond Financial</div>
+        </footer>
+      </article>
+      <article class="testimonial-card" role="button" tabindex="0" aria-label="Read full testimonial from Solution Architect, SAP Fioneer">
+        <blockquote class="quote-text">Greg's expertise is a real asset and any client will be lucky to have them on their side. Best of luck on this exciting journey!</blockquote>
+        <footer class="quote-author">
+          <div class="author-title">Solution Architect</div>
+          <div class="author-company">SAP Fioneer</div>
+        </footer>
+      </article>
+      <article class="testimonial-card" role="button" tabindex="0" aria-label="Read full testimonial from Product Specialist, Abaris Investment Management">
+        <blockquote class="quote-text">Any firm getting Greg's advice will get the best value they can hope for. I really appreciated your immense contribution at Macrobond.</blockquote>
+        <footer class="quote-author">
+          <div class="author-title">Product Specialist</div>
+          <div class="author-company">Abaris Investment Management</div>
+        </footer>
+      </article>
+      <article class="testimonial-card" role="button" tabindex="0" aria-label="Read full testimonial from Senior Account Executive, 9fin">
+        <blockquote class="quote-text">As someone that has witnessed (and benefited from) the value of Greg's insights firsthand, I have no doubt you will be successful!</blockquote>
+        <footer class="quote-author">
+          <div class="author-title">Senior Account Executive</div>
+          <div class="author-company">9fin</div>
+        </footer>
+      </article>
+      <article class="testimonial-card" role="button" tabindex="0" aria-label="Read full testimonial from Head of Customer Solutions, FactSet">
+        <blockquote class="quote-text">I can only recommend Greg to anyone!</blockquote>
+        <footer class="quote-author">
+          <div class="author-title">Head of Customer Solutions</div>
+          <div class="author-company">FactSet</div>
+        </footer>
+      </article>
+      <article class="testimonial-card" role="button" tabindex="0" aria-label="Read full testimonial from VP Sales, FactSet">
+        <blockquote class="quote-text">Your professionalism and market knowledge will make you successful in this new adventure!</blockquote>
+        <footer class="quote-author">
+          <div class="author-title">VP Sales</div>
+          <div class="author-company">FactSet</div>
+        </footer>
+      </article>
+      <article class="testimonial-card" role="button" tabindex="0" aria-label="Read full testimonial from Product Strategist, Charles River Development">
+        <blockquote class="quote-text">I am sure your new customers will benefit from your insight and hope we get to work together again one day.</blockquote>
+        <footer class="quote-author">
+          <div class="author-title">Product Strategist</div>
+          <div class="author-company">Charles River Development</div>
+        </footer>
+      </article>
+      <article class="testimonial-card" role="button" tabindex="0" aria-label="Read full testimonial from VP of Business Development, Engine AI">
+        <blockquote class="quote-text">Amazing move! I highly recommend anyone to try your services!</blockquote>
+        <footer class="quote-author">
+          <div class="author-title">VP of Business Development</div>
+          <div class="author-company">Engine AI</div>
+        </footer>
+      </article>
     </div>
   </div>
 
@@ -658,58 +729,7 @@
   'use strict';
 
   /* Source list — verbatim from dmc01.com. Order preserved. */
-  const TESTIMONIALS = [
-    {
-      title: 'Head of Pre-Sales',
-      company: 'Macrobond Financial',
-      quote: "Very exciting for all the companies that will now get direct access to Greg's invaluable expertise. Working with you over the past few years has really been inspirational! I can't think of many people who bring a unique combination of technical skills, commercial acumen, and business savvy while staying uniquely professional, fair, and genuine. Being both detail oriented and innately able to see the bigger picture while being both necessarily sceptical yet contagiously optimistic makes Greg a truly unique talent."
-    },
-    {
-      title: 'Head of Sales · Former CCO',
-      company: 'Regnology',
-      quote: "Greg was my second hire when I joined Macrobond and he was a massive success. He built our datafeeds business from scratch, running everything from product design through to marketing and GTM. I have no hesitation in recommending him to anyone looking to scale a data business."
-    },
-    {
-      title: 'Product Manager',
-      company: 'Macrobond Financial',
-      quote: "Data without a business model is just a lake. Only senior architects like Greg can turn it into a flowing system that nourishes the industry. Exciting stuff and looking forward to your great contribution to the industry!"
-    },
-    {
-      title: 'Solution Architect',
-      company: 'SAP Fioneer',
-      quote: "Greg's expertise is a real asset and any client will be lucky to have them on their side. Best of luck on this exciting journey!"
-    },
-    {
-      title: 'Product Specialist',
-      company: 'Abaris Investment Management',
-      quote: "Any firm getting Greg's advice will get the best value they can hope for. I really appreciated your immense contribution at Macrobond."
-    },
-    {
-      title: 'Senior Account Executive',
-      company: '9fin',
-      quote: "As someone that has witnessed (and benefited from) the value of Greg's insights firsthand, I have no doubt you will be successful!"
-    },
-    {
-      title: 'Head of Customer Solutions',
-      company: 'FactSet',
-      quote: "I can only recommend Greg to anyone!"
-    },
-    {
-      title: 'VP Sales',
-      company: 'FactSet',
-      quote: "Your professionalism and market knowledge will make you successful in this new adventure!"
-    },
-    {
-      title: 'Product Strategist',
-      company: 'Charles River Development',
-      quote: "I am sure your new customers will benefit from your insight and hope we get to work together again one day."
-    },
-    {
-      title: 'VP of Business Development',
-      company: 'Engine AI',
-      quote: "Amazing move! I highly recommend anyone to try your services!"
-    }
-  ];
+  /* Testimonial text lives in the HTML (#testimonialsTrack). */
 
   function init() {
     const root = document.querySelector('.testimonials-section');
@@ -721,46 +741,19 @@
     const track   = root.querySelector('#testimonialsTrack');
     if (!marquee || !track) return;
 
-    /* Render the cards twice into the track so the loop seam is
-       invisible — when the first set has scrolled past, scrollLeft
-       wraps back to 0 inside the duplicate range, which visually
-       shows the original first card again with no jump.
-       Each card carries the full quote/title/company on data-* so
-       the modal can read it back without re-querying the source. */
-    function buildCard(t) {
-      const card = document.createElement('article');
-      card.className = 'testimonial-card';
-      card.setAttribute('role', 'button');
-      card.setAttribute('tabindex', '0');
-      card.setAttribute('aria-label', 'Read full testimonial from ' + t.title + ', ' + t.company);
-      card.dataset.title = t.title;
-      card.dataset.company = t.company;
-      card.dataset.quote = t.quote;
-      card.innerHTML =
-        '<blockquote class="quote-text">' + escapeHtml(t.quote) + '</blockquote>' +
-        '<footer class="quote-author">' +
-          '<div class="author-title">' + escapeHtml(t.title) + '</div>' +
-          '<div class="author-company">' + escapeHtml(t.company) + '</div>' +
-        '</footer>';
-      return card;
-    }
-    function escapeHtml(s) {
-      return s.replace(/&/g, '&amp;')
-              .replace(/</g, '&lt;')
-              .replace(/>/g, '&gt;')
-              .replace(/"/g, '&quot;');
-    }
-
-    /* Touch screens get a plain native swipe (see CSS): one set of
-       cards, no auto-advance, no loop — writing scrollLeft while iOS
-       is still gliding from a swipe made the cards disappear. */
+    /* The cards are static HTML. Pointer devices get a duplicate set
+       (hidden from assistive tech) so the auto-scroll loop is seamless:
+       when the first set has scrolled past, scrollLeft wraps back to 0
+       inside the duplicate range with no visible jump. Touch devices
+       swipe natively and get no duplicates. */
     const isTouch = window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches;
-
-    const frag = document.createDocumentFragment();
-    TESTIMONIALS.forEach(function(t) { frag.appendChild(buildCard(t)); });
-    /* Duplicate set for seamless loop (pointer devices only). */
-    if (!isTouch) TESTIMONIALS.forEach(function(t) { frag.appendChild(buildCard(t)); });
-    track.appendChild(frag);
+    const cards = Array.from(track.querySelectorAll('.testimonial-card'));
+    if (!isTouch) cards.forEach(function(card) {
+      const copy = card.cloneNode(true);
+      copy.setAttribute('aria-hidden', 'true');
+      copy.setAttribute('tabindex', '-1');
+      track.appendChild(copy);
+    });
 
     /* ============ MODAL — click any card to read the full quote ============ */
     const modal        = root.querySelector('#testimonialModal');
@@ -771,9 +764,9 @@
     const modalBackdrop = modal.querySelector('.testimonial-modal-backdrop');
 
     function openModal(card) {
-      modalQuote.textContent   = card.dataset.quote   || '';
-      modalTitle.textContent   = card.dataset.title   || '';
-      modalCompany.textContent = card.dataset.company || '';
+      modalQuote.textContent   = card.querySelector('.quote-text').textContent;
+      modalTitle.textContent   = card.querySelector('.author-title').textContent;
+      modalCompany.textContent = card.querySelector('.author-company').textContent;
       modal.hidden = false;
       void modal.offsetWidth;
       modal.classList.add('is-visible');
@@ -866,7 +859,7 @@
       suppressClickUntil = performance.now() + 250;
     }, { passive: true });
 
-    console.log('[DMC01-testimonials] Initialised. ' + TESTIMONIALS.length + ' quotes loaded.');
+    console.log('[DMC01-testimonials] Initialised. ' + cards.length + ' quotes loaded.');
   }
 
   if (document.readyState === 'loading') {
