@@ -2,8 +2,7 @@
    DMC01 — Product section JS: the "Flux Dial"
    =====================================================================
 
-   Implements "Flux Dial.dc.html" from the Claude Design project
-   (claude.ai/design/p/5a11a118-…). Six modules sit on a dial around
+   Six modules sit on a dial around
    the DMC01 mark. Hovering (or focusing) a module swings the hand to
    it, and brings forward the relationships it takes part in — dots travelling along arcs inside
    the ring. Clicking opens the module's detail (description, sample

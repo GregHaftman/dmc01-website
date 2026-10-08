@@ -218,7 +218,6 @@ Built by **Grégoire Haftman** for DMC01 Ltd, with:
 
 - [Webflow](https://webflow.com) — visual editor + hosting
 - [Cloudflare Workers](https://workers.cloudflare.com) — static asset hosting (Webflow embed-limit overflow) + consent log
-- [Claude](https://claude.ai) — architectural collaboration, code review, copy iteration
 - [Rajdhani](https://fonts.google.com/specimen/Rajdhani) + [Inter](https://rsms.me/inter/) — typography
 - dmc01-ui-kit (private) — design tokens
 - [Figma](https://figma.com) — design system + Open Graph artwork
