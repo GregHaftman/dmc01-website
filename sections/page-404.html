@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
+<script>(function(){try{var t=localStorage.getItem('dmc01-theme');if(!t)t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+
+<style>
+  /* ============================================================
+     DMC01 · 404 — code embed for Webflow's 404 utility page,
+     light + dark themed. Sits between the nav and footer embeds.
+
+     A large "404" figure, a code line naming the missing path,
+     the headline, and a card of the places that do exist. The nav
+     already carries the one filled Brand Blue CTA, so nothing here
+     is filled: "Open a brief" is the last row of the card.
+     ============================================================ */
+
+  /* @dmc01-tokens:start */
+  :root {
+    /* surfaces — kit */
+    --bg:          #0c0d11;
+    --panel:       #15171d;
+    --panel-2:     #1d2027;
+    --panel-3:     #232730;
+
+    /* text — kit, plus --body (web) */
+    --ink:         #f3f5f8;
+    --body:        rgba(243, 245, 248, 0.80);
+    --muted:       rgba(243, 245, 248, 0.52);
+    --faint:       rgba(243, 245, 248, 0.34);
+
+    /* accents — kit (dark-surface variants) */
+    --accent:       #4c8dff;
+    --accent-hover: #6ba1ff;
+    --accent-soft:  rgba(76, 141, 255, 0.14);
+    --purple:       #9b6bdc;
+
+    /* Brand Blue as a fill — web */
+    --brand-blue:       #0047FF;
+    --brand-blue-hover: #1f5eff;
+    --on-brand:         #ffffff;
+
+    /* lines, radii, shadow — kit */
+    --line:        rgba(255, 255, 255, 0.08);
+    --line-strong: rgba(255, 255, 255, 0.14);
+    --radius-sm:   6px;
+    --radius:      8px;
+    --radius-lg:   12px;
+    --shadow:      0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.25);
+
+    /* type — kit families; Webflow's responsive heading scale where it exists */
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-head: "Rajdhani", -apple-system, sans-serif;
+    --fs-h1:     var(--h1-size, 4.65rem);
+    --fs-h2:     var(--h2-size, 2.83rem);
+    --fs-lede:   1.1875rem;
+    --fs-body:   1.0625rem;
+    --fs-small:  0.9375rem;
+    --fs-xs:     0.8125rem;
+    --fs-eyebrow: 0.9375rem;
+
+    --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  [data-theme="light"] {
+    --bg:          #f5f6f8;
+    --panel:       #ffffff;
+    --panel-2:     #eef0f3;
+    --panel-3:     #e6e9ee;
+
+    --ink:         #0c0d11;
+    --body:        rgba(12, 13, 17, 0.80);
+    --muted:       rgba(12, 13, 17, 0.60);
+    --faint:       rgba(12, 13, 17, 0.40);
+
+    --accent:       #0047FF;
+    --accent-hover: #0039cc;
+    --accent-soft:  rgba(0, 71, 255, 0.09);
+    --purple:       #6633CC;
+
+    --line:        rgba(12, 13, 17, 0.09);
+    --line-strong: rgba(12, 13, 17, 0.16);
+    --shadow:      0 1px 2px rgba(12, 13, 17, 0.06), 0 4px 16px rgba(12, 13, 17, 0.06);
+  }
+  /* Phones: a calmer heading scale (Webflow's mobile H1 is ~46px). */
+  @media (max-width: 480px) {
+    :root { --fs-h1: 2.35rem; --fs-h2: 1.6rem; }
+  }
+  /* @dmc01-tokens:end */
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .notfound-section {
+    --sec-grid: rgba(255, 255, 255, 0.025);
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    width: 100vw;
+    min-height: 100vh;
+    margin-left: calc(-50vw + 50%);
+    padding: clamp(112px, 12vh, 160px) clamp(24px, 4vw, 64px) 88px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  [data-theme="light"] .notfound-section { --sec-grid: rgba(12, 13, 17, 0.035); }
+  .notfound-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(var(--sec-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--sec-grid) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, black 30%, transparent 90%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, black 30%, transparent 90%);
+  }
+  .notfound-section .section-inner { position: relative; z-index: 2; width: 100%; max-width: 780px; margin: 0 auto; }
+
+  /* ----- FIGURE + CODE LINE ----- */
+  .notfound-section .notfound-figure {
+    margin: 0 0 8px;
+    font-family: var(--font-head);
+    font-size: clamp(6.5rem, 20vw, 12rem);
+    font-weight: 700;
+    line-height: 0.8;
+    letter-spacing: -0.02em;
+    color: var(--panel-3);
+    user-select: none;
+  }
+  .notfound-section .notfound-code {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    margin: 0 0 20px;
+    font-family: var(--font-head);
+    font-size: var(--fs-eyebrow);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+  .notfound-section .notfound-code-slashes { flex: none; margin-right: 0.45em; color: var(--accent); }
+  .notfound-section .notfound-code-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .notfound-section .notfound-code-path { color: var(--ink); }
+  .notfound-section .notfound-code-caret {
+    flex: none;
+    display: inline-block;
+    width: 2px;
+    height: 1.05em;
+    margin-left: 3px;
+    background: var(--accent);
+    opacity: 0;
+    animation: notfoundCaret 0.5s steps(1) 0.4s 6;
+  }
+  @keyframes notfoundCaret { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 0; } }
+
+  /* ----- HEADLINE ----- */
+  .notfound-section .section-title {
+    margin: 0 0 18px;
+    text-align: left;
+    font-family: var(--font-head);
+    font-size: var(--fs-h1);
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+  .notfound-section .section-title em { font-style: normal; color: var(--accent); }
+  .notfound-section .section-lede { max-width: 34em; margin: 0 0 36px; text-align: left; font-size: var(--fs-lede); line-height: 1.6; color: var(--body); }
+
+  /* ----- ROUTES — kit card ----- */
+  .notfound-section .notfound-routes {
+    padding: 10px 8px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+  }
+  .notfound-section .notfound-routes-eyebrow {
+    margin: 8px 16px 6px;
+    font-family: var(--font-head);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .notfound-section .notfound-routes ul { list-style: none; }
+  .notfound-section .notfound-routes a {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    color: var(--ink);
+    text-decoration: none;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .notfound-section .notfound-routes a:hover { background: var(--panel-2); }
+  .notfound-section .notfound-routes a:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+  .notfound-section .notfound-route-num {
+    flex: none;
+    width: 1.6em;
+    font-family: var(--font-head);
+    font-size: var(--fs-small);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+  }
+  .notfound-section .notfound-route-name {
+    flex: none;
+    font-family: var(--font-head);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .notfound-section .notfound-route-note {
+    flex: 1;
+    min-width: 0;
+    font-size: var(--fs-small);
+    color: var(--muted);
+  }
+  .notfound-section .notfound-route-arrow {
+    flex: none;
+    align-self: center;
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: var(--muted);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.15s ease, stroke 0.15s ease;
+  }
+  .notfound-section .notfound-routes a:hover .notfound-route-arrow { stroke: var(--accent); transform: translateX(3px); }
+  .notfound-section .notfound-routes li + li a { position: relative; }
+  .notfound-section .notfound-routes li + li a::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 16px;
+    right: 16px;
+    height: 1px;
+    background: var(--line);
+  }
+  .notfound-section .notfound-routes li:hover + li a::before,
+  .notfound-section .notfound-routes li a:hover::before { background: transparent; }
+
+  @media (max-width: 600px) {
+    .notfound-section .notfound-route-note { display: none; }
+    .notfound-section .notfound-route-name { flex: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .notfound-section .notfound-code-caret { animation: none; }
+    .notfound-section .notfound-routes a,
+    .notfound-section .notfound-route-arrow { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<section class="notfound-section" id="dmc01-404">
+  <div class="section-inner">
+
+    <div class="notfound-figure" aria-hidden="true">404</div>
+
+    <p class="notfound-code">
+      <span class="notfound-code-slashes" aria-hidden="true">//</span><span class="notfound-code-text">route not found<span id="dmc01-404-path"></span></span><span class="notfound-code-caret" aria-hidden="true"></span>
+    </p>
+
+    <h1 class="section-title">This page isn't in <em>the&nbsp;brief.</em></h1>
+    <p class="section-lede">It may have moved, or the link was mistyped. Everything else is where you left it.</p>
+
+    <nav class="notfound-routes" aria-label="Where things are">
+      <p class="notfound-routes-eyebrow">Where things are</p>
+      <ul>
+        <li><a href="/">
+          <span class="notfound-route-num">01</span>
+          <span class="notfound-route-name">Home</span>
+          <span class="notfound-route-note">Data monetisation, forward-deployed</span>
+          <svg class="notfound-route-arrow" viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a></li>
+        <li><a href="/#dmc01-product">
+          <span class="notfound-route-num">02</span>
+          <span class="notfound-route-name">The six modules</span>
+          <span class="notfound-route-note">From licensing to distribution</span>
+          <svg class="notfound-route-arrow" viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a></li>
+        <li><a href="/pricing">
+          <span class="notfound-route-num">03</span>
+          <span class="notfound-route-name">Pricing</span>
+          <span class="notfound-route-note">Focus, Build and Transform</span>
+          <svg class="notfound-route-arrow" viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a></li>
+        <li><a href="/faq">
+          <span class="notfound-route-num">04</span>
+          <span class="notfound-route-name">FAQ</span>
+          <span class="notfound-route-note">What people ask before a brief</span>
+          <svg class="notfound-route-arrow" viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a></li>
+        <li><a href="/#dmc01-contact">
+          <span class="notfound-route-num">05</span>
+          <span class="notfound-route-name">Open a brief</span>
+          <span class="notfound-route-note">Reply within one working day</span>
+          <svg class="notfound-route-arrow" viewBox="0 0 24 24" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a></li>
+      </ul>
+    </nav>
+
+  </div>
+</section>
+
+<script>
+  /* Name the missing path in the code line. textContent only, so a
+     crafted URL can't inject markup; long paths are trimmed. */
+  (function () {
+    var el = document.getElementById('dmc01-404-path');
+    if (!el) return;
+    var path = window.location.pathname || '';
+    if (path === '/' || /\.html$/.test(path)) return;
+    try { path = decodeURIComponent(path); } catch (e) {}
+    if (path.length > 48) path = path.slice(0, 47) + '…';
+    el.className = 'notfound-code-path';
+    el.textContent = path;
+    el.insertAdjacentText('beforebegin', ': ');
+  })();
+</script>
+
+</body>
+</html>

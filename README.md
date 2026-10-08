@@ -29,7 +29,8 @@ dmc01-website/
 │   ├── page-faq.html                  # /faq
 │   ├── page-privacy.html              # /privacy-policy
 │   ├── page-terms.html                # /terms-of-use
-│   └── page-cookies.html              # /cookie-policy
+│   ├── page-cookies.html              # /cookie-policy
+│   └── page-404.html                  # Webflow 404 utility page
 │
 ├── shared/
 │   └── brand-tokens.css               # Colour + type tokens — source of truth for every embed
@@ -163,6 +164,7 @@ Dark theme = dmc01-ui-kit values; a light theme is derived in `shared/brand-toke
 | `/privacy-policy` | `page-privacy.html` |
 | `/terms-of-use` | `page-terms.html` |
 | `/cookie-policy` | `page-cookies.html` |
+| 404 (any unknown URL) | `page-404.html` — names the missing path, links to the main routes |
 
 ---
 
