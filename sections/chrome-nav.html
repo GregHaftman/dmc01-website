@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>DMC01 — Nav</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
@@ -172,8 +171,7 @@
   }
   .dmc01-nav .nav-brand:hover { opacity: 0.8; }
 
-  /* Lockup from the Claude Design "DMC01 Logo Animated" nav variant.
-     The JS below adds the one-time reveal and the "01" tilt. */
+  /* Nav lockup. The JS below adds the one-time reveal and the "01" tilt. */
   .dmc01-nav .nav-logo {
     --ink-logo: var(--ink);
     width: 56px;
@@ -554,8 +552,7 @@
   }
 
   /* ---------- LOGO ANIMATION ----------
-     From the Claude Design "DMC01 Logo Animated" nav variant: a
-     diagonal band reveals the lockup the first time the nav appears.
+     A diagonal band reveals the lockup the first time the nav appears.
      After that, every 4s the "01" gives a clear but gentle tilt
      and settles back — the only recurring motion, and deliberately
      quiet. The static <svg> art in the markup is reused, so without

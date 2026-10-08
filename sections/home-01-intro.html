@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>DMC01 — Data Monetisation Concept</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
@@ -16,10 +15,6 @@
 <style>
   /* ============================================================
      DMC01 · Intro hero — animated logo lockup
-
-     Ported from the Claude Design project "DMC01 Logo Animated"
-     (hero variant only; the nav / light / loader cells in that file
-     were design-review demos).
 
      Layers, back to front:
        1. Faint 60px grid
@@ -479,7 +474,7 @@
 
   /* Build the lockup SVG. Two masks: the reveal mask (a hard-edged
      diagonal band that sweeps in on load) and the sheen mask (a thin
-     diagonal band). As in the Claude Design original, the sheen is a
+     diagonal band). The sheen is a
      crisp full-ink copy of the lockup seen only through that band,
      over a base that softens slightly while it passes. No glow. */
   function build(host) {
@@ -529,7 +524,7 @@
 
   /* Sheen: the lockup softens a touch (never below SHEEN_DIM, so it
      never disappears), a band of full-ink light passes left to right,
-     then it settles. The Design original dimmed to 0.4. */
+     then it settles. */
   var SHEEN_DIM = 0.7;
   function sheen(svg) {
     var vw = svg._vw;

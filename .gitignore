@@ -36,7 +36,7 @@ npm-debug.log
 # Local-only full-site preview (Live Server) — never committed
 sections/fullsite-preview.html
 
-# Claude Code project instructions — local only, never committed
+# Local working notes — never committed
 CLAUDE.md
 
 # Wrangler local dev state
